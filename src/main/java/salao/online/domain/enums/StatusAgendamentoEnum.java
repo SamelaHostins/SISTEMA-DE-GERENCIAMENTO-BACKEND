@@ -3,10 +3,9 @@ package salao.online.domain.enums;
 import lombok.Getter;
 
 public enum StatusAgendamentoEnum {
-    AGENDADO(0),
-    AGUARDANDO_ENTRADA(1),
-    CONFIRMADO(2),
-    CANCELADO(3);
+    AGUARDANDO_ENTRADA(0),
+    AGENDADO(1),
+    CANCELADO(2);
 
     public @Getter int statusAgendamento;
 

@@ -4,10 +4,9 @@ import lombok.Getter;
 
 public enum StatusAgendamentoEnumDTO {
 
-    AGENDADO(0),
-    AGUARDANDO_ENTRADA(1),
-    CONFIRMADO(2),
-    CANCELADO(3);
+    AGUARDANDO_ENTRADA(0),
+    AGENDADO(1),
+    CANCELADO(2);
     
     private @Getter int statusAgendamento;
 

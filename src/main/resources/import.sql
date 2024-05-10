@@ -17,7 +17,7 @@ VALUES
   ('634e5678-e89b-12d3-a456-426614174005');
 
 -- Inserir dados na tabela Profissional
-INSERT INTO Profissional (idProfissional, metodosDePagamento, endereco_id) 
+INSERT INTO Profissional (idProfissional, metodosDePagamento, ) 
 VALUES 
   ('345e6789-e89b-12d3-a456-426614174002', 'Cartão de crédito', '123e4567-e89b-12d3-a456-426614174000'),
   ('445e6789-e89b-12d3-a456-426614174003', 'Dinheiro', '223e4567-e89b-12d3-a456-426614174001'),
@@ -87,15 +87,3 @@ VALUES
   ('212e3456-e89b-12d3-a456-426614174011', 'Pedro', 'Almeida', 'pedro.almeida@example.com', '111222333', 'senha789'),
   ('312e3456-e89b-12d3-a456-426614174012', 'Ana', 'Souza', 'ana.souza@example.com', '444555666', 'senhaabc'),
   ('412e3456-e89b-12d3-a456-426614174013', 'Luiz', 'Pereira', 'luiz.pereira@example.com', '777888999', 'senhaxyz');
-
-
-
-ALTER TABLE Profissional ADD CONSTRAINT fk_profissional_endereco FOREIGN KEY (endereco_id) REFERENCES Endereco(idEndereco);
-ALTER TABLE Estoque ADD CONSTRAINT fk_estoque_profissional FOREIGN KEY (profissional_id) REFERENCES Profissional(idProfissional);
-ALTER TABLE Produto ADD CONSTRAINT fk_produto_estoque FOREIGN KEY (estoque_id) REFERENCES Estoque(idEstoque);
-ALTER TABLE Servico ADD CONSTRAINT fk_servico_profissional FOREIGN KEY (profissional_id) REFERENCES Profissional(idProfissional);
-ALTER TABLE Avaliacao ADD CONSTRAINT fk_avaliacao_cliente FOREIGN KEY (cliente_id) REFERENCES Cliente(idCliente);
-ALTER TABLE Avaliacao ADD CONSTRAINT fk_avaliacao_servico FOREIGN KEY (servico_id) REFERENCES Servico(idServico);
-ALTER TABLE Agendamento ADD CONSTRAINT fk_agendamento_cliente FOREIGN KEY (cliente_id) REFERENCES Cliente(idCliente);
-ALTER TABLE Agendamento ADD CONSTRAINT fk_agendamento_servico FOREIGN KEY (servico_id) REFERENCES Servico(idServico);
-ALTER TABLE Calendario ADD CONSTRAINT fk_calendario_profissional FOREIGN KEY (profissional_id) REFERENCES Profissional(idProfissional);

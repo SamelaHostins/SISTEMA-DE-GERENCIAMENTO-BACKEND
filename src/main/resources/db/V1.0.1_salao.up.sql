@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS salao.produto (
    nome VARCHAR(100),
    dtEntrada DATE,
    validade DATE,
-   valor DOUBLE PRECISION,
+   valor DOUBLE PRECISION, --
    idEstoque UUID,
    FOREIGN KEY (idEstoque) REFERENCES salao.estoque(idEstoque)
 );
@@ -75,10 +75,10 @@ CREATE TABLE IF NOT EXISTS salao.produto (
 -- Tabela servico
 CREATE TABLE IF NOT EXISTS salao.servico (
    idServico UUID NOT NULL PRIMARY KEY,
-   nome VARCHAR(55),
+   nome VARCHAR(55), (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55)
    especificacao VARCHAR(500),
    termosCondicoes VARCHAR(1000),
-   valor DOUBLE PRECISION,
+   valor DECIMAL(5, 2),
    idProfissional UUID,
    FOREIGN KEY (idProfissional) REFERENCES salao.profissional(idProfissional)
 );

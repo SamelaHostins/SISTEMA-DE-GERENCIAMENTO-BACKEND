@@ -37,11 +37,14 @@ public class Cliente extends Informacao {
     private @Getter List<Avaliacao> avaliacoes;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "servico")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente")
     private @Getter List<Agendamento> agendamentos;
 
-    public Cliente(List<Avaliacao> avaliacoes, List<Agendamento> agendamentos) {
+    public Cliente(String nome, String sobrenome, int idade, String email, String telefone, 
+    String usuario, String senha, List<Avaliacao> avaliacoes, List<Agendamento> agendamentos) {
+        super(nome, sobrenome, idade, email, telefone, usuario, senha);
         this.avaliacoes = avaliacoes;
+        this.agendamentos = agendamentos;
     }
     
 

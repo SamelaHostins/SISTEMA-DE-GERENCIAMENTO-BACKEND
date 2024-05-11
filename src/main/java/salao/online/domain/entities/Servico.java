@@ -12,7 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -24,7 +26,8 @@ import io.smallrye.common.constraint.NotNull;
 import lombok.Getter;
 
 @Entity
-@Table(schema = "salao", name = "servico")
+@Table(schema = "salao", name = "servico", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "id_profissional"}) })
 public class Servico {
 
     protected Servico() {
@@ -37,7 +40,7 @@ public class Servico {
     @NotNull
     private @Getter UUID idServico;
 
-    @NotNull
+    @NotBlank
     @Size(min = 3, max = 55, message = "O nome deve ter entre 3 e 55 caracteres")
     private @Getter String nome;
 
@@ -51,13 +54,14 @@ public class Servico {
     @DecimalMin(value = "0.01", message = "O valor deve ser no mínimo 0.01")
     private @Getter double valor;
 
+    @NotNull
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_profissional")
     private @Getter Profissional profissional;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "servico")
     private @Getter List<Avaliacao> avaliacoes;
 
     @JsonManagedReference

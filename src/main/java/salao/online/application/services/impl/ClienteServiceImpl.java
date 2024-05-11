@@ -46,7 +46,6 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public ClienteDTO atualizarCliente(ClienteDTO clienteDTO) throws ValidacaoException {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'atualizarCliente'");
     }
 

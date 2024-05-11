@@ -1,45 +1,32 @@
 package salao.online.domain.entities;
 
-import java.util.UUID;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.GenericGenerator;
 
 import io.smallrye.common.constraint.NotNull;
 import lombok.Getter;
 
-@Entity
-@Table(schema = "salao", name = "informacao")
-public class Informacao {
+@MappedSuperclass
+public abstract class Informacao {
 
     protected Informacao() {
     }
 
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_informacao")
-    @NotNull
-    private @Getter UUID idInformacao;
-
-    @NotEmpty
+    @NotBlank
     @Size(min = 3, max = 25, message = "O nome deve ter entre 3 e 25 caracteres")    
     private @Getter String nome;
 
-    @NotEmpty
+    @NotBlank
     @Size(min = 3, max = 25, message = "O sobrenome deve ter entre 3 e 25 caracteres")    
     private @Getter String sobrenome;
 
     @NotEmpty
+    @Positive
     private @Getter int idade;
 
     @NotEmpty

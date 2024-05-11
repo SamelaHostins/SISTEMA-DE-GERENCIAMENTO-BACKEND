@@ -48,7 +48,6 @@ public class ServicoServiceImpl implements ServicoService {
 
     @Override
     public ServicoDTO atualizarServico(ServicoDTO servicoDTO) throws ValidacaoException {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'atualizarServico'");
     }
 

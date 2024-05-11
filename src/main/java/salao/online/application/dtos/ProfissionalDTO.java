@@ -12,10 +12,17 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProfissionalDTO extends InformacaoDTO{
+public class ProfissionalDTO{
     
     private UUID idProfissional;
-    private UUID IdEndereco;
+    private String nome;
+    private String sobrenome;
+    private int idade;
+    private String email;
+    private String telefone;
+    private String usuario;
+    private String senha;
+    private UUID idEndereco;
     private List<ServicoDTO> servicos;
     private List<EstoqueDTO> estoques;
 }

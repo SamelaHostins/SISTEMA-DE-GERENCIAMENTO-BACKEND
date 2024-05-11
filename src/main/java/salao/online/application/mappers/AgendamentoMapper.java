@@ -6,6 +6,7 @@ import salao.online.domain.entities.Agendamento;
 import java.util.List;
 
 import org.mapstruct.Named;
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,6 +14,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "cdi")
 public interface AgendamentoMapper {
 
+    @InheritInverseConfiguration
     Agendamento toEntity(AgendamentoDTO dto);
 
     @Mapping(source = "cliente.idCliente", target = "idCliente")

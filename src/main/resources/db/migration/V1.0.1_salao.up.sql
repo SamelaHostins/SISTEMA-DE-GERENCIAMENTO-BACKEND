@@ -1,21 +1,21 @@
-CREATE SCHEMA IF NOT EXISTS salao;
+/*
+Estamos usando estratégia de Tabela por subclasse (Class Table Inheritance), 
+cada classe na hierarquia de herança tem sua própria tabela no banco de dados, 
+incluindo os dados da classe base. Portanto, não há necessidade de uma tabela 
+separada para a classe base.
+*/
 
--- Tabela informacao
-CREATE TABLE IF NOT EXISTS salao.informacao (
-   id_informacao UUID NOT NULL PRIMARY KEY,
-   nome VARCHAR(25) NOT NULL,
-   sobrenome VARCHAR(25) NOT NULL, -- adicionar minimo de 3 caracteres
-   email VARCHAR(30) NOT NULL, -- adicionar minimo de 3 caracteres
-   telefone VARCHAR(12) NOT NULL,
-   usuario VARCHAR (25) NOT NULL, -- adicionar minimo de 3 caracteres
-   senha VARCHAR(8) NOT NULL, ---- verificar se tem algo que diz que tem que ter EXATO 8 caracteres
-);
+CREATE SCHEMA IF NOT EXISTS salao;
 
 -- Tabela cliente
 CREATE TABLE IF NOT EXISTS salao.cliente (
-   id_cliente UUID NOT NULL PRIMARY KEY
-   id_informacao UUID NOT NULL,
-   FOREIGN KEY (id_informacao) REFERENCES salao.informacao(id_informacao)
+   id_cliente UUID NOT NULL PRIMARY KEY,
+   nome VARCHAR(25) NOT NULL,
+   sobrenome VARCHAR(25) NOT NULL,
+   email VARCHAR(30) NOT NULL,
+   telefone VARCHAR(12) NOT NULL,
+   usuario VARCHAR(25) NOT NULL,
+   senha VARCHAR(8) NOT NULL
 );
 
 -- Tabela endereco
@@ -31,15 +31,20 @@ CREATE TABLE IF NOT EXISTS salao.endereco (
 -- Tabela profissional
 CREATE TABLE IF NOT EXISTS salao.profissional (
    id_profissional UUID NOT NULL PRIMARY KEY,
-   id_informacao UUID NOT NULL,
+   nome VARCHAR(25) NOT NULL,
+   sobrenome VARCHAR(25) NOT NULL,
+   email VARCHAR(30) NOT NULL,
+   telefone VARCHAR(12) NOT NULL,
+   usuario VARCHAR(25) NOT NULL,
+   senha VARCHAR(8) NOT NULL,
    id_endereco UUID NOT NULL,
-   FOREIGN KEY (id_informacao) REFERENCES salao.informacao(id_informacao)
-   FOREIGN KEY (id_endereco) REFERENCES salao.endereco(id_endereco));
+   FOREIGN KEY (id_endereco) REFERENCES salao.endereco(id_endereco)
+);
 
 -- Tabela metodoPagamento
 CREATE TABLE IF NOT EXISTS salao.metodo_pagamento (
-   id_metodo_pagamento UUID PRIMARY KEY,
-   nome VARCHAR(20) UNIQUE
+   id_metodo_pagamento UUID NOT NULL PRIMARY KEY,
+   nome VARCHAR(20) NOT NULL UNIQUE
 );
 
 -- Tabela profissionalMetodoPagamento (para relacionamento muitos-para-muitos)
@@ -66,7 +71,7 @@ CREATE TABLE IF NOT EXISTS salao.produto (
    nome VARCHAR(55),
    dt_entrada DATE,
    dt_validade DATE,
-   valor DOUBLE PRECISION, --
+   valor DOUBLE PRECISION,
    id_estoque UUID NOT NULL,
    FOREIGN KEY (id_estoque) REFERENCES salao.estoque(id_estoque)
 );
@@ -74,7 +79,7 @@ CREATE TABLE IF NOT EXISTS salao.produto (
 -- Tabela servico
 CREATE TABLE IF NOT EXISTS salao.servico (
    id_servico UUID NOT NULL PRIMARY KEY,
-   nome VARCHAR(55) NOT NULL (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55)
+   nome VARCHAR(55) NOT NULL,
    especificacao VARCHAR(500),
    termos_e_condicoes VARCHAR(1000),
    valor DECIMAL(5, 2),

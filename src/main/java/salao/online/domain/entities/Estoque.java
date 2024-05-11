@@ -9,8 +9,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -22,7 +25,8 @@ import io.smallrye.common.constraint.NotNull;
 import lombok.Getter;
 
 @Entity
-@Table(schema = "salao", name = "estoque")
+@Table(schema = "salao", name = "estoque", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "id_profissional"}) })
 public class Estoque {
 
     protected Estoque() {
@@ -35,7 +39,7 @@ public class Estoque {
     @NotNull
     private @Getter UUID idEstoque;
 
-    @NotNull
+    @NotBlank
     @Size(min = 3, max = 55, message = "O nome deve ter entre 3 e 55 caracteres")
     private @Getter String nome;
 
@@ -44,7 +48,7 @@ public class Estoque {
 
     @NotNull
     @JsonBackReference
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_profissional")
     private @Getter Profissional profissional;
 

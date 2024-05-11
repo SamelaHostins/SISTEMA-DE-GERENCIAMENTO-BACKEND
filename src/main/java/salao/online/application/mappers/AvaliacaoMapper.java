@@ -15,7 +15,6 @@ public interface AvaliacaoMapper {
 
     Avaliacao toEntity(AvaliacaoDTO dto);
 
-    @Mapping(source = "idAvaliacao", target = "idAvaliacao")
     @Mapping(source = "cliente.idCliente", target = "idCliente")
     @Mapping(source = "servico.idServico", target = "idServico")
     @Named("mapToDTO")

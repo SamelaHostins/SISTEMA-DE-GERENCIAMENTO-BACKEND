@@ -36,6 +36,7 @@ public class Avaliacao {
     @NotNull
     private @Getter UUID idAvaliacao;
 
+    @NotNull
     private @Getter int nota;
 
     @CreationTimestamp

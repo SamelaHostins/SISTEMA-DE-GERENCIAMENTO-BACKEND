@@ -7,12 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import io.smallrye.common.constraint.NotNull;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+
 import lombok.Getter;
 
 @Entity
@@ -44,7 +45,8 @@ public class Endereco {
     @NotEmpty
     private @Getter int numero;
 
-    @NotEmpty
+    @NotNull
+    @Size(max = 20, message = "O cep deve ter no máximo 10 caracteres")
     private @Getter String cep;
 
     public Endereco(String rua, String bairro, String cidade, int numero, String cep) {

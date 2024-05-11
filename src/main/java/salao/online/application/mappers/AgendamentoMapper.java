@@ -15,7 +15,6 @@ public interface AgendamentoMapper {
 
     Agendamento toEntity(AgendamentoDTO dto);
 
-    @Mapping(source = "idAgendamento", target = "idAgendamento")
     @Mapping(source = "cliente.idCliente", target = "idCliente")
     @Mapping(source = "servico.idServico", target = "idServico")
     @Named("mapToDTO")

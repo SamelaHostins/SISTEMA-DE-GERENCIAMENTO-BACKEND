@@ -15,7 +15,6 @@ public interface ProdutoMapper {
 
     Produto toEntity(ProdutoDTO dto);
 
-    @Mapping(source = "idProduto", target = "idProduto")
     @Mapping(source = "estoque.idEstoque", target = "idEstoque")
     @Named("mapToDTO")
     ProdutoDTO toDto(Produto entity);

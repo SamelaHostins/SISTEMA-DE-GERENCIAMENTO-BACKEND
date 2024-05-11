@@ -17,6 +17,6 @@ public class EstoqueDTO {
     private UUID idEstoque;
     private String nome;
     private int qtdDeProdutos;
-    private List<ProdutoDTO> produtos;
     private UUID idProfissional;
+    private List<ProdutoDTO> produtos;
 }

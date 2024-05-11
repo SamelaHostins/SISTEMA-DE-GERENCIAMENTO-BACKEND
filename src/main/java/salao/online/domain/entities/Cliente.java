@@ -42,7 +42,6 @@ public class Cliente extends Informacao {
 
     public Cliente(List<Avaliacao> avaliacoes, List<Agendamento> agendamentos) {
         this.avaliacoes = avaliacoes;
-        this.agendamentos = agendamentos;
     }
     
 

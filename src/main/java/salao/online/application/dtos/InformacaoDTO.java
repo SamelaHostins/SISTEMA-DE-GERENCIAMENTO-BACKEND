@@ -19,5 +19,6 @@ public class InformacaoDTO {
     private int idade;
     private String email;
     private String telefone;
+    private String usuario;
     private String senha;
 }

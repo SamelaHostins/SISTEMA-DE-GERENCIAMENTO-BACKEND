@@ -15,7 +15,6 @@ public interface EstoqueMapper {
 
     Estoque toEntity(EstoqueDTO dto);
 
-    @Mapping(source = "idEstoque", target = "idEstoque")
     @Mapping(source = "profissional.idProfissional", target = "idProfissional")
     @Named("mapToDTO")
     EstoqueDTO toDto(Estoque entity);

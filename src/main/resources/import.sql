@@ -26,7 +26,7 @@ VALUES
   ('745e6789-e89b-12d3-a456-426614174006', 'Boleto', '523e4567-e89b-12d3-a456-426614174004');
 
 -- Inserir dados na tabela Estoque
-INSERT INTO Estoque (idEstoque, nome, qtdProdutos, profissional_id) 
+INSERT INTO Estoque (idEstoque, nome, qtdProdutos, idProfissional) 
 VALUES 
   ('456e7890-e89b-12d3-a456-426614174003', 'Estoque 1', 100, '345e6789-e89b-12d3-a456-426614174002'),
   ('556e7890-e89b-12d3-a456-426614174004', 'Estoque 2', 200, '445e6789-e89b-12d3-a456-426614174003'),
@@ -35,7 +35,7 @@ VALUES
   ('856e7890-e89b-12d3-a456-426614174007', 'Estoque 5', 220, '745e6789-e89b-12d3-a456-426614174006');
 
 -- Inserir dados na tabela Produto
-INSERT INTO Produto (idProduto, nome, dtEntrada, validade, valor, estoque_id) 
+INSERT INTO Produto (idProduto, nome, dtEntrada, validade, valor, idEstoque) 
 VALUES 
   ('567e8901-e89b-12d3-a456-426614174004', 'Produto 1', '2024-05-05', '2024-12-31', 10.99, '456e7890-e89b-12d3-a456-426614174003'),
   ('667e8901-e89b-12d3-a456-426614174005', 'Produto 2', '2024-05-06', '2024-12-31', 20.99, '556e7890-e89b-12d3-a456-426614174004'),
@@ -44,7 +44,7 @@ VALUES
   ('967e8901-e89b-12d3-a456-426614174008', 'Produto 5', '2024-05-09', '2024-12-31', 30.99, '856e7890-e89b-12d3-a456-426614174007');
 
 -- Inserir dados na tabela Servico
-INSERT INTO Servico (idServico, nome, especificacao, termosCondicoes, valor, profissional_id) 
+INSERT INTO Servico (idServico, nome, especificacao, termosCondicoes, valor, idProfissional) 
 VALUES 
   ('678e9012-e89b-12d3-a456-426614174005', 'Serviço 1', 'Especificação do Serviço 1', 'Termos e Condições do Serviço 1', 50.00, '345e6789-e89b-12d3-a456-426614174002'),
   ('778e9012-e89b-12d3-a456-426614174006', 'Serviço 2', 'Especificação do Serviço 2', 'Termos e Condições do Serviço 2', 60.00, '445e6789-e89b-12d3-a456-426614174003'),
@@ -53,7 +53,7 @@ VALUES
   ('a78e9012-e89b-12d3-a456-426614174009', 'Serviço 5', 'Especificação do Serviço 5', 'Termos e Condições do Serviço 5', 90.00, '745e6789-e89b-12d3-a456-426614174006');
 
 -- Inserir dados na tabela Avaliacao
-INSERT INTO Avaliacao (idAvaliacao, nota, cliente_id, servico_id) 
+INSERT INTO Avaliacao (idAvaliacao, nota, idCliente, idServico) 
 VALUES 
   ('789e0123-e89b-12d3-a456-426614174006', 5, '234e5678-e89b-12d3-a456-426614174001', '678e9012-e89b-12d3-a456-426614174005'),
   ('889e0123-e89b-12d3-a456-426614174007', 4, '334e5678-e89b-12d3-a456-426614174002', '778e9012-e89b-12d3-a456-426614174006'),
@@ -62,7 +62,7 @@ VALUES
   ('b89e0123-e89b-12d3-a456-426614174010', 1, '634e5678-e89b-12d3-a456-426614174005', 'a78e9012-e89b-12d3-a456-426614174009');
 
 -- Inserir dados na tabela Agendamento
-INSERT INTO Agendamento (idAgendamento, nome, hora, cliente_id, servico_id) 
+INSERT INTO Agendamento (idAgendamento, nome, hora, idCliente, idServico) 
 VALUES 
   ('890e1234-e89b-12d3-a456-426614174007', 'Agendamento 1', 14, '234e5678-e89b-12d3-a456-426614174001', '678e9012-e89b-12d3-a456-426614174005'),
   ('990e1234-e89b-12d3-a456-426614174008', 'Agendamento 2', 15, '334e5678-e89b-12d3-a456-426614174002', '778e9012-e89b-12d3-a456-426614174006'),
@@ -71,7 +71,7 @@ VALUES
   ('c90e1234-e89b-12d3-a456-426614174011', 'Agendamento 5', 18, '634e5678-e89b-12d3-a456-426614174005', 'a78e9012-e89b-12d3-a456-426614174009');
 
 -- Inserir dados na tabela Calendario
-INSERT INTO Calendario (idCalendario, nome, hora, profissional_id) 
+INSERT INTO Calendario (idCalendario, nome, hora, idProfissional) 
 VALUES 
   ('901e2345-e89b-12d3-a456-426614174008', 'Calendário 1', 8, '345e6789-e89b-12d3-a456-426614174002'),
   ('a01e2345-e89b-12d3-a456-426614174009', 'Calendário 2', 9, '445e6789-e89b-12d3-a456-426614174003'),

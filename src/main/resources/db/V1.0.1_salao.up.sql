@@ -3,8 +3,8 @@ CREATE SCHEMA IF NOT EXISTS salao;
 -- Tabela informacao
 CREATE TABLE IF NOT EXISTS salao.informacao (
    idInformacao UUID NOT NULL PRIMARY KEY,
-   nome VARCHAR(25),
-   sobrenome VARCHAR(25),
+   nome VARCHAR(55), (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55)
+   sobrenome VARCHAR(55), (LENGTH(sobrenome) >= 3 AND LENGTH(sobrenome) <= 55)
    email VARCHAR(30),
    telefone VARCHAR(12),
    usuario VARCHAR (12),
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS salao.profissional (
 -- Tabela metodoPagamento
 CREATE TABLE IF NOT EXISTS salao.metodoPagamento (
    idMetodo UUID PRIMARY KEY,
-   nome VARCHAR(50) UNIQUE
+   nome VARCHAR(50), (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55) UNIQUE
 );
 
 -- Tabela profissionalMetodoPagamento (para relacionamento muitos-para-muitos)
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS salao.profissionalMetodoPagamento (
 -- Tabela estoque
 CREATE TABLE IF NOT EXISTS salao.estoque (
    idEstoque UUID NOT NULL PRIMARY KEY,
-   nome VARCHAR(55),
+   nome VARCHAR(55), (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55)
    qtdProdutos INT,
    idProfissional UUID,
    FOREIGN KEY (idProfissional) REFERENCES salao.profissional(idProfissional)
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS salao.estoque (
 -- Tabela produto
 CREATE TABLE IF NOT EXISTS salao.produto (
    idProduto UUID NOT NULL PRIMARY KEY,
-   nome VARCHAR(100),
+   nome VARCHAR(100), (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55)
    dtEntrada DATE,
    validade DATE,
    valor DOUBLE PRECISION, --
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS salao.servico (
    idServico UUID NOT NULL PRIMARY KEY,
    nome VARCHAR(55), (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55)
    especificacao VARCHAR(500),
-   termosCondicoes VARCHAR(1000),
+   termosCondicoes VARCHAR(5000),
    valor DECIMAL(5, 2),
    idProfissional UUID,
    FOREIGN KEY (idProfissional) REFERENCES salao.profissional(idProfissional)
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS salao.avaliacao (
 -- Tabela agendamento
 CREATE TABLE IF NOT EXISTS salao.agendamento (
    idAgendamento UUID NOT NULL PRIMARY KEY,
-   nome VARCHAR(55),
+   nome VARCHAR(55), (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55)
    hora TIME,
    idCliente UUID,
    idServico UUID,
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS salao.agendamento (
 -- Tabela calendario
 CREATE TABLE IF NOT EXISTS salao.calendario (
    idCalendario UUID NOT NULL PRIMARY KEY,
-   nome VARCHAR(55),
+   nome VARCHAR(55), (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55)
    hora TIME,
    profissionalId UUID,
    FOREIGN KEY (idProfissional) REFERENCES salao.profissional(idProfissional)

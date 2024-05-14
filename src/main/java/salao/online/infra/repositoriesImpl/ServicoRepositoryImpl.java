@@ -1,4 +1,4 @@
-package salao.online.infra;
+package salao.online.infra.repositoriesImpl;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,7 +10,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import salao.online.domain.entities.Avaliacao;
 import salao.online.domain.entities.Servico;
-import salao.online.domain.repositories.ServicoRepository;
+import salao.online.infra.repositories.ServicoRepository;
 
 @ApplicationScoped
 public class ServicoRepositoryImpl implements ServicoRepository {

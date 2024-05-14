@@ -1,5 +1,6 @@
 package salao.online.application.services.impl;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -16,7 +17,7 @@ import salao.online.application.services.interfaces.ClienteService;
 import salao.online.domain.entities.Cliente;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
 import salao.online.domain.exceptions.ValidacaoException;
-import salao.online.domain.repositories.ClienteRepository;
+import salao.online.infra.repositories.ClienteRepository;
 
 @ApplicationScoped
 public class ClienteServiceImpl implements ClienteService {
@@ -37,16 +38,26 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public ClienteDTO inserirCliente(ClienteDTO clienteDTO) {
+    public ClienteDTO cadastrarCliente(ClienteDTO clienteDTO) {
         Cliente cliente = clienteMapper.toEntity(clienteDTO);
-        logger.info("Salvando o cliente criado");
+        logger.info("Salvando o cliente no bd");
         clienteRepository.persistAndFlush(cliente);
         return getClienteDTO(cliente);
     }
 
     @Override
-    public ClienteDTO atualizarCliente(ClienteDTO clienteDTO) throws ValidacaoException {
-        throw new UnsupportedOperationException("Unimplemented method 'atualizarCliente'");
+    public ClienteDTO atualizarCadastroCliente(ClienteDTO clienteDTO) throws ValidacaoException {
+        Optional<Cliente> clienteOptional = clienteRepository.findByIdOptional(clienteDTO.getIdCliente());
+        if (clienteOptional.isPresent()) {
+            Cliente cliente = clienteOptional.get();
+            cliente.atualizarCadastroCliente(clienteDTO.getNome(), clienteDTO.getSobrenome(), clienteDTO.getIdade(),
+                    clienteDTO.getEmail(), clienteDTO.getTelefone(), clienteDTO.getSenha());
+            logger.info("Salvando registro atualizado");
+            clienteRepository.persistAndFlush(cliente);
+            return getClienteDTO(cliente);
+        } else {
+            throw new ValidacaoException(MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro());
+        }
     }
 
     @Override
@@ -56,6 +67,14 @@ public class ClienteServiceImpl implements ClienteService {
                 .orElseThrow(() -> new ValidacaoException(
                         MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro()));
         return getClienteDTO(cliente);
+    }
+
+    @Override
+    public ClienteDTO deletarCadastroCliente(UUID idCliente) throws ValidacaoException {
+        logger.info("Validando se o Cliente existe");
+        buscarClientePorId(idCliente);
+        Optional<Cliente> cliente = clienteRepository.deletarCadastroDeCliente(idCliente);
+        return getClienteDTO(cliente.get());
     }
 
     private ClienteDTO getClienteDTO(Cliente cliente) {

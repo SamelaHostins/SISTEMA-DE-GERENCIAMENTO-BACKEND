@@ -16,7 +16,7 @@ import salao.online.application.services.interfaces.ServicoService;
 import salao.online.domain.entities.Servico;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
 import salao.online.domain.exceptions.ValidacaoException;
-import salao.online.domain.repositories.ServicoRepository;
+import salao.online.infra.repositories.ServicoRepository;
 
 @ApplicationScoped
 public class ServicoServiceImpl implements ServicoService {

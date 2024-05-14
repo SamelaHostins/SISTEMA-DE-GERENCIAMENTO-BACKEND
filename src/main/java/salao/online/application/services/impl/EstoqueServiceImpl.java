@@ -16,7 +16,7 @@ import salao.online.application.services.interfaces.EstoqueService;
 import salao.online.domain.entities.Estoque;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
 import salao.online.domain.exceptions.ValidacaoException;
-import salao.online.domain.repositories.EstoqueRepository;
+import salao.online.infra.repositories.EstoqueRepository;
 
 @ApplicationScoped
 public class EstoqueServiceImpl implements EstoqueService {

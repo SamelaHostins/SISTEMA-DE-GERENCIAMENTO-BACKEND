@@ -21,9 +21,9 @@ import salao.online.domain.entities.Cliente;
 import salao.online.domain.entities.Servico;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
 import salao.online.domain.exceptions.ValidacaoException;
-import salao.online.domain.repositories.AvaliacaoRepository;
-import salao.online.domain.repositories.ClienteRepository;
-import salao.online.domain.repositories.ServicoRepository;
+import salao.online.infra.repositories.AvaliacaoRepository;
+import salao.online.infra.repositories.ClienteRepository;
+import salao.online.infra.repositories.ServicoRepository;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 

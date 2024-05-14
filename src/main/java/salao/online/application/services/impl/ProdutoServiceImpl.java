@@ -15,7 +15,7 @@ import salao.online.application.services.interfaces.ProdutoService;
 import salao.online.domain.entities.Produto;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
 import salao.online.domain.exceptions.ValidacaoException;
-import salao.online.domain.repositories.ProdutoRepository;
+import salao.online.infra.repositories.ProdutoRepository;
 
 @ApplicationScoped
 public class ProdutoServiceImpl implements ProdutoService {

@@ -1,8 +1,8 @@
-package salao.online.infra;
+package salao.online.infra.repositoriesImpl;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import salao.online.domain.repositories.ProfissionalRepository;
+import salao.online.infra.repositories.ProfissionalRepository;
 
 @ApplicationScoped
 public class ProfissionalRepositoryImpl implements ProfissionalRepository {

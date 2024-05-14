@@ -1,65 +1,59 @@
 package salao.online.domain.entities;
 
-import java.util.UUID;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 import io.smallrye.common.constraint.NotNull;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
-@Entity
-@Table(schema = "salao", name = "informacao")
-public class Informacao {
+@MappedSuperclass
+public abstract class Informacao {
 
     protected Informacao() {
     }
 
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_informacao")
-    @NotNull
-    private @Getter UUID idInformacao;
-
-    @NotEmpty
-    @Size(max = 25, message = "O nome deve ter no máximo 25 caracteres")
+    @NotBlank
+    @Size(min = 3, max = 25, message = "O nome deve ter entre 3 e 25 caracteres")    
     private @Getter String nome;
 
-    @NotEmpty
-    @Size(max = 30, message = "O sobrenome deve ter no máximo 30 caracteres")
+    @NotBlank
+    @Size(min = 3, max = 25, message = "O sobrenome deve ter entre 3 e 25 caracteres")    
     private @Getter String sobrenome;
 
     @NotEmpty
+    @Positive
     private @Getter int idade;
-
 
     @NotEmpty
     @Email(message = "O e-mail deve ser válido")
+    @Size(max = 30, message = "O e-mail deve ter no máximo 30 caracteres")    
     private @Getter String email;
 
     @NotEmpty
+    @Pattern(regexp = "^\\d+$", message = "O telefone deve conter apenas dígitos de 0 a 9")
     @Size(max = 12, message = "O telefone deve ter no máximo 12 caracteres")
     private @Getter String telefone;
 
     @NotNull
-    @Size(min = 8, max = 8, message = "A senha deve ter 8 caracteres")
+    @Size(min = 3, max = 25, message = "O usuário deve conter no máximo 25 caracteres")
+    private @Getter String usuario;
+
+    @NotNull
+    @Pattern(regexp = "^(?=.*[0-9]).{8}$", message = "A senha deve conter pelo menos um número")    
     private @Getter String senha;
 
-    public Informacao(String nome, String sobrenome, int idade, String email, String telefone, String senha) {
+    public Informacao(String nome, String sobrenome, int idade, String email, String telefone, String usuario, String senha) {
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.idade = idade;
         this.email = email;
         this.telefone = telefone;
+        this.usuario = usuario;
         this.senha = senha;
     }
 }

@@ -12,6 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -19,12 +22,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.smallrye.common.constraint.NotNull;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Entity
-@Table(schema = "salao", name = "estoque")
+@Table(schema = "salao", name = "estoque", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "id_profissional"}) })
 public class Estoque {
 
     protected Estoque() {
@@ -37,15 +39,12 @@ public class Estoque {
     @NotNull
     private @Getter UUID idEstoque;
 
-    @NotEmpty
-    @Size(max = 25, message = "O nome deve ter no máximo 25 caracteres")
+    @NotBlank
+    @Size(min = 3, max = 55, message = "O nome deve ter entre 3 e 55 caracteres")
     private @Getter String nome;
 
+    @Column(name = "qtd_de_produtos")
     private @Getter int qtdDeProdutos;
-
-    @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "estoque")
-    private @Getter List<Produto> produtos;
 
     @NotNull
     @JsonBackReference
@@ -53,6 +52,9 @@ public class Estoque {
     @JoinColumn(name = "id_profissional")
     private @Getter Profissional profissional;
 
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "estoque")
+    private @Getter List<Produto> produtos;
 
     public Estoque(String nome, int qtdDeProdutos, List<Produto> produtos, Profissional profissional) {
         this.nome = nome;

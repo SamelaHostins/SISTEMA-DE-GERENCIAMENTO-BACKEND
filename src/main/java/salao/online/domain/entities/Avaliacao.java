@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.PositiveOrZero;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -36,6 +37,8 @@ public class Avaliacao {
     @NotNull
     private @Getter UUID idAvaliacao;
 
+    @NotNull
+    @PositiveOrZero
     private @Getter int nota;
 
     @CreationTimestamp

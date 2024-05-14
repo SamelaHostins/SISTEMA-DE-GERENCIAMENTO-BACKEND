@@ -45,7 +45,6 @@ public class EstoqueServiceImpl implements EstoqueService {
 
     @Override
     public EstoqueDTO atualizarEstoque(EstoqueDTO estoqueDTO) throws ValidacaoException {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'atualizarEstoque'");
     }
 
@@ -60,7 +59,6 @@ public class EstoqueServiceImpl implements EstoqueService {
 
     @Override
     public List<EstoqueDTO> buscarEstoquesDoProfissional(UUID idEstoque) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'buscarEstoquesDoEstoque'");
     }
 

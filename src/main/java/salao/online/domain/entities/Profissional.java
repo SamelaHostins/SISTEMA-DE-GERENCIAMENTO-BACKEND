@@ -51,7 +51,8 @@ public class Profissional extends Informacao {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
     private @Getter List<Estoque> estoques;
 
-    public Profissional(Informacao informacao, Endereco endereco, List<Servico> servicos, List<Estoque> estoques) {
+    public Profissional(String nome, String sobrenome, int idade, String email, String telefone, String usuario, String senha, Endereco endereco, List<Servico> servicos, List<Estoque> estoques) {
+        super(nome, sobrenome, idade, email, telefone, usuario, senha);
         this.endereco = endereco;
         this.servicos = servicos;
         this.estoques = estoques;

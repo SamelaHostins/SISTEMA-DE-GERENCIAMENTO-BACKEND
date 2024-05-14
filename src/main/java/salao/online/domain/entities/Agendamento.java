@@ -1,15 +1,19 @@
 package salao.online.domain.entities;
 
+import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.FutureOrPresent;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -20,6 +24,9 @@ import io.smallrye.common.constraint.NotNull;
 import lombok.Getter;
 import salao.online.domain.enums.StatusAgendamentoEnum;
 
+@Entity
+@Table(schema = "salao", name = "agendamento", uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "id_cliente", "id_servico" }) })
 public class Agendamento {
 
     protected Agendamento() {
@@ -33,12 +40,13 @@ public class Agendamento {
     private @Getter UUID idAgendamento;
 
     @NotNull
-    @Column(name = "data_agendamento")
+    @FutureOrPresent(message = "A data de agendamento deve ser hoje ou no futuro")
+    @Column(name = "dt_agendamento")
     private @Getter LocalDate dataAgendamento;
 
     @NotNull
     @Column(name = "hora_agendamento")
-    private @Getter LocalTime horaAgendamento;
+    private @Getter Time horaAgendamento;
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
@@ -57,7 +65,7 @@ public class Agendamento {
     @JoinColumn(name = "id_servico")
     private @Getter Servico servico;
 
-    public Agendamento(LocalDate dataAgendamento, LocalTime horaAgendamento,
+    public Agendamento(LocalDate dataAgendamento, Time horaAgendamento,
             StatusAgendamentoEnum statusAgendamento, Cliente cliente, Servico servico) {
         this.dataAgendamento = dataAgendamento;
         this.horaAgendamento = horaAgendamento;

@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -18,8 +20,6 @@ import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import io.smallrye.common.constraint.NotNull;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Entity
@@ -36,12 +36,15 @@ public class Produto {
     private @Getter UUID idProduto;
 
     @NotEmpty
-    @Size(max = 25, message = "O nome deve ter no máximo 25 caracteres")
+    @Size(min= 3, max = 55, message = "O nome deve ter entre 3 e 55 caracteres")
     private @Getter String nome;
 
     @CreationTimestamp
-    @Column(name = "dt_entrada_produto")
+    @Column(name = "dt_entrada")
     private @Getter LocalDate dtEntradaProduto;
+
+    @Column(name = "dt_validade")
+    private @Getter LocalDate dtValidadeProduto;
 
     @NotEmpty
     private @Getter double valor;
@@ -52,8 +55,9 @@ public class Produto {
     @JoinColumn(name = "id_estoque")
     private @Getter Estoque estoque;
 
-    public Produto(String nome, double valor, Estoque estoque){
+    public Produto(String nome, LocalDate dtValidadeProduto, double valor, Estoque estoque){
         this.nome = nome;
+        this.dtValidadeProduto = dtValidadeProduto;
         this.valor = valor;
         this.estoque = estoque;
 

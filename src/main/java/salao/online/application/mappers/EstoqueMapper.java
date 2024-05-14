@@ -2,6 +2,7 @@ package salao.online.application.mappers;
 
 import java.util.List;
 
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -10,12 +11,12 @@ import org.mapstruct.Named;
 import salao.online.application.dtos.EstoqueDTO;
 import salao.online.domain.entities.Estoque;
 
-@Mapper(componentModel = "cdi")
+@Mapper(componentModel = "cdi", uses = ProdutoMapper.class)
 public interface EstoqueMapper {
 
+    @InheritInverseConfiguration
     Estoque toEntity(EstoqueDTO dto);
 
-    @Mapping(source = "idEstoque", target = "idEstoque")
     @Mapping(source = "profissional.idProfissional", target = "idProfissional")
     @Named("mapToDTO")
     EstoqueDTO toDto(Estoque entity);

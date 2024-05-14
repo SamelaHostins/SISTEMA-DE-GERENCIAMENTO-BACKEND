@@ -12,9 +12,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ClienteDTO extends InformacaoDTO{
+public class ClienteDTO{
     
     private UUID idCliente;
+    private String nome;
+    private String sobrenome;
+    private int idade;
+    private String email;
+    private String telefone;
+    private String usuario;
+    private String senha;
     private List<AvaliacaoDTO> avaliacoes;
     private List<AgendamentoDTO> agendamentos;
 }

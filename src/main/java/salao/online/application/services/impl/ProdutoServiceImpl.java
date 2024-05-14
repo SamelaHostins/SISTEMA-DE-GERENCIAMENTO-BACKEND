@@ -41,7 +41,6 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public ProdutoDTO atualizarProduto(ProdutoDTO produtoDTO) throws ValidacaoException {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'atualizarProduto'");
     }
 
@@ -56,7 +55,6 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public List<ProdutoDTO> buscarProdutosDoEstoque(UUID idProduto) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'buscarProdutosDoProduto'");
     }
 

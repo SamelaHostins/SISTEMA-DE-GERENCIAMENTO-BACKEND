@@ -12,6 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -19,13 +23,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.smallrye.common.constraint.NotNull;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Entity
-@Table(schema = "salao", name = "servico")
+@Table(schema = "salao", name = "servico", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "id_profissional"}) })
 public class Servico {
 
     protected Servico() {
@@ -38,26 +40,28 @@ public class Servico {
     @NotNull
     private @Getter UUID idServico;
 
-    @NotEmpty
-    @Size(min = 2, max = 55, message = "O nome deve ter entre 2 e 55 caracteres")
+    @NotBlank
+    @Size(min = 3, max = 55, message = "O nome deve ter entre 3 e 55 caracteres")
     private @Getter String nome;
 
     @Size(max = 500, message = "A especificacao deve ter no máximo 500 caracteres")
     private @Getter String especificacao;
 
+    @Column(name = "termos_e_condicoes")
     @Size(max = 1000, message = "Os termos e condições devem ter no máximo 1000 caracteres")
     private @Getter String termosECondicoes;
 
     @DecimalMin(value = "0.01", message = "O valor deve ser no mínimo 0.01")
     private @Getter double valor;
 
+    @NotNull
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_profissional")
     private @Getter Profissional profissional;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "servico")
     private @Getter List<Avaliacao> avaliacoes;
 
     @JsonManagedReference

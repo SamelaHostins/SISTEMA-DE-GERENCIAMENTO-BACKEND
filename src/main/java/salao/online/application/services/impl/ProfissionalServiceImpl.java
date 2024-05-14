@@ -50,7 +50,6 @@ public class ProfissionalServiceImpl implements ProfissionalService {
 
     @Override
     public ProfissionalDTO atualizarProfissional(ProfissionalDTO profissionalDTO) throws ValidacaoException {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'atualizarProfissional'");
     }
 

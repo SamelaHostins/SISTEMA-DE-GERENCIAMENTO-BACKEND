@@ -1,0 +1,35 @@
+Explicação do Fluxo atual:
+
+O processo se inicia quando o cliente Procura por atendimento, buscando pelo procedimento estético desejado. 
+Quando abordado, o profissional Mostra o portfólio, com o intuito de estimular o interesse do cliente em 
+relação ao seu trabalho. Caso o cliente tenha Interesse pelo portfólio, e não haja dúvidas, o processo avança 
+diretamente para a Solicitação do agendamento. Por outro lado, se o cliente demonstrar Interesse pelo 
+portfólio e possuir alguma dúvida, o profissional prossegue o atendimento com a tarefa de Esclarecer as 
+dúvidas da cliente, fornecendo informações sobre o procedimento, produtos utilizados, tempo de atendimento 
+e qualquer outra informação solicitada Após esclarecimentos, se o cliente desejar, ele procede com a 
+Solicitação do agendamento para o dia e horário de sua preferência. 
+
+Em seguida, o profissional precisa Verificar a disponibilidade de atendimento. 
+Alguns membros da equipe do Studio utilizam agendas físicas, enquanto outros registram os compromissos 
+em agendas online no celular. Caso não haja nenhum agendamento registrado para o horário solicitado, 
+a profissional realiza a Marcação da cliente.  No entanto, se não houver disponibilidade na agenda, 
+o profissional Oferece ou solicita outro horário à cliente Quando a cliente confirmar o agendamento, 
+o compromisso é oficializado e, para garantir o comprometimento da cliente com o serviço, é solicitado 
+um valor de entrada. Isso visa prevenir cancelamentos de última hora e assegurar o comparecimento da cliente. 
+
+Nos casos em que o atendimento é relacionado ao pacote de noivas, a noiva assina o contrato e paga os 30% 
+de entrada, finalizando assim o agendamento. Para atendimentos regulares, o Studio Ajusta o valor de entrada 
+conforme a quantidade de serviços solicitados, finalizando o agendamento após a Confirmação do pagamento. 
+É importante observar que alguns profissionais do Studio podem optar por não solicitar um valor de entrada, 
+nesse caso, o agendamento é finalizado após a Confirmação do agendamento.
+
+Problemas dos clientes:
+O estabelecimento enfrenta desafios, com ênfase no gerenciamento de clientes e na organização financeira. 
+
+Objetivos: 
+- disponibilizar interface intuitiva, seguindo princípios de usabilidade e experiência do usuário 
+para os clientes fazerem agendamentos com o profissional; 
+- facilitar a organização dos compromissos dos profissionais por meio de calendários e da gestão de seus compromissos; 
+- contribuir para o controle financeiro do profissional; 
+- analisar o processo atual do Studio e de suas atividades e propor possíveis melhorias para aprimorar
+- possibilitar a criação de estoques pro profissional poder ter controle dos seus produtos

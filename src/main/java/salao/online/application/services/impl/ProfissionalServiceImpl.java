@@ -17,7 +17,7 @@ import salao.online.application.services.interfaces.ProfissionalService;
 import salao.online.domain.entities.Profissional;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
 import salao.online.domain.exceptions.ValidacaoException;
-import salao.online.domain.repositories.ProfissionalRepository;
+import salao.online.infra.repositories.ProfissionalRepository;
 
 @ApplicationScoped
 public class ProfissionalServiceImpl implements ProfissionalService {

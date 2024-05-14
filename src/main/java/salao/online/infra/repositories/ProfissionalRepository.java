@@ -1,4 +1,4 @@
-package salao.online.domain.repositories;
+package salao.online.infra.repositories;
 
 import java.util.UUID;
 

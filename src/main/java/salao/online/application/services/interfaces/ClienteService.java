@@ -7,10 +7,12 @@ import salao.online.domain.exceptions.ValidacaoException;
 
 public interface ClienteService {
 
-    public ClienteDTO inserirCliente(ClienteDTO clienteDTO);
+    public ClienteDTO cadastrarCliente(ClienteDTO clienteDTO);
 
-    public ClienteDTO atualizarCliente(ClienteDTO clienteDTO) throws ValidacaoException;
+    public ClienteDTO atualizarCadastroCliente(ClienteDTO clienteDTO) throws ValidacaoException;
 
     public ClienteDTO buscarClientePorId(UUID idCliente) throws ValidacaoException;
+
+    public ClienteDTO deletarCadastroCliente(UUID idCliente) throws ValidacaoException;
 
 }

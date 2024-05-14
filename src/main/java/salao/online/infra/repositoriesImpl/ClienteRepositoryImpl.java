@@ -1,8 +1,9 @@
-package salao.online.infra;
+package salao.online.infra.repositoriesImpl;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -10,7 +11,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import salao.online.domain.entities.Avaliacao;
 import salao.online.domain.entities.Cliente;
-import salao.online.domain.repositories.ClienteRepository;
+import salao.online.infra.repositories.ClienteRepository;
 
 @ApplicationScoped
 public class ClienteRepositoryImpl implements ClienteRepository {
@@ -26,4 +27,14 @@ public class ClienteRepositoryImpl implements ClienteRepository {
             return Collections.emptyList();
         }
     }
+
+    @Override
+    public Optional<Cliente> deletarCadastroDeCliente(UUID idCliente) {
+        Optional<Cliente> clienteOptional = findByIdOptional(idCliente);
+        if (clienteOptional.isPresent()) {
+            deleteById(idCliente);
+        }
+        return clienteOptional;
+    }
+
 }

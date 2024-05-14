@@ -41,6 +41,18 @@ CREATE TABLE IF NOT EXISTS salao.profissional (
    FOREIGN KEY (id_endereco) REFERENCES salao.endereco(id_endereco)
 );
 
+-- Tabela agendamento
+CREATE TABLE IF NOT EXISTS salao.agendamento (
+   id_agendamento UUID NOT NULL PRIMARY KEY,
+   dt_agendamento DATE NOT NULL,
+   hora_agendamento TIME NOT NULL,
+   status_agendamento INT,
+   id_cliente UUID NOT NULL,
+   id_servico UUID NOT NULL,
+   FOREIGN KEY (id_cliente) REFERENCES salao.cliente(id_cliente),
+   FOREIGN KEY (id_servico) REFERENCES salao.servico(id_servico)
+);
+
 -- Tabela metodoPagamento
 CREATE TABLE IF NOT EXISTS salao.metodo_pagamento (
    id_metodo_pagamento UUID NOT NULL PRIMARY KEY,
@@ -92,18 +104,6 @@ CREATE TABLE IF NOT EXISTS salao.avaliacao (
    id_avaliacao UUID NOT NULL PRIMARY KEY,
    nota INT NOT NULL,
    dt_avaliacao DATE,
-   id_cliente UUID NOT NULL,
-   id_servico UUID NOT NULL,
-   FOREIGN KEY (id_cliente) REFERENCES salao.cliente(id_cliente),
-   FOREIGN KEY (id_servico) REFERENCES salao.servico(id_servico)
-);
-
--- Tabela agendamento
-CREATE TABLE IF NOT EXISTS salao.agendamento (
-   id_agendamento UUID NOT NULL PRIMARY KEY,
-   dt_agendamento DATE NOT NULL,
-   hora_agendamento TIME NOT NULL,
-   status_agendamento INT,
    id_cliente UUID NOT NULL,
    id_servico UUID NOT NULL,
    FOREIGN KEY (id_cliente) REFERENCES salao.cliente(id_cliente),

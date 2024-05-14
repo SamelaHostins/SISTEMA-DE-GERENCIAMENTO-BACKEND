@@ -1,4 +1,4 @@
-package salao.online.infra;
+package salao.online.infra.repositoriesImpl;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -6,7 +6,7 @@ import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 
 import salao.online.domain.entities.Avaliacao;
-import salao.online.domain.repositories.AvaliacaoRepository;
+import salao.online.infra.repositories.AvaliacaoRepository;
 
 @ApplicationScoped
 public class AvaliacaoRepositoryImpl implements AvaliacaoRepository {

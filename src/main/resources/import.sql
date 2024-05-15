@@ -62,7 +62,7 @@ VALUES
   ('b89e0123-e89b-12d3-a456-426614174010', 1, '634e5678-e89b-12d3-a456-426614174005', 'a78e9012-e89b-12d3-a456-426614174009');
 
 -- Inserir dados na tabela Agendamento
-INSERT INTO Agendamento (idAgendamento, nome, hora, cliente_id, servico_id) 
+INSERT INTO Agendamento (idAgendamento, nome, hora, idCliente, idServico) 
 VALUES 
   ('890e1234-e89b-12d3-a456-426614174007', 'Agendamento 1', 14, '234e5678-e89b-12d3-a456-426614174001', '678e9012-e89b-12d3-a456-426614174005'),
   ('990e1234-e89b-12d3-a456-426614174008', 'Agendamento 2', 15, '334e5678-e89b-12d3-a456-426614174002', '778e9012-e89b-12d3-a456-426614174006'),
@@ -71,7 +71,7 @@ VALUES
   ('c90e1234-e89b-12d3-a456-426614174011', 'Agendamento 5', 18, '634e5678-e89b-12d3-a456-426614174005', 'a78e9012-e89b-12d3-a456-426614174009');
 
 -- Inserir dados na tabela Calendario
-INSERT INTO Calendario (idCalendario, nome, hora, profissional_id) 
+INSERT INTO Calendario (idCalendario, nome, hora, idProfissional) 
 VALUES 
   ('901e2345-e89b-12d3-a456-426614174008', 'Calendário 1', 8, '345e6789-e89b-12d3-a456-426614174002'),
   ('a01e2345-e89b-12d3-a456-426614174009', 'Calendário 2', 9, '445e6789-e89b-12d3-a456-426614174003'),

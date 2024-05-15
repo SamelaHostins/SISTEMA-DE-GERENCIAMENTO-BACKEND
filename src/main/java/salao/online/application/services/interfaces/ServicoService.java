@@ -2,7 +2,7 @@ package salao.online.application.services.interfaces;
 
 import java.util.UUID;
 
-import salao.online.application.dtos.ServicoDTO;
+import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.domain.exceptions.ValidacaoException;
 
 public interface ServicoService {

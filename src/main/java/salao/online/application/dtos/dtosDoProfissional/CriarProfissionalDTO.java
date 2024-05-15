@@ -1,7 +1,4 @@
-package salao.online.application.dtos;
-
-import java.util.List;
-import java.util.UUID;
+package salao.online.application.dtos.dtosDoProfissional;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,17 +9,18 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProfissionalDTO{
-    
-    private UUID idProfissional;
+public class CriarProfissionalDTO{
+
     private String nome;
     private String sobrenome;
+    private String nomeSocial;
     private int idade;
     private String email;
     private String telefone;
-    private String usuario;
+    private String rua;
+    private String bairro;
+    private String cidade;
+    private int numero;
+    private String cep;
     private String senha;
-    private UUID idEndereco;
-    private List<ServicoDTO> servicos;
-    private List<EstoqueDTO> estoques;
 }

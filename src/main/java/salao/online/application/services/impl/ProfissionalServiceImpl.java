@@ -1,5 +1,6 @@
 package salao.online.application.services.impl;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -8,8 +9,10 @@ import javax.transaction.Transactional;
 
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
-import salao.online.application.dtos.ProfissionalDTO;
-import salao.online.application.mappers.EnderecoMapper;
+import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.ProfissionalDTO;
 import salao.online.application.mappers.EstoqueMapper;
 import salao.online.application.mappers.ProfissionalMapper;
 import salao.online.application.mappers.ServicoMapper;
@@ -29,9 +32,6 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     ServicoMapper servicoMapper;
 
     @Inject
-    EnderecoMapper enderecoMapper;
-
-    @Inject
     EstoqueMapper estoqueMapper;
 
     @Inject
@@ -41,11 +41,11 @@ public class ProfissionalServiceImpl implements ProfissionalService {
 
     @Override
     @Transactional
-    public ProfissionalDTO inserirProfissional(ProfissionalDTO profissionalDTO) {
-        Profissional profissional = profissionalMapper.toEntity(profissionalDTO);
+    public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO) {
+        Profissional profissional = profissionalMapper.criarDtoToEntity(profissionalDTO);
         logger.info("Salvando o profissional criado");
         profissionalRepository.persistAndFlush(profissional);
-        return getProfissionalDTO(profissional);
+        return profissionalMapper.toDtoCriar(profissional);
     }
 
     @Override
@@ -54,19 +54,48 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     }
 
     @Override
-    public ProfissionalDTO buscarProfissionalPorId(UUID idProfissional) throws ValidacaoException {
+    public BuscarProfissionalDTO buscarProfissionalPorId(UUID idProfissional) throws ValidacaoException {
         logger.info("Validando se o Profissional existe");
         Profissional profissional = profissionalRepository.findByIdOptional(idProfissional)
                 .orElseThrow(() -> new ValidacaoException(
                         MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
-        return getProfissionalDTO(profissional);
+        return getBuscarProfissionalDTO(profissional);
+    }
+
+    @Override
+    public ListarProfissionalDTO listarProfissionalPorId(UUID idProfissional) throws ValidacaoException {
+        logger.info("Validando se o Profissional existe");
+        Profissional profissional = profissionalRepository.findByIdOptional(idProfissional)
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
+        return getListarProfissionalDTO(profissional);
+    }
+
+    @Override
+    public ProfissionalDTO deletarCadastroDoProfissional(UUID idProfissional) throws ValidacaoException {
+        logger.info("Validando se o Cliente existe");
+        buscarProfissionalPorId(idProfissional);
+        Optional<Profissional> profissional = profissionalRepository.deletarCadastroDoProfissional(idProfissional);
+        return getProfissionalDTO(profissional.get());
     }
 
     private ProfissionalDTO getProfissionalDTO(Profissional profissional) {
         ProfissionalDTO profissionalDTO = profissionalMapper.toDto(profissional);
-        profissionalDTO.setIdEndereco(enderecoMapper.toDto(profissional.getEndereco()).getIdEndereco());
         profissionalDTO.setServicos(servicoMapper.toDtoList(profissional.getServicos()));
         profissionalDTO.setEstoques(estoqueMapper.toDtoList(profissional.getEstoques()));
+        return profissionalDTO;
+    }
+
+    private BuscarProfissionalDTO getBuscarProfissionalDTO(Profissional profissional) {
+        BuscarProfissionalDTO profissionalDTO = profissionalMapper.toDtoBuscar(profissional);
+        profissionalDTO.setServicos(servicoMapper.toDtoList(profissional.getServicos()));
+        profissionalDTO.setEstoques(estoqueMapper.toDtoList(profissional.getEstoques()));
+        return profissionalDTO;
+    }
+
+    private ListarProfissionalDTO getListarProfissionalDTO(Profissional profissional) {
+        ListarProfissionalDTO profissionalDTO = profissionalMapper.toDtoListar(profissional);
+        profissionalDTO.setServicos(servicoMapper.toDtoList(profissional.getServicos()));
         return profissionalDTO;
     }
 

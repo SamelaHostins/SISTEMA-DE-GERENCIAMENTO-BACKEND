@@ -7,7 +7,7 @@ import javax.inject.Inject;
 
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
-import salao.online.application.dtos.ServicoDTO;
+import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.application.mappers.AgendamentoMapper;
 import salao.online.application.mappers.AvaliacaoMapper;
 import salao.online.application.mappers.ProfissionalMapper;

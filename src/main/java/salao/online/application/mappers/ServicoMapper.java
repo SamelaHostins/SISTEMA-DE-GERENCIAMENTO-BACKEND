@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import salao.online.application.dtos.ServicoDTO;
+import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.domain.entities.Servico;
 
 @Mapper(componentModel = "cdi", uses = AvaliacaoMapper.class)

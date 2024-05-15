@@ -1,10 +1,3 @@
-/*
-Estamos usando estratégia de Tabela por subclasse (Class Table Inheritance), 
-cada classe na hierarquia de herança tem sua própria tabela no banco de dados, 
-incluindo os dados da classe base. Portanto, não há necessidade de uma tabela 
-separada para a classe base.
-*/
-
 CREATE SCHEMA IF NOT EXISTS salao;
 
 -- Tabela cliente
@@ -41,6 +34,23 @@ CREATE TABLE IF NOT EXISTS salao.profissional (
    FOREIGN KEY (id_endereco) REFERENCES salao.endereco(id_endereco)
 );
 
+-- Tabela metodoPagamento
+CREATE TABLE IF NOT EXISTS salao.metodo_pagamento (
+   id_metodo_pagamento UUID NOT NULL PRIMARY KEY,
+   nome VARCHAR(20) NOT NULL UNIQUE
+);
+
+-- Tabela servico
+CREATE TABLE IF NOT EXISTS salao.servico (
+   id_servico UUID NOT NULL PRIMARY KEY,
+   nome VARCHAR(55) NOT NULL,
+   especificacao VARCHAR(500),
+   termos_e_condicoes VARCHAR(1000),
+   valor DECIMAL(5, 2),
+   id_profissional UUID NOT NULL,
+   FOREIGN KEY (id_profissional) REFERENCES salao.profissional(id_profissional)
+);
+
 -- Tabela agendamento
 CREATE TABLE IF NOT EXISTS salao.agendamento (
    id_agendamento UUID NOT NULL PRIMARY KEY,
@@ -53,16 +63,10 @@ CREATE TABLE IF NOT EXISTS salao.agendamento (
    FOREIGN KEY (id_servico) REFERENCES salao.servico(id_servico)
 );
 
--- Tabela metodoPagamento
-CREATE TABLE IF NOT EXISTS salao.metodo_pagamento (
-   id_metodo_pagamento UUID NOT NULL PRIMARY KEY,
-   nome VARCHAR(20) NOT NULL UNIQUE
-);
-
 -- Tabela profissionalMetodoPagamento (para relacionamento muitos-para-muitos)
 CREATE TABLE IF NOT EXISTS salao.profissional_metodo_pagamento (
    id_profissional UUID,
-   id_metodo_pagamento INT,
+   id_metodo_pagamento UUID,
    PRIMARY KEY (id_profissional, id_metodo_pagamento),
    FOREIGN KEY (id_profissional) REFERENCES salao.profissional(id_profissional),
    FOREIGN KEY (id_metodo_pagamento) REFERENCES salao.metodo_pagamento(id_metodo_pagamento)
@@ -86,17 +90,6 @@ CREATE TABLE IF NOT EXISTS salao.produto (
    valor DOUBLE PRECISION,
    id_estoque UUID NOT NULL,
    FOREIGN KEY (id_estoque) REFERENCES salao.estoque(id_estoque)
-);
-
--- Tabela servico
-CREATE TABLE IF NOT EXISTS salao.servico (
-   id_servico UUID NOT NULL PRIMARY KEY,
-   nome VARCHAR(55) NOT NULL,
-   especificacao VARCHAR(500),
-   termos_e_condicoes VARCHAR(1000),
-   valor DECIMAL(5, 2),
-   id_profissional UUID NOT NULL,
-   FOREIGN KEY (id_profissional) REFERENCES salao.profissional(id_profissional)
 );
 
 -- Tabela avaliacao

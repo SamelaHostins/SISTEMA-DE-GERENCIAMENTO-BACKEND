@@ -1,3 +1,317 @@
 runtime: java
-
-
+openapi: 3.0.2
+info:
+  title: Swagger J&S Beauty - OpenAPI
+  version: 1.0.1
+  description: >
+    Sistema de Gerenciamento para Microempreendedores da área de estética.
+    Objetivos:
+    - disponibilizar interface intuitiva
+    - facilitar a organização dos compromissos dos profissionais por meio de calendários e da gestão de seus compromissos
+    - contribuir para o controle financeiro do profissional
+    - analisar o processo atual do Studio e de suas atividades e propor possíveis melhorias para aprimorar
+    - possibilitar a criação de estoques pro profissional poder ter controle dos seus produtos
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: samela@hostins.com.br
+tags:
+  - name: profissional
+    description: Profissional é o usuário que oferece os serviços
+  - name: cliente
+    description: Cliente é o usuário que busca por um serviço
+paths:
+  /cliente/criar:
+    post:
+      tags:
+        - cliente
+      summary: Cadastrar um cliente
+      operationId: criarCliente
+      requestBody:
+        description: Informações para cadastrar um cliente
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cliente'
+      responses:
+        '200':
+          description: Cliente criado com sucesso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '500':
+          description: Ocorreu um erro na requisição.
+  /cliente/buscar/{id_cliente}:
+    get:
+      tags:
+        - cliente
+      summary: Buscar um cliente
+      operationId: buscarClientePorId
+      parameters:
+        - name: id_cliente
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Busca realizada com sucesso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '404':
+          description: O cliente não foi encontrado
+        '500':
+          description: Ocorreu um erro na requisição.
+  /cliente/deletar/{id_cliente}:
+    delete:
+      tags:
+        - cliente
+      summary: Deletar um cliente
+      operationId: deletarCliente
+      parameters:
+        - name: id_cliente
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Cadastro deletado com sucesso!
+        '404':
+          description: O cliente não foi encontrado
+        '500':
+          description: Ocorreu um erro na requisição.
+  /cliente/atualizar/{id_cliente}:
+    put:
+      tags:
+        - cliente
+      summary: Atualizar um cliente
+      operationId: atualizarCliente
+      parameters:
+        - name: id_cliente
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Informações para atualizar o cliente
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cliente'
+      responses:
+        '200':
+          description: Cadastro atualizado com sucesso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '404':
+          description: O cliente não foi encontrado
+        '500':
+          description: Ocorreu um erro na requisição.
+components:
+  schemas:
+    Cliente:
+      type: object
+      properties:
+        id_cliente:
+          type: string
+          format: uuid
+        nome:
+          type: string
+        sobrenome:
+          type: string
+        email:
+          type: string
+        telefone:
+          type: string
+        usuario:
+          type: string
+        senha:
+          type: string
+      required:
+        - id_cliente
+        - nome
+        - sobrenome
+        - email
+        - telefone
+        - usuario
+        - senha
+    Endereco:
+      type: object
+      properties:
+        id_endereco:
+          type: string
+          format: uuid
+        rua:
+          type: string
+        bairro:
+          type: string
+        cidade:
+          type: string
+        numero:
+          type: integer
+        cep:
+          type: string
+      required:
+        - id_endereco
+        - cep
+    Profissional:
+      type: object
+      properties:
+        id_profissional:
+          type: string
+          format: uuid
+        nome:
+          type: string
+        sobrenome:
+          type: string
+        email:
+          type: string
+        telefone:
+          type: string
+        usuario:
+          type: string
+        senha:
+          type: string
+        id_endereco:
+          type: string
+          format: uuid
+      required:
+        - id_profissional
+        - nome
+        - sobrenome
+        - email
+        - telefone
+        - usuario
+        - senha
+        - id_endereco
+    Agendamento:
+      type: object
+      properties:
+        id_agendamento:
+          type: string
+          format: uuid
+        dt_agendamento:
+          type: string
+          format: date
+        hora_agendamento:
+          type: string
+          format: time
+        status_agendamento:
+          type: integer
+        id_cliente:
+          type: string
+          format: uuid
+        id_servico:
+          type: string
+          format: uuid
+      required:
+        - id_agendamento
+        - dt_agendamento
+        - hora_agendamento
+        - id_cliente
+        - id_servico
+    MetodoPagamento:
+      type: object
+      properties:
+        id_metodo_pagamento:
+          type: string
+          format: uuid
+        nome:
+          type: string
+      required:
+        - id_metodo_pagamento
+        - nome
+    Estoque:
+      type: object
+      properties:
+        id_estoque:
+          type: string
+          format: uuid
+        nome:
+          type: string
+        qtd_de_produtos:
+          type: integer
+        id_profissional:
+          type: string
+          format: uuid
+      required:
+        - id_estoque
+        - nome
+        - id_profissional
+    Produto:
+      type: object
+      properties:
+        id_produto:
+          type: string
+          format: uuid
+        nome:
+          type: string
+        dt_entrada:
+          type: string
+          format: date
+        dt_validade:
+          type: string
+          format: date
+        valor:
+          type: number
+          format: double
+        id_estoque:
+          type: string
+          format: uuid
+      required:
+        - id_produto
+        - id_estoque
+    Servico:
+      type: object
+      properties:
+        id_servico:
+          type: string
+          format: uuid
+        nome:
+          type: string
+        especificacao:
+          type: string
+        termos_e_condicoes:
+          type: string
+        valor:
+          type: number
+          format: decimal
+        id_profissional:
+          type: string
+          format: uuid
+      required:
+        - id_servico
+        - nome
+        - id_profissional
+    Avaliacao:
+      type: object
+      properties:
+        id_avaliacao:
+          type: string
+          format: uuid
+        nota:
+          type: integer
+        dt_avaliacao:
+          type: string
+          format: date
+        id_cliente:
+          type: string
+          format: uuid
+        id_servico:
+          type: string
+          format: uuid
+      required:
+        - id_avaliacao
+        - nota
+        - id_cliente
+        - id_servico

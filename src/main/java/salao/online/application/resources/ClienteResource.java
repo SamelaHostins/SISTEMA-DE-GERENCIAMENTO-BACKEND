@@ -1,8 +1,10 @@
 package salao.online.application.resources;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -36,6 +38,7 @@ public class ClienteResource {
 
     @Operation(summary = "Cadastrando um Cliente")
     @APIResponse(responseCode = "200", description = "Cliente criado com sucesso!")
+    @APIResponse(responseCode = "500", description = "Ocorreu um erro na requisição.")
     @POST
     @Path("/criar")
     public Response criarAluno(@RequestBody ClienteDTO dto) {
@@ -69,7 +72,7 @@ public class ClienteResource {
     @Operation(summary = "Deletando o cadastro de um cliente")
     @APIResponse(responseCode = "200", description = "Cadastro deletado com sucesso!")
     @APIResponse(responseCode = "404", description = "O cliente não foi encontrado")
-    @GET
+    @DELETE
     @Path("/deletar/{id_cliente}")
     public Response deletarCadastroCliente(@PathParam("id_cliente") UUID idCliente)
             throws ValidacaoException {
@@ -87,7 +90,7 @@ public class ClienteResource {
     @Operation(summary = "Atualizando o cadastro de um cliente")
     @APIResponse(responseCode = "200", description = "Cadastro atualizado com sucesso!")
     @APIResponse(responseCode = "404", description = "O cliente não foi encontrado")
-    @GET
+    @PUT
     @Path("/atualizar/{id_cliente}")
     public Response atualizarCadastroCliente(@RequestBody ClienteDTO clienteDTO)
             throws ValidacaoException {

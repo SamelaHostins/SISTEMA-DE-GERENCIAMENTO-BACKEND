@@ -1,12 +1,7 @@
 package salao.online.domain.entities;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
 
 import io.smallrye.common.constraint.NotNull;
 import lombok.Getter;
@@ -18,37 +13,32 @@ public abstract class Informacao {
     protected Informacao() {
     }
 
-    @NotBlank
-    @Size(min = 3, max = 25, message = "O nome deve ter entre 3 e 25 caracteres")    
+    @NotNull
     private @Getter @Setter String nome;
 
-    @NotBlank
-    @Size(min = 3, max = 25, message = "O sobrenome deve ter entre 3 e 25 caracteres")    
+    @NotNull
     private @Getter @Setter String sobrenome;
 
-    @NotEmpty
-    @Positive
+    @Column(name = "nome_social")
+    private @Getter @Setter String nomeSocial;
+
+    @NotNull
     private @Getter @Setter int idade;
 
-    @NotEmpty
-    @Email(message = "O e-mail deve ser válido")
-    @Size(max = 30, message = "O e-mail deve ter no máximo 30 caracteres")    
+    @NotNull
     private @Getter @Setter String email;
 
-    @NotEmpty
-    @Pattern(regexp = "^\\d+$", message = "O telefone deve conter apenas dígitos de 0 a 9")
-    @Size(max = 12, message = "O telefone deve ter no máximo 12 caracteres")
+    @NotNull
     private @Getter @Setter String telefone;
 
     @NotNull
-    @Size(min = 3, max = 25, message = "O usuário deve conter no máximo 25 caracteres")
-    private @Getter String usuario;
+    private @Getter @Setter String usuario;
 
     @NotNull
-    @Pattern(regexp = "^(?=.*[0-9]).{8}$", message = "A senha deve conter pelo menos um número")    
     private @Getter @Setter String senha;
 
-    public Informacao(String nome, String sobrenome, int idade, String email, String telefone, String usuario, String senha) {
+    public Informacao(String nome, String sobrenome, int idade, String email, String telefone, String usuario,
+            String senha) {
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.idade = idade;

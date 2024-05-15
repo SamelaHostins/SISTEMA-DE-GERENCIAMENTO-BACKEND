@@ -11,7 +11,9 @@ import javax.transaction.Transactional;
 
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
-import salao.online.application.dtos.ClienteDTO;
+import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
+import salao.online.application.dtos.dtosDeCliente.ClienteDTO;
+import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
 import salao.online.application.mappers.AgendamentoMapper;
 import salao.online.application.mappers.AvaliacaoMapper;
 import salao.online.application.mappers.ClienteMapper;
@@ -40,11 +42,16 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public ClienteDTO cadastrarCliente(ClienteDTO clienteDTO) {
-        Cliente cliente = clienteMapper.toEntity(clienteDTO);
+    public CriarClienteDTO cadastrarCliente(CriarClienteDTO clienteDTO) {
+        Cliente cliente = clienteMapper.criarDtoToEntity(clienteDTO);
+        if (clienteDTO.getNomeSocial() != null && !clienteDTO.getNomeSocial().isEmpty()) {
+            cliente.setUsuario(clienteDTO.getNomeSocial());
+        } else {
+            cliente.setUsuario(clienteDTO.getNome() + " " + clienteDTO.getSobrenome());
+        }
         logger.info("Salvando o cliente no bd");
         clienteRepository.persistAndFlush(cliente);
-        return getClienteDTO(cliente);
+        return clienteMapper.toDtoCriar(cliente);
     }
 
     @Override
@@ -63,12 +70,12 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public ClienteDTO buscarClientePorId(UUID idCliente) throws ValidacaoException {
+    public BuscarClienteDTO buscarClientePorId(UUID idCliente) throws ValidacaoException {
         logger.info("Validando se o Cliente existe");
         Cliente cliente = clienteRepository.findByIdOptional(idCliente)
                 .orElseThrow(() -> new ValidacaoException(
                         MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro()));
-        return getClienteDTO(cliente);
+        return getBuscarClienteDTO(cliente);
     }
 
     @Override
@@ -80,15 +87,22 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-   public List<ClienteDTO> buscarClientesPorNome() {
+   public List<BuscarClienteDTO> buscarClientesPorNome() {
       logger.info("Buscando de forma ordenada os clientes cadastrados");
       return clienteRepository.buscarClientesPorNome().stream()
-            .map(cliente -> getClienteDTO(cliente))
+            .map(cliente -> getBuscarClienteDTO(cliente))
             .collect(Collectors.toList());
    }
 
     private ClienteDTO getClienteDTO(Cliente cliente) {
         ClienteDTO clienteDTO = clienteMapper.toDto(cliente);
+        clienteDTO.setAvaliacoes(avaliacaoMapper.toDtoList(cliente.getAvaliacoes()));
+        clienteDTO.setAgendamentos(agendamentoMapper.toDtoList(cliente.getAgendamentos()));
+        return clienteDTO;
+    }
+
+    private BuscarClienteDTO getBuscarClienteDTO(Cliente cliente) {
+        BuscarClienteDTO clienteDTO = clienteMapper.toDtoBuscar(cliente);
         clienteDTO.setAvaliacoes(avaliacaoMapper.toDtoList(cliente.getAvaliacoes()));
         clienteDTO.setAgendamentos(agendamentoMapper.toDtoList(cliente.getAgendamentos()));
         return clienteDTO;

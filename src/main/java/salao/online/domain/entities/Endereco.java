@@ -8,12 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import io.smallrye.common.constraint.NotNull;
-
 import lombok.Getter;
 
 @Entity
@@ -31,22 +29,18 @@ public class Endereco {
     private @Getter UUID idEndereco;
 
     @NotEmpty
-    @Size(max = 20, message = "A rua deve ter no máximo 20 caracteres")
     private @Getter String rua;
 
     @NotEmpty
-    @Size(max = 20, message = "O bairro deve ter no máximo 20 caracteres")
     private @Getter String bairro;
 
     @NotEmpty
-    @Size(max = 20, message = "A cidade deve ter no máximo 20 caracteres")
     private @Getter String cidade;
 
     @NotEmpty
     private @Getter int numero;
 
     @NotNull
-    @Size(max = 20, message = "O cep deve ter no máximo 10 caracteres")
     private @Getter String cep;
 
     public Endereco(String rua, String bairro, String cidade, int numero, String cep) {

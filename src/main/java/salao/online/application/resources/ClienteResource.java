@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
@@ -16,7 +17,9 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
-import salao.online.application.dtos.ClienteDTO;
+import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
+import salao.online.application.dtos.dtosDeCliente.ClienteDTO;
+import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
 import salao.online.application.services.interfaces.ClienteService;
 import salao.online.domain.exceptions.ValidacaoException;
 
@@ -37,10 +40,10 @@ public class ClienteResource {
     @POST
     @Transactional
     @Path("/criar")
-    public Response criarAluno(@RequestBody ClienteDTO dto) {
+    public Response criarAluno(@Valid @RequestBody CriarClienteDTO dto) {
         try {
             LOG.info("Requisição recebida - Cadastrar Cliente");
-            ClienteDTO clienteDTO = clienteService.cadastrarCliente(dto);
+            CriarClienteDTO clienteDTO = clienteService.cadastrarCliente(dto);
             return Response.status(200).entity(clienteDTO).build();
         } catch (Exception ex) {
             return Response.status(500).entity("Ocorreu um erro na requisição.").build();
@@ -56,7 +59,7 @@ public class ClienteResource {
             throws ValidacaoException {
         try {
             LOG.info("Requisição recebida - Buscar o Cliente");
-            ClienteDTO clienteDTO = clienteService.buscarClientePorId(idCliente);
+            BuscarClienteDTO clienteDTO = clienteService.buscarClientePorId(idCliente);
             return Response.status(200).entity(clienteDTO).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
@@ -71,7 +74,7 @@ public class ClienteResource {
     public Response buscarClientes() {
         try {
             LOG.info("Requisição recebida - Buscar o Cliente");
-            List<ClienteDTO> clienteDTO = clienteService.buscarClientesPorNome();
+            List<BuscarClienteDTO> clienteDTO = clienteService.buscarClientesPorNome();
             return Response.status(200).entity(clienteDTO).build();
         } catch (Exception ex) {
             return Response.status(500).entity("Ocorreu um erro na requisição.").build();

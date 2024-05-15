@@ -13,4 +13,8 @@ public interface ClienteRepository extends PanacheRepositoryBase<Cliente, UUID> 
     public List<Avaliacao> buscarTodasAvaliacoesDoCliente(UUID idCliente);
 
     public Optional<Cliente> deletarCadastroDeCliente(UUID idCliente);
+
+    public List<Cliente> buscarClientesPorNome();
+
+    public Optional<Cliente> buscarClientePorId(UUID idCliente);
 }

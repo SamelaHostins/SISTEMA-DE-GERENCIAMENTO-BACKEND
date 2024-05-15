@@ -1,5 +1,6 @@
 package salao.online.application.services.interfaces;
 
+import java.util.List;
 import java.util.UUID;
 
 import salao.online.application.dtos.ClienteDTO;
@@ -15,4 +16,5 @@ public interface ClienteService {
 
     public ClienteDTO deletarCadastroCliente(UUID idCliente) throws ValidacaoException;
 
+    public List<ClienteDTO> buscarClientesPorNome();
 }

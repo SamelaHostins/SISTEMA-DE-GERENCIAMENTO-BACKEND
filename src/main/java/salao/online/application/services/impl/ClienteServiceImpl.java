@@ -1,7 +1,9 @@
 package salao.online.application.services.impl;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -76,6 +78,14 @@ public class ClienteServiceImpl implements ClienteService {
         Optional<Cliente> cliente = clienteRepository.deletarCadastroDeCliente(idCliente);
         return getClienteDTO(cliente.get());
     }
+
+    @Override
+   public List<ClienteDTO> buscarClientesPorNome() {
+      logger.info("Buscando de forma ordenada os clientes cadastrados");
+      return clienteRepository.buscarClientesPorNome().stream()
+            .map(cliente -> getClienteDTO(cliente))
+            .collect(Collectors.toList());
+   }
 
     private ClienteDTO getClienteDTO(Cliente cliente) {
         ClienteDTO clienteDTO = clienteMapper.toDto(cliente);

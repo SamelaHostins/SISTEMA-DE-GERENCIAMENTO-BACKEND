@@ -37,4 +37,16 @@ public class ClienteRepositoryImpl implements ClienteRepository {
         return clienteOptional;
     }
 
+    @Override
+    public Optional<Cliente> buscarClientePorId(UUID idCliente) {
+        return find("id_cliente", idCliente).firstResultOptional();
+    }
+
+    @Override
+    public List<Cliente> buscarClientesPorNome() {
+        List<Cliente> clientes = listAll();
+        clientes.sort(Comparator.comparing(Cliente::getNome));
+        return clientes;
+    }
+
 }

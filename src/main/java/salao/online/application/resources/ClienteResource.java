@@ -1,19 +1,14 @@
 package salao.online.application.resources;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
@@ -40,6 +35,7 @@ public class ClienteResource {
     @APIResponse(responseCode = "200", description = "Cliente criado com sucesso!")
     @APIResponse(responseCode = "500", description = "Ocorreu um erro na requisição.")
     @POST
+    @Transactional
     @Path("/criar")
     public Response criarAluno(@RequestBody ClienteDTO dto) {
         try {
@@ -69,10 +65,24 @@ public class ClienteResource {
         }
     }
 
+    @Operation(summary = "Buscando todos os cliente")
+    @APIResponse(responseCode = "200", description = "Busca realizada com sucesso!")
+    @GET
+    public Response buscarClientes() {
+        try {
+            LOG.info("Requisição recebida - Buscar o Cliente");
+            List<ClienteDTO> clienteDTO = clienteService.buscarClientesPorNome();
+            return Response.status(200).entity(clienteDTO).build();
+        } catch (Exception ex) {
+            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+        }
+    }
+
     @Operation(summary = "Deletando o cadastro de um cliente")
     @APIResponse(responseCode = "200", description = "Cadastro deletado com sucesso!")
     @APIResponse(responseCode = "404", description = "O cliente não foi encontrado")
     @DELETE
+    @Transactional
     @Path("/deletar/{id_cliente}")
     public Response deletarCadastroCliente(@PathParam("id_cliente") UUID idCliente)
             throws ValidacaoException {
@@ -91,6 +101,7 @@ public class ClienteResource {
     @APIResponse(responseCode = "200", description = "Cadastro atualizado com sucesso!")
     @APIResponse(responseCode = "404", description = "O cliente não foi encontrado")
     @PUT
+    @Transactional
     @Path("/atualizar/{id_cliente}")
     public Response atualizarCadastroCliente(@RequestBody ClienteDTO clienteDTO)
             throws ValidacaoException {

@@ -16,14 +16,6 @@ import salao.online.infra.repositories.ServicoRepository;
 public class ServicoRepositoryImpl implements ServicoRepository {
 
     @Override
-    public List<Servico> buscarServicos() {
-        List<Servico> servicos = listAll();
-        return servicos.stream()
-                .sorted(Comparator.comparing(Servico::getNome))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<Avaliacao> buscarAvaliacoesDoServico(UUID idServico) {
         Servico servico = findByIdOptional(idServico).orElse(null);
         if (servico != null) {

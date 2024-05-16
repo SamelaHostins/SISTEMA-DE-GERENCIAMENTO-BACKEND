@@ -20,12 +20,12 @@ tags:
   - name: Cliente
     description: Cliente é o usuário que busca por um serviço
 paths:
-  /cliente/criar:
+  /cliente/cadastrar:
     post:
       tags:
         - Cliente
       summary: Cadastrar um cliente
-      operationId: criarCliente
+      operationId: cadastrarCliente
       requestBody:
         description: Informações para cadastrar um cliente
         required: true

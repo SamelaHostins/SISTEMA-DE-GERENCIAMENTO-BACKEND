@@ -32,7 +32,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     private static Logger logger = LoggerFactory.getLogger(LoggerFactory.class);
 
     @Override
-    public ProdutoDTO inserirProduto(ProdutoDTO produtoDTO) throws ValidacaoException {
+    public ProdutoDTO cadastrarProduto(ProdutoDTO produtoDTO) throws ValidacaoException {
         Produto produto = produtoMapper.toEntity(produtoDTO);
         logger.info("Salvando o produto criado");
         produtoRepository.persistAndFlush(produto);

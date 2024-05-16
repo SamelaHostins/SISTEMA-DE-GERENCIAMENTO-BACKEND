@@ -49,7 +49,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     }
 
     @Override
-    public ProfissionalDTO atualizarProfissional(ProfissionalDTO profissionalDTO) throws ValidacaoException {
+    public ProfissionalDTO atualizarCadastroDoProfissional(ProfissionalDTO profissionalDTO) throws ValidacaoException {
         throw new UnsupportedOperationException("Unimplemented method 'atualizarProfissional'");
     }
 

@@ -61,17 +61,22 @@ public class Servico {
     private @Getter List<Avaliacao> avaliacoes;
 
     @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente")
+    private @Getter List<Produto> produtos;
+
+    @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "servico")
     private @Getter List<Agendamento> agendamentos;
 
     public Servico(String nome, String especificacao, String termosECondicoes, double valor, 
-    Profissional profissional, List<Avaliacao> avaliacoes, List<Agendamento> agendamentos) {
+    Profissional profissional, List<Avaliacao> avaliacoes, List<Produto> produtos, List<Agendamento> agendamentos) {
         this.nome = nome;
         this.especificacao = especificacao;
         this.termosECondicoes = termosECondicoes;
         this.valor = valor;
         this.profissional = profissional;
         this.avaliacoes = avaliacoes;
+        this.produtos = produtos;
         this.agendamentos = agendamentos;
     }
 

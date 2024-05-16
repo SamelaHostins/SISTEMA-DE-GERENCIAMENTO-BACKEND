@@ -12,7 +12,7 @@ public interface ProfissionalService {
 
     public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO);
 
-    public ProfissionalDTO atualizarProfissional(ProfissionalDTO profissionalDTO) throws ValidacaoException;
+    public ProfissionalDTO atualizarCadastroDoProfissional(ProfissionalDTO profissionalDTO) throws ValidacaoException;
 
     public BuscarProfissionalDTO buscarProfissionalPorId(UUID idProfissional) throws ValidacaoException;
 

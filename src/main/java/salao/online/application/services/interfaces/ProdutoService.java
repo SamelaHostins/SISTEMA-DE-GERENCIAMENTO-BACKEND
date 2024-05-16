@@ -8,7 +8,7 @@ import salao.online.domain.exceptions.ValidacaoException;
 
 public interface ProdutoService {
 
-    public ProdutoDTO inserirProduto(ProdutoDTO servicoDTO) throws ValidacaoException;
+    public ProdutoDTO cadastrarProduto(ProdutoDTO servicoDTO) throws ValidacaoException;
 
     public ProdutoDTO atualizarProduto(ProdutoDTO servicoDTO) throws ValidacaoException;
 

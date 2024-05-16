@@ -39,8 +39,8 @@ public class ClienteResource {
     @APIResponse(responseCode = "500", description = "Ocorreu um erro na requisição.")
     @POST
     @Transactional
-    @Path("/criar")
-    public Response criarAluno(@Valid @RequestBody CriarClienteDTO dto) {
+    @Path("/cadastrar")
+    public Response cadastrarCliente(@Valid @RequestBody CriarClienteDTO dto) {
         try {
             LOG.info("Requisição recebida - Cadastrar Cliente");
             CriarClienteDTO clienteDTO = clienteService.cadastrarCliente(dto);

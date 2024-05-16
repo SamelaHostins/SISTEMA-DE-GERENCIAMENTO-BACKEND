@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import salao.online.application.dtos.AgendamentoDTO;
 import salao.online.application.dtos.AvaliacaoDTO;
+import salao.online.application.dtos.ProdutoDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,5 +24,6 @@ public class ServicoDTO {
     private double valor;
     private UUID idProfissional;
     private List<AvaliacaoDTO> avaliacoes;
+    private List<ProdutoDTO> produtos;
     private List<AgendamentoDTO> agendamentos;
 }

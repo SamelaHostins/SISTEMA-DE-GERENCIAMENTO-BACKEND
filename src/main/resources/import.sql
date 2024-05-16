@@ -1,11 +1,3 @@
--- Inserir dados na tabela Endereco
-INSERT INTO salao.endereco (idEndereco, rua, bairro, cidade, numero, cep) 
-VALUES 
-  ('123e4567-e89b-12d3-a456-426614174000', 'Rua A', 'Bairro X', 'Cidade Y', 123, '12345-678'),
-  ('223e4567-e89b-12d3-a456-426614174001', 'Rua B', 'Bairro Y', 'Cidade Z', 456, '23456-789'),
-  ('323e4567-e89b-12d3-a456-426614174002', 'Rua C', 'Bairro Z', 'Cidade X', 789, '34567-890'),
-  ('423e4567-e89b-12d3-a456-426614174003', 'Rua D', 'Bairro W', 'Cidade Y', 1011, '45678-901'),
-  ('523e4567-e89b-12d3-a456-426614174004', 'Rua E', 'Bairro V', 'Cidade Z', 1213, '56789-012');
 
 -- Inserir dados na tabela Cliente
 INSERT INTO salao.cliente (idCliente) 
@@ -17,13 +9,13 @@ VALUES
   ('634e5678-e89b-12d3-a456-426614174005');
 
 -- Inserir dados na tabela Profissional
-INSERT INTO salao.profissional (idProfissional, metodosDePagamento, ) 
+INSERT INTO salao.profissional (idProfissional, metodosDePagamento, rua, bairro, cidade, numero, cep) 
 VALUES 
-  ('345e6789-e89b-12d3-a456-426614174002', 'Cartão de crédito', '123e4567-e89b-12d3-a456-426614174000'),
-  ('445e6789-e89b-12d3-a456-426614174003', 'Dinheiro', '223e4567-e89b-12d3-a456-426614174001'),
-  ('545e6789-e89b-12d3-a456-426614174004', 'Transferência bancária', '323e4567-e89b-12d3-a456-426614174002'),
-  ('645e6789-e89b-12d3-a456-426614174005', 'PIX', '423e4567-e89b-12d3-a456-426614174003'),
-  ('745e6789-e89b-12d3-a456-426614174006', 'Boleto', '523e4567-e89b-12d3-a456-426614174004');
+  ('345e6789-e89b-12d3-a456-426614174002', 'Cartão de crédito', '123e4567-e89b-12d3-a456-426614174000', 'Rua A', 'Bairro X', 'Cidade Y', 123, '12345-678'),
+  ('445e6789-e89b-12d3-a456-426614174003', 'Dinheiro', '223e4567-e89b-12d3-a456-426614174001', 'Rua B', 'Bairro Y', 'Cidade Z', 456, '23456-789'),
+  ('545e6789-e89b-12d3-a456-426614174004', 'Transferência bancária', '323e4567-e89b-12d3-a456-426614174002', 'Rua C', 'Bairro Z', 'Cidade X', 789, '34567-890'),
+  ('645e6789-e89b-12d3-a456-426614174005', 'PIX', '423e4567-e89b-12d3-a456-426614174003', 'Rua D', 'Bairro W', 'Cidade Y', 1011, '45678-901'),
+  ('745e6789-e89b-12d3-a456-426614174006', 'Boleto', '523e4567-e89b-12d3-a456-426614174004', 'Rua E', 'Bairro V', 'Cidade Z', 1213, '56789-012');
 
 -- Inserir dados na tabela Estoque
 INSERT INTO salao.estoque (idEstoque, nome, qtdProdutos, idProfissional) 

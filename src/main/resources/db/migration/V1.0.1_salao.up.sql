@@ -18,18 +18,7 @@ CREATE TABLE IF NOT EXISTS salao.cliente (
    CHECK (idade > 0),
    CHECK (telefone ~ '^[0-9]+$')
 );
-
--- Tabela endereco
-CREATE TABLE IF NOT EXISTS salao.endereco (
-   id_endereco UUID NOT NULL PRIMARY KEY,
-   rua VARCHAR(20),
-   bairro VARCHAR(20),
-   cidade VARCHAR(20),
-   numero INT4,
-   cep VARCHAR(10) NOT NULL
-   CHECK (numero >= 0)
-);
-
+ 
 -- Tabela profissional
 CREATE TABLE IF NOT EXISTS salao.profissional (
    id_profissional UUID NOT NULL PRIMARY KEY,
@@ -41,8 +30,12 @@ CREATE TABLE IF NOT EXISTS salao.profissional (
    telefone VARCHAR(12) NOT NULL,
    usuario VARCHAR(25) NOT NULL,
    senha VARCHAR(8) NOT NULL,
-   id_endereco UUID NOT NULL,
-   FOREIGN KEY (id_endereco) REFERENCES salao.endereco(id_endereco),
+   rua VARCHAR(20),
+   bairro VARCHAR(20),
+   cidade VARCHAR(20),
+   numero INT4,
+   cep VARCHAR(10) NOT NULL
+   CHECK (numero >= 0)
    CHECK (LENGTH(nome) >= 3 AND LENGTH(nome) <= 25),
    CHECK (LENGTH(sobrenome) >= 3 AND LENGTH(sobrenome) <= 25),
    CHECK (senha ~ '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8}$'),

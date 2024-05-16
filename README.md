@@ -1,4 +1,4 @@
-# salao.online
+## salao.online
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
@@ -46,6 +46,22 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 You can then execute your native executable with: `./target/salao.online-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
+
+## Objetivos
+
+
+
+## Como usar
+
+Para rodar o trabalho, o processo envolve uma série de comandos Maven específicos para compilar e executar nosso projeto Java com Quarkus de forma eficiente. Primeiramente, é necessário utilizar o comando "mvn clean install". Aqui, mvn indica que estamos utilizando o Maven, uma ferramenta fundamental para automação de compilação e gerenciamento de dependências em projetos Java. O parâmetro clean tem a função de limpar artefatos de compilações anteriores, enquanto install executa a compilação do projeto, realiza os testes necessários e gera um pacote do projeto. Este arquivo é então disponibilizado no repositório local do Maven, permitindo seu uso em outros projetos. Depois de concluir essa etapa, prossegue com o comando "mvn quarkus:dev" ou "mvn quarkus dev". Aqui, novamente mvn indica o uso do Maven, enquanto quarkus:dev é específico para projetos Quarkus. Este comando inicia um servidor de desenvolvimento que monitora automaticamente o código. Ele detecta alterações em tempo real e recarrega o servidor dinamicamente, o que permite visualizar instantaneamente as mudanças enquanto é desenvolvido. Essa abordagem acelera significativamente o ciclo de desenvolvimento, eliminando a necessidade de reinicializações manuais do servidor após cada modificação.
+
+## Tecnologias
+
+* Maven v3.9.6
+* Java v17
+* Quarkus v2.15.3
+* Mastruct v1.5.5
+* Hibernate v5.5.7
 
 ## Related Guides
 

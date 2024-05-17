@@ -1,6 +1,8 @@
 package salao.online.application.services.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -99,6 +101,36 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteRepository.buscarClientesPorNome().stream()
                 .map(cliente -> getBuscarClienteDTO(cliente))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Integer> obterFaixasEtariasDasClientes() {
+        List<BuscarClienteDTO> clientes = clienteRepository.buscarClientesPorNome().stream()
+        .map(cliente -> getBuscarClienteDTO(cliente))
+        .collect(Collectors.toList());
+        Map<String, Integer> distribuicao = new HashMap<>();
+        distribuicao.put("abaixo_18", 0);
+        distribuicao.put("de_18_a_25", 0);
+        distribuicao.put("de_25_a_30", 0);
+        distribuicao.put("de_30_a_40", 0);
+        distribuicao.put("acima_40", 0);
+
+        for (BuscarClienteDTO cliente : clientes) {
+            int idade = cliente.getIdade();
+            if (idade < 18) {
+                distribuicao.put("abaixo_18", distribuicao.get("abaixo_18") + 1);
+            } else if (idade <= 25) {
+                distribuicao.put("de_18_a_25", distribuicao.get("de_18_a_25") + 1);
+            } else if (idade <= 30) {
+                distribuicao.put("de_25_a_30", distribuicao.get("de_25_a_30") + 1);
+            } else if (idade <= 40) {
+                distribuicao.put("de_30_a_40", distribuicao.get("de_30_a_40") + 1);
+            } else {
+                distribuicao.put("acima_40", distribuicao.get("acima_40") + 1);
+            }
+        }
+
+        return distribuicao;
     }
 
     private ClienteDTO getClienteDTO(Cliente cliente) {

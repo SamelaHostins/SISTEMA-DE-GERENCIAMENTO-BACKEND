@@ -29,7 +29,7 @@ import salao.online.domain.exceptions.ValidacaoException;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ClienteResource {
-    
+
     @Inject
     ClienteService clienteService;
 
@@ -120,5 +120,17 @@ public class ClienteResource {
         }
     }
 
-
+    @Operation(summary = "Buscando as faixas etarias das clientes cadastradas")
+    @APIResponse(responseCode = "200", description = "Busca realizada com sucesso!")
+    @GET
+    @Path("/faixas-etarias")
+    public Response obterFaixasEtariasDasClientes() {
+        try {
+            LOG.info("Requisição recebida - Buscar as faixas etarias das clientes cadastradas");
+            clienteService.obterFaixasEtariasDasClientes();
+            return Response.status(200).build();
+        } catch (Exception ex) {
+            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+        }
+    }
 }

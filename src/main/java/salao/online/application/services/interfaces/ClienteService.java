@@ -1,6 +1,7 @@
 package salao.online.application.services.interfaces;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
@@ -20,4 +21,6 @@ public interface ClienteService {
     public ClienteDTO deletarCadastroCliente(UUID idCliente) throws ValidacaoException;
 
     public List<BuscarClienteDTO> buscarClientesPorNome();
+
+    public Map<String, Integer> obterFaixasEtariasDasClientes();
 }

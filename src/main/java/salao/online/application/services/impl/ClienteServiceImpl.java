@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
+import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.ClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
@@ -55,15 +56,21 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public ClienteDTO atualizarCadastroCliente(ClienteDTO clienteDTO) throws ValidacaoException {
+    public AtualizarClienteDTO atualizarCadastroCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException {
         Optional<Cliente> clienteOptional = clienteRepository.findByIdOptional(clienteDTO.getIdCliente());
         if (clienteOptional.isPresent()) {
             Cliente cliente = clienteOptional.get();
-            cliente.atualizarCadastroCliente(clienteDTO.getNome(), clienteDTO.getSobrenome(), clienteDTO.getIdade(),
-                    clienteDTO.getEmail(), clienteDTO.getTelefone(), clienteDTO.getSenha());
+            cliente.atualizarCadastroCliente(clienteDTO.getNome(), clienteDTO.getSobrenome(),
+                    clienteDTO.getNomeSocial(), clienteDTO.getIdade(), clienteDTO.getEmail(),
+                    clienteDTO.getTelefone(), clienteDTO.getSenha());
+            if (clienteDTO.getNomeSocial() != null && !clienteDTO.getNomeSocial().isEmpty()) {
+                cliente.setUsuario(clienteDTO.getNomeSocial());
+            } else {
+                cliente.setUsuario(clienteDTO.getNome() + " " + clienteDTO.getSobrenome());
+            }
             logger.info("Salvando registro atualizado");
             clienteRepository.persistAndFlush(cliente);
-            return getClienteDTO(cliente);
+            return clienteMapper.toDtoAtualizar(cliente);
         } else {
             throw new ValidacaoException(MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro());
         }
@@ -87,12 +94,12 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-   public List<BuscarClienteDTO> buscarClientesPorNome() {
-      logger.info("Buscando de forma ordenada os clientes cadastrados");
-      return clienteRepository.buscarClientesPorNome().stream()
-            .map(cliente -> getBuscarClienteDTO(cliente))
-            .collect(Collectors.toList());
-   }
+    public List<BuscarClienteDTO> buscarClientesPorNome() {
+        logger.info("Buscando de forma ordenada os clientes cadastrados");
+        return clienteRepository.buscarClientesPorNome().stream()
+                .map(cliente -> getBuscarClienteDTO(cliente))
+                .collect(Collectors.toList());
+    }
 
     private ClienteDTO getClienteDTO(Cliente cliente) {
         ClienteDTO clienteDTO = clienteMapper.toDto(cliente);

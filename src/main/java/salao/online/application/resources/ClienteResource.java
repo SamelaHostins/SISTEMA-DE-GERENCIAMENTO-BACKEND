@@ -17,6 +17,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
+import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.ClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
@@ -106,11 +107,11 @@ public class ClienteResource {
     @PUT
     @Transactional
     @Path("/atualizar/{id_cliente}")
-    public Response atualizarCadastroCliente(@RequestBody ClienteDTO clienteDTO)
+    public Response atualizarCadastroCliente(@RequestBody AtualizarClienteDTO clienteDTO)
             throws ValidacaoException {
         try {
             LOG.info("Requisição recebida - Atualizar o cadastro do Cliente");
-            ClienteDTO clienteAtualizado = clienteService.atualizarCadastroCliente(clienteDTO);
+            AtualizarClienteDTO clienteAtualizado = clienteService.atualizarCadastroCliente(clienteDTO);
             return Response.status(200).entity(clienteAtualizado).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();

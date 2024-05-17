@@ -3,6 +3,7 @@ package salao.online.application.services.interfaces;
 import java.util.List;
 import java.util.UUID;
 
+import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.ClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
@@ -12,7 +13,7 @@ public interface ClienteService {
 
     public CriarClienteDTO cadastrarCliente(CriarClienteDTO clienteDTO);
 
-    public ClienteDTO atualizarCadastroCliente(ClienteDTO clienteDTO) throws ValidacaoException;
+    public AtualizarClienteDTO atualizarCadastroCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException;
 
     public BuscarClienteDTO buscarClientePorId(UUID idCliente) throws ValidacaoException;
 

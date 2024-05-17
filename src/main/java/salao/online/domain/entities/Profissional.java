@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -19,10 +18,10 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.smallrye.common.constraint.NotNull;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(schema = "salao", name = "profissional", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "id_endereco" }) })
+@Table(schema = "salao", name = "profissional")
 public class Profissional extends Informacao {
 
     protected Profissional() {
@@ -36,19 +35,19 @@ public class Profissional extends Informacao {
     private @Getter UUID idProfissional;
 
     @NotEmpty
-    private @Getter String rua;
+    private @Getter @Setter String rua;
 
     @NotEmpty
-    private @Getter String bairro;
+    private @Getter @Setter String bairro;
 
     @NotEmpty
-    private @Getter String cidade;
+    private @Getter @Setter String cidade;
 
     @NotEmpty
-    private @Getter int numero;
+    private @Getter @Setter int numero;
 
     @NotNull
-    private @Getter String cep;
+    private @Getter @Setter String cep;
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
@@ -58,10 +57,10 @@ public class Profissional extends Informacao {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
     private @Getter List<Estoque> estoques;
 
-    public Profissional(String nome, String sobrenome, int idade, String email, 
-    String telefone, String usuario, String senha, String rua, String bairro, String cidade,
-    int numero, String cep, List<Servico> servicos, List<Estoque> estoques) {
-        super(nome, sobrenome, idade, email, telefone, usuario, senha);
+    public Profissional(String nome, String sobrenome, String nomeSocial, int idade, String email,
+            String telefone, String usuario, String senha, String rua, String bairro, String cidade,
+            int numero, String cep, List<Servico> servicos, List<Estoque> estoques) {
+        super(nome, sobrenome, nomeSocial, idade, email, telefone, usuario, senha);
         this.rua = rua;
         this.bairro = bairro;
         this.cidade = cidade;
@@ -69,6 +68,24 @@ public class Profissional extends Informacao {
         this.cep = cep;
         this.servicos = servicos;
         this.estoques = estoques;
+    }
+
+    public Profissional atualizarCadastroProfissional(String novoNome, String novoSobrenome, String novoNomeSocial,
+            int novaIdade, String novoEmail, String novoTelefone, String novaSenha, String novaRua,
+            String novoBairro, String novaCidade, int novoNumero, String novoCep) {
+        setNome(novoNome);
+        setSobrenome(novoSobrenome);
+        setNomeSocial(novoNomeSocial);
+        setIdade(novaIdade);
+        setEmail(novoEmail);
+        setTelefone(novoTelefone);
+        setSenha(novaSenha);
+        setRua(novaRua);
+        setBairro(novoBairro);
+        setCidade(novaCidade);
+        setNumero(novoNumero);
+        setCep(novoCep);
+        return this;
     }
 
 }

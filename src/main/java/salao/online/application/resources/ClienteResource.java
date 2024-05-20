@@ -6,6 +6,7 @@ import javax.ws.rs.core.Response;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -127,8 +128,8 @@ public class ClienteResource {
     public Response obterFaixasEtariasDasClientes() {
         try {
             LOG.info("Requisição recebida - Buscar as faixas etarias das clientes cadastradas");
-            clienteService.obterFaixasEtariasDasClientes();
-            return Response.status(200).build();
+            Map<String, Integer> faixasEtarias = clienteService.obterFaixasEtariasDasClientes();
+            return Response.status(200).entity(faixasEtarias).build();
         } catch (Exception ex) {
             return Response.status(500).entity("Ocorreu um erro na requisição.").build();
         }

@@ -6,6 +6,7 @@ import javax.ws.rs.core.Response;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -17,6 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
+import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.ClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
@@ -28,7 +30,7 @@ import salao.online.domain.exceptions.ValidacaoException;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ClienteResource {
-    
+
     @Inject
     ClienteService clienteService;
 
@@ -106,11 +108,11 @@ public class ClienteResource {
     @PUT
     @Transactional
     @Path("/atualizar/{id_cliente}")
-    public Response atualizarCadastroCliente(@RequestBody ClienteDTO clienteDTO)
+    public Response atualizarCadastroCliente(@RequestBody AtualizarClienteDTO clienteDTO)
             throws ValidacaoException {
         try {
             LOG.info("Requisição recebida - Atualizar o cadastro do Cliente");
-            ClienteDTO clienteAtualizado = clienteService.atualizarCadastroCliente(clienteDTO);
+            AtualizarClienteDTO clienteAtualizado = clienteService.atualizarCadastroCliente(clienteDTO);
             return Response.status(200).entity(clienteAtualizado).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
@@ -119,5 +121,17 @@ public class ClienteResource {
         }
     }
 
-
+    @Operation(summary = "Buscando as faixas etarias das clientes cadastradas")
+    @APIResponse(responseCode = "200", description = "Busca realizada com sucesso!")
+    @GET
+    @Path("/faixas-etarias")
+    public Response obterFaixasEtariasDasClientes() {
+        try {
+            LOG.info("Requisição recebida - Buscar as faixas etarias das clientes cadastradas");
+            Map<String, Integer> faixasEtarias = clienteService.obterFaixasEtariasDasClientes();
+            return Response.status(200).entity(faixasEtarias).build();
+        } catch (Exception ex) {
+            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+        }
+    }
 }

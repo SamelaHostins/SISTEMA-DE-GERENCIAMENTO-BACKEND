@@ -16,8 +16,8 @@ import com.oracle.svm.core.annotate.Inject;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.application.services.interfaces.ServicoService;
 
-@Path("/profissional")
-@Tag(name = "Endpoints do Profissional")
+@Path("/servico")
+@Tag(name = "Endpoints do Servico")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ServicoResource {

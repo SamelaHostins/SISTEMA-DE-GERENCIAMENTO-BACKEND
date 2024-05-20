@@ -37,10 +37,11 @@ public abstract class Informacao {
     @NotNull
     private @Getter @Setter String senha;
 
-    public Informacao(String nome, String sobrenome, int idade, String email, String telefone, String usuario,
+    public Informacao(String nome, String sobrenome, String nomeSocial, int idade, String email, String telefone, String usuario,
             String senha) {
         this.nome = nome;
         this.sobrenome = sobrenome;
+        this.nomeSocial = nomeSocial;
         this.idade = idade;
         this.email = email;
         this.telefone = telefone;

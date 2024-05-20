@@ -19,6 +19,8 @@ tags:
     description: Profissional é o usuário que oferece os serviços
   - name: Cliente
     description: Cliente é o usuário que busca por um serviço
+  - name: Serviço
+    description: Serviço são as atividades que o profissional desempenha
 paths:
   /cliente/cadastrar:
     post:
@@ -117,6 +119,127 @@ paths:
           description: O cliente não foi encontrado
         "500":
           description: Ocorreu um erro na requisição.
+          /profissional/cadastrar:
+    post:
+      tags:
+        - Profissional
+      summary: Cadastrar um profissional
+      operationId: cadastrarProfissional
+      requestBody:
+        description: Informações para cadastrar um profissional
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Profissional"
+      responses:
+        "200":
+          description: Profissional criado com sucesso!
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profissional"
+        "500":
+          description: Ocorreu um erro na requisição.
+  /profissional/buscar/{id_profissional}:
+    get:
+      tags:
+        - Profissional
+      summary: Buscar um profissional
+      operationId: buscarProfissionalPorId
+      parameters:
+        - name: id_profissional
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Busca realizada com sucesso!
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profissional"
+        "404":
+          description: O profissional não foi encontrado
+        "500":
+          description: Ocorreu um erro na requisição.
+  /profissional/deletar/{id_profissional}:
+    delete:
+      tags:
+        - Profissional
+      summary: Deletar um profissional
+      operationId: deletarProfissional
+      parameters:
+        - name: id_profissional
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Cadastro deletado com sucesso!
+        "404":
+          description: O profissional não foi encontrado
+        "500":
+          description: Ocorreu um erro na requisição.
+  /profissional/atualizar/{id_profissional}:
+    put:
+      tags:
+        - Profissional
+      summary: Atualizar um profissional
+      operationId: atualizarProfissional
+      parameters:
+        - name: id_profissional
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Informações para atualizar o profissional
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Profissional"
+      responses:
+        "200":
+          description: Cadastro atualizado com sucesso!
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profissional"
+        "404":
+          description: O profissional não foi encontrado
+        "500":
+          description: Ocorreu um erro na requisição.
+  /servico/listar-servicos/{id_profissional}:
+    get:
+      tags:
+        - Servico
+      summary: Listar todos os serviços de um profissional
+      operationId: listarServicosDoProfissional
+      parameters:
+        - name: id_profissional
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Busca realizada com sucesso!
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Servico"
+        "500":
+          description: Ocorreu um erro na requisição.
 components:
   schemas:
     Cliente:
@@ -147,25 +270,6 @@ components:
         - telefone
         - usuario
         - senha
-    Endereco:
-      type: object
-      properties:
-        id_endereco:
-          type: string
-          format: uuid
-        rua:
-          type: string
-        bairro:
-          type: string
-        cidade:
-          type: string
-        numero:
-          type: int4
-        cep:
-          type: string
-      required:
-        - id_endereco
-        - cep
     Profissional:
       type: object
       properties:
@@ -186,9 +290,16 @@ components:
           type: string
         senha:
           type: string
-        id_endereco:
+        rua:
           type: string
-          format: uuid
+        bairro:
+          type: string
+        cidade:
+          type: string
+        numero:
+          type: int4
+        cep:
+          type: string
       required:
         - id_profissional
         - nome
@@ -197,7 +308,7 @@ components:
         - telefone
         - usuario
         - senha
-        - id_endereco
+        - cep
     Agendamento:
       type: object
       properties:

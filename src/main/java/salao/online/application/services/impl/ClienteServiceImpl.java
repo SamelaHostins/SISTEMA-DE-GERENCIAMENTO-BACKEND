@@ -1,6 +1,8 @@
 package salao.online.application.services.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -11,6 +13,7 @@ import javax.transaction.Transactional;
 
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
+import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.ClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
@@ -55,15 +58,21 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public ClienteDTO atualizarCadastroCliente(ClienteDTO clienteDTO) throws ValidacaoException {
+    public AtualizarClienteDTO atualizarCadastroCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException {
         Optional<Cliente> clienteOptional = clienteRepository.findByIdOptional(clienteDTO.getIdCliente());
         if (clienteOptional.isPresent()) {
             Cliente cliente = clienteOptional.get();
-            cliente.atualizarCadastroCliente(clienteDTO.getNome(), clienteDTO.getSobrenome(), clienteDTO.getIdade(),
-                    clienteDTO.getEmail(), clienteDTO.getTelefone(), clienteDTO.getSenha());
+            cliente.atualizarCadastroCliente(clienteDTO.getNome(), clienteDTO.getSobrenome(),
+                    clienteDTO.getNomeSocial(), clienteDTO.getIdade(), clienteDTO.getEmail(),
+                    clienteDTO.getTelefone(), clienteDTO.getSenha());
+            if (clienteDTO.getNomeSocial() != null && !clienteDTO.getNomeSocial().isEmpty()) {
+                cliente.setUsuario(clienteDTO.getNomeSocial());
+            } else {
+                cliente.setUsuario(clienteDTO.getNome() + " " + clienteDTO.getSobrenome());
+            }
             logger.info("Salvando registro atualizado");
             clienteRepository.persistAndFlush(cliente);
-            return getClienteDTO(cliente);
+            return clienteMapper.toDtoAtualizar(cliente);
         } else {
             throw new ValidacaoException(MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro());
         }
@@ -87,12 +96,42 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-   public List<BuscarClienteDTO> buscarClientesPorNome() {
-      logger.info("Buscando de forma ordenada os clientes cadastrados");
-      return clienteRepository.buscarClientesPorNome().stream()
-            .map(cliente -> getBuscarClienteDTO(cliente))
-            .collect(Collectors.toList());
-   }
+    public List<BuscarClienteDTO> buscarClientesPorNome() {
+        logger.info("Buscando de forma ordenada os clientes cadastrados");
+        return clienteRepository.buscarClientesPorNome().stream()
+                .map(cliente -> getBuscarClienteDTO(cliente))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Integer> obterFaixasEtariasDasClientes() {
+        List<BuscarClienteDTO> clientes = clienteRepository.buscarClientesPorNome().stream()
+        .map(cliente -> getBuscarClienteDTO(cliente))
+        .collect(Collectors.toList());
+        Map<String, Integer> distribuicao = new HashMap<>();
+        distribuicao.put("abaixo_18", 0);
+        distribuicao.put("de_18_a_25", 0);
+        distribuicao.put("de_25_a_30", 0);
+        distribuicao.put("de_30_a_40", 0);
+        distribuicao.put("acima_40", 0);
+
+        for (BuscarClienteDTO cliente : clientes) {
+            int idade = cliente.getIdade();
+            if (idade < 18) {
+                distribuicao.put("abaixo_18", distribuicao.get("abaixo_18") + 1);
+            } else if (idade <= 25) {
+                distribuicao.put("de_18_a_25", distribuicao.get("de_18_a_25") + 1);
+            } else if (idade <= 30) {
+                distribuicao.put("de_25_a_30", distribuicao.get("de_25_a_30") + 1);
+            } else if (idade <= 40) {
+                distribuicao.put("de_30_a_40", distribuicao.get("de_30_a_40") + 1);
+            } else {
+                distribuicao.put("acima_40", distribuicao.get("acima_40") + 1);
+            }
+        }
+
+        return distribuicao;
+    }
 
     private ClienteDTO getClienteDTO(Cliente cliente) {
         ClienteDTO clienteDTO = clienteMapper.toDto(cliente);

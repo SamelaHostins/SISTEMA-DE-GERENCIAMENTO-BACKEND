@@ -81,7 +81,6 @@ public class ServicoServiceImpl implements ServicoService {
         ServicoDTO servicoDTO = servicoMapper.toDto(servico);
         servicoDTO.setIdProfissional(profissionalMapper.toDto(servico.getProfissional()).getIdProfissional());
         servicoDTO.setAvaliacoes(avaliacaoMapper.toDtoList(servico.getAvaliacoes()));
-        servicoDTO.setProdutos(produtoMapper.toDtoList(servico.getProdutos()));
         servicoDTO.setAgendamentos(agendamentoMapper.toDtoList(servico.getAgendamentos()));
         return servicoDTO;
     }

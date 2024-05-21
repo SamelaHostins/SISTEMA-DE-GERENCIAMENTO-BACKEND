@@ -10,6 +10,7 @@ import javax.enterprise.context.ApplicationScoped;
 import salao.online.domain.entities.Profissional;
 import salao.online.domain.entities.Servico;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
+import salao.online.domain.enums.TipoServicoEnum;
 import salao.online.domain.exceptions.ValidacaoException;
 import salao.online.infra.repositories.ProfissionalRepository;
 
@@ -17,7 +18,7 @@ import salao.online.infra.repositories.ProfissionalRepository;
 public class ProfissionalRepositoryImpl implements ProfissionalRepository {
 
     @Override
-    public Optional<Profissional> deletarCadastroDoProfissional(UUID idProfissional){
+    public Optional<Profissional> deletarCadastroDoProfissional(UUID idProfissional) {
         Optional<Profissional> profissionalOptional = findByIdOptional(idProfissional);
         if (profissionalOptional.isPresent()) {
             deleteById(idProfissional);
@@ -26,11 +27,15 @@ public class ProfissionalRepositoryImpl implements ProfissionalRepository {
     }
 
     @Override
-    public List<Servico> buscarServicosDoProfissional(UUID idProfissional) throws ValidacaoException {
-        return findByIdOptional(idProfissional)
-                .orElseThrow(
-                        () -> new ValidacaoException(MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()))
-                .getServicos().stream()
+    public List<Servico> buscarServicosDoProfissional(UUID idProfissional, TipoServicoEnum tipoServico)
+            throws ValidacaoException {
+        Profissional profissional = findByIdOptional(idProfissional)
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
+        // Define o tipo de serviço padrão como NORMAL se não especificado
+        final TipoServicoEnum tipoServicoFinal = (tipoServico == null) ? TipoServicoEnum.NORMAL : tipoServico;
+        return profissional.getServicos().stream()
+                .filter(servico -> servico.getTipoServico() == tipoServicoFinal)
                 .collect(Collectors.toList());
     }
 

@@ -79,6 +79,19 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Transactional
+    public boolean atualizarClienteEspecial(UUID idCliente) throws ValidacaoException {
+        logger.info("Atualizando cliente para especial");
+        Cliente cliente = clienteRepository.findById(idCliente);
+        if (cliente != null) {
+            cliente.atualizarClienteEspecial();
+            clienteRepository.persist(cliente);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public BuscarClienteDTO buscarClientePorId(UUID idCliente) throws ValidacaoException {
         logger.info("Validando se o Cliente existe");
         Cliente cliente = clienteRepository.findByIdOptional(idCliente)
@@ -106,8 +119,8 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public Map<String, Integer> obterFaixasEtariasDasClientes() {
         List<BuscarClienteDTO> clientes = clienteRepository.buscarClientesPorNome().stream()
-        .map(cliente -> getBuscarClienteDTO(cliente))
-        .collect(Collectors.toList());
+                .map(cliente -> getBuscarClienteDTO(cliente))
+                .collect(Collectors.toList());
         Map<String, Integer> distribuicao = new HashMap<>();
         distribuicao.put("abaixo_18", 0);
         distribuicao.put("de_18_a_25", 0);

@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.domain.entities.Servico;
 
@@ -25,4 +26,9 @@ public interface ServicoMapper {
     @IterableMapping(qualifiedByName = "mapToDTO")
     @Named("mapListToDtoList")
     List<ServicoDTO> toDtoList(List<Servico> servicos);
+
+    @InheritInverseConfiguration
+    Servico criarDtoToEntity(CriarServicoDTO dto);
+
+    CriarServicoDTO toDtoCriar(Servico entity);
 }

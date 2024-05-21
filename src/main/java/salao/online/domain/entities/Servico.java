@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.smallrye.common.constraint.NotNull;
 import lombok.Getter;
+import salao.online.domain.enums.TipoServicoEnum;
 
 @Entity
 @Table(schema = "salao", name = "servico", uniqueConstraints = {
@@ -38,6 +39,9 @@ public class Servico {
     @Column(name = "id_servico")
     @NotNull
     private @Getter UUID idServico;
+
+    @Column(name = "tipo_servico")
+    private @Getter TipoServicoEnum tipoServico;
 
     @NotBlank
     private @Getter String nome;
@@ -64,8 +68,9 @@ public class Servico {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "servico")
     private @Getter List<Agendamento> agendamentos;
 
-    public Servico(String nome, String especificacao, String termosECondicoes, double valor, 
+    public Servico(TipoServicoEnum tipoServico, String nome, String especificacao, String termosECondicoes, double valor, 
     Profissional profissional, List<Avaliacao> avaliacoes, List<Agendamento> agendamentos) {
+        this.tipoServico = tipoServico;
         this.nome = nome;
         this.especificacao = especificacao;
         this.termosECondicoes = termosECondicoes;

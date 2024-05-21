@@ -16,6 +16,8 @@ public interface ClienteService {
 
     public AtualizarClienteDTO atualizarCadastroCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException;
 
+    public boolean atualizarClienteEspecial(UUID idCliente) throws ValidacaoException;
+
     public BuscarClienteDTO buscarClientePorId(UUID idCliente) throws ValidacaoException;
 
     public ClienteDTO deletarCadastroCliente(UUID idCliente) throws ValidacaoException;

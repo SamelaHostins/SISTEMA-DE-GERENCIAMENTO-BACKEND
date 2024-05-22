@@ -39,4 +39,11 @@ public class ProfissionalRepositoryImpl implements ProfissionalRepository {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Servico> buscarTodosOsServicosDoProfissional(UUID idProfissional) throws ValidacaoException {
+        Profissional profissional = findByIdOptional(idProfissional)
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
+        return profissional.getServicos().stream().collect(Collectors.toList());
+    }
 }

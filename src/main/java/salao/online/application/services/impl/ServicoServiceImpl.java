@@ -85,6 +85,22 @@ public class ServicoServiceImpl implements ServicoService {
         }
     }
 
+    @Override
+    public List<ServicoDTO> listarTodosOsServicosDoProfissional(UUID idProfissional)
+            throws ValidacaoException {
+        logger.info("Obtendo informações para listar os serviços");
+        Profissional profissional = profissionalRepository.findById(idProfissional);
+        if (profissional.getIdProfissional() == null) {
+            throw new ValidacaoException(MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro());
+        } else {
+            List<Servico> servicos = profissionalRepository
+                    .buscarTodosOsServicosDoProfissional(profissional.getIdProfissional());
+            return servicos.stream()
+                    .map(servico -> getServicoDTO(servico))
+                    .collect(Collectors.toList());
+        }
+    }
+
     private ServicoDTO getServicoDTO(Servico servico) {
         ServicoDTO servicoDTO = servicoMapper.toDto(servico);
         servicoDTO.setIdProfissional(profissionalMapper.toDto(servico.getProfissional()).getIdProfissional());

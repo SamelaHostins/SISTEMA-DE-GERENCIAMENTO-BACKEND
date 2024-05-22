@@ -16,4 +16,6 @@ public interface ProfissionalRepository extends PanacheRepositoryBase<Profission
 
     public List<Servico> buscarServicosDoProfissional(UUID idProfissional, TipoServicoEnum tipoServico)
             throws ValidacaoException;
+
+    public List<Servico> buscarTodosOsServicosDoProfissional(UUID idProfissional) throws ValidacaoException;
 }

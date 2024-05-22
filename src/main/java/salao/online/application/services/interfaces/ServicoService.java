@@ -14,5 +14,8 @@ public interface ServicoService {
     public ServicoDTO atualizarServico(ServicoDTO servicoDTO) throws ValidacaoException;
 
     public List<ServicoDTO> listarServicosDoProfissional(UUID idProfissional, TipoServicoEnumDTO tipoServico) throws ValidacaoException;
+
+    public List<ServicoDTO> listarTodosOsServicosDoProfissional (UUID idProfissional) throws ValidacaoException;
+
 }
 

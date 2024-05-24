@@ -9,12 +9,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.openapi.annotations.*;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import com.oracle.svm.core.annotate.Inject;
 
 import salao.online.application.dtos.TipoServicoEnumDTO;
+import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.application.services.interfaces.ServicoService;
 import salao.online.domain.exceptions.ValidacaoException;
@@ -30,6 +32,22 @@ public class ServicoResource {
 
     private static final org.jboss.logging.Logger LOG = org.jboss.logging.Logger.getLogger(ServicoResource.class);
 
+    @Operation(summary = "Cadastrando um Servico")
+    @APIResponse(responseCode = "200", description = "Servico criado com sucesso!")
+    @APIResponse(responseCode = "500", description = "Ocorreu um erro na requisição.")
+    @POST
+    @Transactional
+    @Path("/cadastrar")
+    public Response cadastrarServico(@RequestBody CriarServicoDTO dto) {
+        try {
+            LOG.info("Requisição recebida - Cadastrar Servico");
+            CriarServicoDTO servicoDTO = servicoService.cadastrarServico(dto);
+            return Response.status(200).entity(servicoDTO).build();
+        } catch (Exception ex) {
+            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+        }
+    }
+    
     @Operation(summary = "Listando os serviços de um profissional", description = "Lista os serviços normais se não indicado nenhum tipo de serviço ou indicado "
             +
             "o tipo de serviço normal. Se indicado o tipo de serviço especial, listará os serviços especiais.")
@@ -73,7 +91,7 @@ public class ServicoResource {
     @DELETE
     @Transactional
     @Path("/deletar/{id_servico}")
-    public Response deletarCadastroservico(@PathParam("id_servico") UUID idservico)
+    public Response deletarServico(@PathParam("id_servico") UUID idservico)
             throws ValidacaoException {
         try {
             LOG.info("Requisição recebida - Deletar o cadastro do servico");

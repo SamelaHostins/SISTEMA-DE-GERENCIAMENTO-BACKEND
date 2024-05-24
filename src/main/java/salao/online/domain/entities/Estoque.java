@@ -58,7 +58,7 @@ public class Estoque {
 
     public Estoque(String nome, int qtdDeProdutos, List<Produto> produtos, Profissional profissional) {
         this.nome = nome;
-        this.qtdDeProdutos = qtdDeProdutos;
+        this.qtdDeProdutos = 0;
         this.produtos = produtos;
         this.profissional = profissional;
     }

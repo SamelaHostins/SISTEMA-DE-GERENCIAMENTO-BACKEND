@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import salao.online.application.dtos.EstoqueDTO;
+import salao.online.application.dtos.dtosDoEstoque.EstoqueDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 
 @AllArgsConstructor

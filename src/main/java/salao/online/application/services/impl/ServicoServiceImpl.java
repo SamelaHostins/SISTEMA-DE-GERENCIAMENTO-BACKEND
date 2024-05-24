@@ -1,6 +1,7 @@
 package salao.online.application.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -10,6 +11,8 @@ import javax.inject.Inject;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import salao.online.application.dtos.TipoServicoEnumDTO;
+import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
+import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.application.mappers.AgendamentoMapper;
 import salao.online.application.mappers.AvaliacaoMapper;
@@ -56,16 +59,27 @@ public class ServicoServiceImpl implements ServicoService {
     private static Logger logger = LoggerFactory.getLogger(LoggerFactory.class);
 
     @Override
-    public ServicoDTO cadastrarServico(ServicoDTO servicoDTO) {
-        Servico servico = servicoMapper.toEntity(servicoDTO);
+    public CriarServicoDTO cadastrarServico(CriarServicoDTO servicoDTO) {
+        Servico servico = servicoMapper.criarDtoToEntity(servicoDTO);
         logger.info("Salvando o servico criado");
         servicoRepository.persistAndFlush(servico);
-        return getServicoDTO(servico);
+        return servicoMapper.toDtoCriar(servico);
     }
 
     @Override
-    public ServicoDTO atualizarServico(ServicoDTO servicoDTO) throws ValidacaoException {
-        throw new UnsupportedOperationException("Unimplemented method 'atualizarServico'");
+    public AtualizarServicoDTO atualizarServico(AtualizarServicoDTO servicoDTO) throws ValidacaoException {
+        Optional<Servico> servicoOptional = servicoRepository.findByIdOptional(servicoDTO.getIdServico());
+        if (servicoOptional.isPresent()) {
+            Servico servico = servicoOptional.get();
+            TipoServicoEnum tipoServico = tipoServicoMapper.toEntity(servicoDTO.getTipoServico());
+            servico.atualizarCadastroServico(tipoServico, servicoDTO.getNome(), servicoDTO.getEspecificacao(),
+                    servicoDTO.getTermosECondicoes(), servicoDTO.getValor());
+            logger.info("Salvando registro atualizado");
+            servicoRepository.persistAndFlush(servico);
+            return servicoMapper.toDtoAtualizar(servico);
+        } else {
+            throw new ValidacaoException(MensagemErroValidacaoEnum.SERVICO_NAO_ENCONTRADO.getMensagemErro());
+        }
     }
 
     @Override

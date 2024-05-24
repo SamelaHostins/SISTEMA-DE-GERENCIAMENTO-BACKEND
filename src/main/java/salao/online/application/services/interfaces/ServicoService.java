@@ -4,14 +4,16 @@ import java.util.List;
 import java.util.UUID;
 
 import salao.online.application.dtos.TipoServicoEnumDTO;
+import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
+import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.domain.exceptions.ValidacaoException;
 
 public interface ServicoService {
 
-    public ServicoDTO cadastrarServico(ServicoDTO servicoDTO);
+    public CriarServicoDTO cadastrarServico(CriarServicoDTO servicoDTO);
 
-    public ServicoDTO atualizarServico(ServicoDTO servicoDTO) throws ValidacaoException;
+    public AtualizarServicoDTO atualizarServico(AtualizarServicoDTO servicoDTO) throws ValidacaoException;
 
     public void deletarCadastroServico(UUID idServico) throws ValidacaoException;
 

@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
-import salao.online.application.dtos.EstoqueDTO;
+import salao.online.application.dtos.dtosDoEstoque.EstoqueDTO;
 import salao.online.application.mappers.EstoqueMapper;
 import salao.online.application.mappers.ProdutoMapper;
 import salao.online.application.mappers.ProfissionalMapper;
@@ -36,7 +36,7 @@ public class EstoqueServiceImpl implements EstoqueService {
     private static Logger logger = LoggerFactory.getLogger(LoggerFactory.class);
 
     @Override
-    public EstoqueDTO inserirEstoque(EstoqueDTO estoqueDTO) {
+    public EstoqueDTO cadastrarEstoque(EstoqueDTO estoqueDTO) {
         Estoque estoque = estoqueMapper.toEntity(estoqueDTO);
         logger.info("Salvando o estoque criado");
         estoqueRepository.persistAndFlush(estoque);

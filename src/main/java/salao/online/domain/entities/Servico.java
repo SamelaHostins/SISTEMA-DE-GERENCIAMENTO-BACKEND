@@ -23,11 +23,12 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.smallrye.common.constraint.NotNull;
 import lombok.Getter;
+import lombok.Setter;
 import salao.online.domain.enums.TipoServicoEnum;
 
 @Entity
 @Table(schema = "salao", name = "servico", uniqueConstraints = {
-    @UniqueConstraint(columnNames = { "id_profissional"}) })
+        @UniqueConstraint(columnNames = { "id_profissional" }) })
 public class Servico {
 
     protected Servico() {
@@ -41,18 +42,18 @@ public class Servico {
     private @Getter UUID idServico;
 
     @Column(name = "tipo_servico")
-    private @Getter TipoServicoEnum tipoServico;
+    private @Getter @Setter TipoServicoEnum tipoServico;
 
     @NotBlank
-    private @Getter String nome;
+    private @Getter @Setter String nome;
 
-    private @Getter String especificacao;
+    private @Getter @Setter String especificacao;
 
     @Column(name = "termos_e_condicoes")
-    private @Getter String termosECondicoes;
+    private @Getter @Setter String termosECondicoes;
 
     @DecimalMin(value = "0.01", message = "O valor deve ser no mínimo 0.01")
-    private @Getter double valor;
+    private @Getter @Setter double valor;
 
     @NotNull
     @JsonBackReference
@@ -68,8 +69,9 @@ public class Servico {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "servico")
     private @Getter List<Agendamento> agendamentos;
 
-    public Servico(TipoServicoEnum tipoServico, String nome, String especificacao, String termosECondicoes, double valor, 
-    Profissional profissional, List<Avaliacao> avaliacoes, List<Agendamento> agendamentos) {
+    public Servico(TipoServicoEnum tipoServico, String nome, String especificacao, String termosECondicoes,
+            double valor,
+            Profissional profissional, List<Avaliacao> avaliacoes, List<Agendamento> agendamentos) {
         this.tipoServico = tipoServico;
         this.nome = nome;
         this.especificacao = especificacao;
@@ -78,6 +80,16 @@ public class Servico {
         this.profissional = profissional;
         this.avaliacoes = avaliacoes;
         this.agendamentos = agendamentos;
+    }
+
+    public Servico atualizarCadastroServico(TipoServicoEnum novoTipoServico, String novoNome, String novaEspecificacao,
+            String novosTermosECondicoes, double novoValor) {
+        setTipoServico(novoTipoServico);
+        setNome(novoNome);
+        setEspecificacao(novaEspecificacao);
+        setTermosECondicoes(novosTermosECondicoes);
+        setValor(novoValor);
+        return this;
     }
 
 }

@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import salao.online.application.dtos.EstoqueDTO;
+import salao.online.application.dtos.dtosDoEstoque.EstoqueDTO;
 import salao.online.domain.entities.Estoque;
 
 @Mapper(componentModel = "cdi", uses = ProdutoMapper.class)

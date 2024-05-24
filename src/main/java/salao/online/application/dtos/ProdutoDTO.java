@@ -15,9 +15,9 @@ import lombok.Setter;
 public class ProdutoDTO {
 
     private UUID idProduto;
+    private UUID idEstoque;
     private String nome;
     private LocalDate dtEntradaProduto;
     private LocalDate dtValidadeProduto;
     private double valor;
-    private UUID idEstoque;
 }

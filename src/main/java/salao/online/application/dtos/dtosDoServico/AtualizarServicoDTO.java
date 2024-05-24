@@ -14,6 +14,7 @@ import salao.online.application.dtos.TipoServicoEnumDTO;
 @Setter
 public class AtualizarServicoDTO {
     
+    private UUID idServico;
     private String nome;
     private TipoServicoEnumDTO tipoServico;
     private String especificacao;

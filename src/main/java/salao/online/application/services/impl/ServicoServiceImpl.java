@@ -69,6 +69,16 @@ public class ServicoServiceImpl implements ServicoService {
     }
 
     @Override
+    public void deletarCadastroServico(UUID idServico) throws ValidacaoException {
+        logger.info("Validando se o serviço existe");
+        Servico servico = servicoRepository.findById(idServico);
+        if (servico != null) {
+            servicoRepository.deletarServico(idServico);
+        }
+        throw new ValidacaoException("O serviço fornecido não existe.");
+    }
+
+    @Override
     public List<ServicoDTO> listarServicosDoProfissional(UUID idProfissional, TipoServicoEnumDTO tipoServicoDTO)
             throws ValidacaoException {
         logger.info("Obtendo informações para listar os serviços");

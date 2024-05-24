@@ -18,5 +18,5 @@ public interface ProfissionalService {
 
     public ListarProfissionalDTO listarProfissionalPorId(UUID idProfissional) throws ValidacaoException;
 
-    public ProfissionalDTO deletarCadastroDoProfissional(UUID idCliente) throws ValidacaoException;
+    public void deletarCadastroDoProfissional(UUID idProfissional) throws ValidacaoException;
 }

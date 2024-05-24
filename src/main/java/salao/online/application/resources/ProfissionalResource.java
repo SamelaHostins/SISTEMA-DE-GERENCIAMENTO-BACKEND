@@ -82,8 +82,8 @@ public class ProfissionalResource {
             throws ValidacaoException {
         try {
             LOG.info("Requisição recebida - Deletar o cadastro do Profissional");
-            ProfissionalDTO ProfissionalDTO = profissionalService.deletarCadastroDoProfissional(idProfissional);
-            return Response.status(200).entity(ProfissionalDTO).build();
+            profissionalService.deletarCadastroDoProfissional(idProfissional);
+            return Response.status(200).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {

@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
-import salao.online.application.dtos.dtosDeCliente.ClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
 import salao.online.domain.exceptions.ValidacaoException;
 
@@ -20,7 +19,7 @@ public interface ClienteService {
 
     public BuscarClienteDTO buscarClientePorId(UUID idCliente) throws ValidacaoException;
 
-    public ClienteDTO deletarCadastroCliente(UUID idCliente) throws ValidacaoException;
+    public void deletarCadastroCliente(UUID idCliente) throws ValidacaoException;
 
     public List<BuscarClienteDTO> buscarClientesPorNome();
 

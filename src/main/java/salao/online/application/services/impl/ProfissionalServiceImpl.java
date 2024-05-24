@@ -1,6 +1,5 @@
 package salao.online.application.services.impl;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -72,18 +71,10 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     }
 
     @Override
-    public ProfissionalDTO deletarCadastroDoProfissional(UUID idProfissional) throws ValidacaoException {
+    public void deletarCadastroDoProfissional(UUID idProfissional) throws ValidacaoException {
         logger.info("Validando se o Cliente existe");
         buscarProfissionalPorId(idProfissional);
-        Optional<Profissional> profissional = profissionalRepository.deletarCadastroDoProfissional(idProfissional);
-        return getProfissionalDTO(profissional.get());
-    }
-
-    private ProfissionalDTO getProfissionalDTO(Profissional profissional) {
-        ProfissionalDTO profissionalDTO = profissionalMapper.toDto(profissional);
-        profissionalDTO.setServicos(servicoMapper.toDtoList(profissional.getServicos()));
-        profissionalDTO.setEstoques(estoqueMapper.toDtoList(profissional.getEstoques()));
-        return profissionalDTO;
+        profissionalRepository.deletarCadastroDoProfissional(idProfissional);
     }
 
     private BuscarProfissionalDTO getBuscarProfissionalDTO(Profissional profissional) {

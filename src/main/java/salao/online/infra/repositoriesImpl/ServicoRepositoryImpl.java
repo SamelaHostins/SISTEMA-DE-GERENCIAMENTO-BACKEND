@@ -3,6 +3,7 @@ package salao.online.infra.repositoriesImpl;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,15 @@ public class ServicoRepositoryImpl implements ServicoRepository {
         } else {
             return Collections.emptyList();
         }
+    }
+
+    @Override
+    public Optional<Servico> deletarServico(UUID idServico) {
+        Optional<Servico> servicoOptional = findByIdOptional(idServico);
+        if (servicoOptional.isPresent()) {
+            deleteById(idServico);
+        }
+        return servicoOptional;
     }
 
 }

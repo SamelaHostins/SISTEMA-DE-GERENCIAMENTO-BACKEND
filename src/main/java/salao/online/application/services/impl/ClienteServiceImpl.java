@@ -15,7 +15,6 @@ import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
-import salao.online.application.dtos.dtosDeCliente.ClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
 import salao.online.application.mappers.AgendamentoMapper;
 import salao.online.application.mappers.AvaliacaoMapper;
@@ -101,11 +100,10 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public ClienteDTO deletarCadastroCliente(UUID idCliente) throws ValidacaoException {
+    public void deletarCadastroCliente(UUID idCliente) throws ValidacaoException {
         logger.info("Validando se o Cliente existe");
         buscarClientePorId(idCliente);
-        Optional<Cliente> cliente = clienteRepository.deletarCadastroDeCliente(idCliente);
-        return getClienteDTO(cliente.get());
+        clienteRepository.deletarCadastroDeCliente(idCliente);
     }
 
     @Override
@@ -144,13 +142,6 @@ public class ClienteServiceImpl implements ClienteService {
         }
 
         return distribuicao;
-    }
-
-    private ClienteDTO getClienteDTO(Cliente cliente) {
-        ClienteDTO clienteDTO = clienteMapper.toDto(cliente);
-        clienteDTO.setAvaliacoes(avaliacaoMapper.toDtoList(cliente.getAvaliacoes()));
-        clienteDTO.setAgendamentos(agendamentoMapper.toDtoList(cliente.getAgendamentos()));
-        return clienteDTO;
     }
 
     private BuscarClienteDTO getBuscarClienteDTO(Cliente cliente) {

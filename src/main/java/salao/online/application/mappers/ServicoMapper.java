@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.domain.entities.Servico;
@@ -31,4 +32,6 @@ public interface ServicoMapper {
     Servico criarDtoToEntity(CriarServicoDTO dto);
 
     CriarServicoDTO toDtoCriar(Servico entity);
+
+    AtualizarServicoDTO toDtoAtualizar (Servico entity);
 }

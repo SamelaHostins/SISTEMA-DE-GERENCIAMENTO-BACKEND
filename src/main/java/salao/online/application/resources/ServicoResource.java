@@ -3,17 +3,17 @@ package salao.online.application.resources;
 import java.util.List;
 import java.util.UUID;
 
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import org.eclipse.microprofile.openapi.annotations.*;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
-import com.oracle.svm.core.annotate.Inject;
+import jakarta.inject.Inject;
 
 import salao.online.application.dtos.TipoServicoEnumDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;

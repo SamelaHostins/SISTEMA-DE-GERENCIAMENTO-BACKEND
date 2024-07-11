@@ -2,16 +2,15 @@ package salao.online.domain.entities;
 
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
-
-import org.hibernate.annotations.GenericGenerator;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import io.smallrye.common.constraint.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 
 @Entity
@@ -22,8 +21,7 @@ public class Endereco {
     }
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(generator = "UUID", strategy = GenerationType.AUTO)
     @Column(name = "id_endereco")
     @NotNull
     private @Getter UUID idEndereco;

@@ -1,7 +1,7 @@
 package salao.online.domain.entities;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 
 import io.smallrye.common.constraint.NotNull;
 import lombok.Getter;
@@ -37,7 +37,8 @@ public abstract class Informacao {
     @NotNull
     private @Getter @Setter String senha;
 
-    public Informacao(String nome, String sobrenome, String nomeSocial, int idade, String email, String telefone, String usuario,
+    public Informacao(String nome, String sobrenome, String nomeSocial, int idade, String email, String telefone,
+            String usuario,
             String senha) {
         this.nome = nome;
         this.sobrenome = sobrenome;

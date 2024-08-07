@@ -24,7 +24,7 @@ public class EstoqueRepositoryImpl implements EstoqueRepository {
     }
 
     @Override
-    public List<Produto> buscarProdutosDoEstoque(UUID idEstoque) {
+    public List<Produto> listarProdutosDoEstoque(UUID idEstoque) {
         Estoque estoque = findByIdOptional(idEstoque).orElse(null);
         if (estoque != null) {
             return estoque.getProdutos().stream()

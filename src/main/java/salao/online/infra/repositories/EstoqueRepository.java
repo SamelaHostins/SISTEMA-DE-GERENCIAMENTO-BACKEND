@@ -11,5 +11,5 @@ public interface EstoqueRepository extends PanacheRepositoryBase<Estoque, UUID> 
 
     public List<Estoque> buscarEstoques();
 
-    public List<Produto> buscarProdutosDoEstoque(UUID idEstoque);
+    public List<Produto> listarProdutosDoEstoque(UUID idEstoque);
 }

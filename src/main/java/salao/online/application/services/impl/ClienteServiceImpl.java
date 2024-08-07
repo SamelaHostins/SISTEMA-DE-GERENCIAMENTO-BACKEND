@@ -57,6 +57,30 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    public BuscarClienteDTO buscarClientePorId(UUID idCliente) throws ValidacaoException {
+        logger.info("Validando se o Cliente existe");
+        Cliente cliente = clienteRepository.findByIdOptional(idCliente)
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro()));
+        return getBuscarClienteDTO(cliente);
+    }
+
+    @Override
+    public List<BuscarClienteDTO> buscarClientesPorNome() {
+        logger.info("Buscando de forma ordenada os clientes cadastrados");
+        return clienteRepository.buscarClientesPorNome().stream()
+                .map(cliente -> getBuscarClienteDTO(cliente))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deletarCadastroCliente(UUID idCliente) throws ValidacaoException {
+        logger.info("Validando se o Cliente existe");
+        buscarClientePorId(idCliente);
+        clienteRepository.deletarCadastroDeCliente(idCliente);
+    }
+
+    @Override
     public AtualizarClienteDTO atualizarCadastroCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException {
         Optional<Cliente> clienteOptional = clienteRepository.findByIdOptional(clienteDTO.getIdCliente());
         if (clienteOptional.isPresent()) {
@@ -88,30 +112,6 @@ public class ClienteServiceImpl implements ClienteService {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public BuscarClienteDTO buscarClientePorId(UUID idCliente) throws ValidacaoException {
-        logger.info("Validando se o Cliente existe");
-        Cliente cliente = clienteRepository.findByIdOptional(idCliente)
-                .orElseThrow(() -> new ValidacaoException(
-                        MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro()));
-        return getBuscarClienteDTO(cliente);
-    }
-
-    @Override
-    public void deletarCadastroCliente(UUID idCliente) throws ValidacaoException {
-        logger.info("Validando se o Cliente existe");
-        buscarClientePorId(idCliente);
-        clienteRepository.deletarCadastroDeCliente(idCliente);
-    }
-
-    @Override
-    public List<BuscarClienteDTO> buscarClientesPorNome() {
-        logger.info("Buscando de forma ordenada os clientes cadastrados");
-        return clienteRepository.buscarClientesPorNome().stream()
-                .map(cliente -> getBuscarClienteDTO(cliente))
-                .collect(Collectors.toList());
     }
 
     @Override

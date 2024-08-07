@@ -47,7 +47,26 @@ public class ServicoResource {
             return Response.status(500).entity("Ocorreu um erro na requisição.").build();
         }
     }
-    
+
+    @Operation(summary = "Deletando o cadastro de um servico")
+    @APIResponse(responseCode = "200", description = "Cadastro deletado com sucesso!")
+    @APIResponse(responseCode = "404", description = "O servico não foi encontrado")
+    @DELETE
+    @Transactional
+    @Path("/deletar/{id_servico}")
+    public Response deletarServico(@PathParam("id_servico") UUID idservico)
+            throws ValidacaoException {
+        try {
+            LOG.info("Requisição recebida - Deletar o cadastro do servico");
+            servicoService.deletarCadastroServico(idservico);
+            return Response.status(200).build();
+        } catch (ValidacaoException ex) {
+            return Response.status(404).entity(ex.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+        }
+    }
+
     @Operation(summary = "Listando os serviços de um profissional", description = "Lista os serviços normais se não indicado nenhum tipo de serviço ou indicado "
             +
             "o tipo de serviço normal. Se indicado o tipo de serviço especial, listará os serviços especiais.")
@@ -80,25 +99,6 @@ public class ServicoResource {
             LOG.info("Requisição recebida - listar todos os serviços de um profissional");
             List<ServicoDTO> servicos = servicoService.listarTodosOsServicosDoProfissional(idProfissional);
             return Response.status(200).entity(servicos).build();
-        } catch (Exception ex) {
-            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
-        }
-    }
-
-    @Operation(summary = "Deletando o cadastro de um servico")
-    @APIResponse(responseCode = "200", description = "Cadastro deletado com sucesso!")
-    @APIResponse(responseCode = "404", description = "O servico não foi encontrado")
-    @DELETE
-    @Transactional
-    @Path("/deletar/{id_servico}")
-    public Response deletarServico(@PathParam("id_servico") UUID idservico)
-            throws ValidacaoException {
-        try {
-            LOG.info("Requisição recebida - Deletar o cadastro do servico");
-            servicoService.deletarCadastroServico(idservico);
-            return Response.status(200).build();
-        } catch (ValidacaoException ex) {
-            return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {
             return Response.status(500).entity("Ocorreu um erro na requisição.").build();
         }

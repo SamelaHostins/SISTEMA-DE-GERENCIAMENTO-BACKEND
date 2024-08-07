@@ -17,10 +17,7 @@ public enum MensagemErroValidacaoEnum {
     PRODUTO_NAO_ENCONTRADO("O produto não foi encontrado."),
 
     // Mensagem de erro de Relatório
-    RELATORIO_NAO_CRIADO("O relatório não pôde ser criado."),
-
-    // Mensagem de erro de Avaliação
-    AVALIACAO_INSUFICIENTE("É necessário no mínimo 3 avaliações para retornar uma média");
+    RELATORIO_NAO_CRIADO("O relatório não pôde ser criado.");
 
     public @Getter String mensagemErro;
 

@@ -23,6 +23,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ProfissionalDTO;
 import salao.online.application.services.interfaces.ProfissionalService;
 import salao.online.domain.exceptions.ValidacaoException;
@@ -47,14 +48,14 @@ public class ProfissionalResource {
     public Response cadastrarProfissional(@Valid @RequestBody CriarProfissionalDTO dto) {
         try {
             LOG.info("Requisição recebida - Cadastrar Profissional");
-            CriarProfissionalDTO ProfissionalDTO = profissionalService.cadastrarProfissional(dto);
-            return Response.status(200).entity(ProfissionalDTO).build();
+            CriarProfissionalDTO profissionalDTO = profissionalService.cadastrarProfissional(dto);
+            return Response.status(200).entity(profissionalDTO).build();
         } catch (Exception ex) {
             return Response.status(500).entity("Ocorreu um erro na requisição.").build();
         }
     }
 
-    @Operation(summary = "Buscando um Profissional")
+    @Operation(summary = "Buscando um todos os dados de um Profissional")
     @APIResponse(responseCode = "200", description = "Busca realizada com sucesso!")
     @APIResponse(responseCode = "404", description = "O Profissional não foi encontrado")
     @GET
@@ -63,8 +64,26 @@ public class ProfissionalResource {
             throws ValidacaoException {
         try {
             LOG.info("Requisição recebida - Buscar o Profissional");
-            BuscarProfissionalDTO ProfissionalDTO = profissionalService.buscarProfissionalPorId(idProfissional);
-            return Response.status(200).entity(ProfissionalDTO).build();
+            BuscarProfissionalDTO profissionalDTO = profissionalService.buscarProfissionalPorId(idProfissional);
+            return Response.status(200).entity(profissionalDTO).build();
+        } catch (ValidacaoException ex) {
+            return Response.status(404).entity(ex.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+        }
+    }
+
+    @Operation(summary = "Lista os dados básicos do Profissional")
+    @APIResponse(responseCode = "200", description = "Busca realizada com sucesso!")
+    @APIResponse(responseCode = "404", description = "O Profissional não foi encontrado")
+    @GET
+    @Path("/listar/{id_profissional}")
+    public Response listarProfissionalPorId(@PathParam("id_profissional") UUID idProfissional)
+            throws ValidacaoException {
+        try {
+            LOG.info("Requisição recebida - Listar o Profissional");
+            ListarProfissionalDTO profissionalDTO = profissionalService.listarProfissionalPorId(idProfissional);
+            return Response.status(200).entity(profissionalDTO).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {
@@ -91,18 +110,19 @@ public class ProfissionalResource {
         }
     }
 
+    //ainda não está pronto, mas pode add ele no front
     @Operation(summary = "Atualizando o cadastro de um Profissional")
     @APIResponse(responseCode = "200", description = "Cadastro atualizado com sucesso!")
     @APIResponse(responseCode = "404", description = "O Profissional não foi encontrado")
     @PUT
     @Transactional
     @Path("/atualizar/{id_profissional}")
-    public Response atualizarCadastroProfissional(@RequestBody ProfissionalDTO ProfissionalDTO)
+    public Response atualizarCadastroProfissional(@RequestBody ProfissionalDTO profissionalDTO)
             throws ValidacaoException {
         try {
             LOG.info("Requisição recebida - Atualizar o cadastro do Profissional");
-            ProfissionalDTO ProfissionalAtualizado = profissionalService.atualizarCadastroDoProfissional(ProfissionalDTO);
-            return Response.status(200).entity(ProfissionalAtualizado).build();
+            ProfissionalDTO profissional = profissionalService.atualizarCadastroDoProfissional(profissionalDTO);
+            return Response.status(200).entity(profissional).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {

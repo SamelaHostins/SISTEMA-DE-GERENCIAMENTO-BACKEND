@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
-
+import salao.online.domain.entities.Estoque;
 import salao.online.domain.entities.Profissional;
 import salao.online.domain.entities.Servico;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
@@ -45,5 +45,14 @@ public class ProfissionalRepositoryImpl implements ProfissionalRepository {
                 .orElseThrow(() -> new ValidacaoException(
                         MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
         return profissional.getServicos().stream().collect(Collectors.toList());
+    }
+
+    
+    @Override
+    public List<Estoque> buscarEstoquesDoProfissional(UUID idProfissional) throws ValidacaoException {
+        Profissional profissional = findByIdOptional(idProfissional)
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
+        return profissional.getEstoques().stream().collect(Collectors.toList());
     }
 }

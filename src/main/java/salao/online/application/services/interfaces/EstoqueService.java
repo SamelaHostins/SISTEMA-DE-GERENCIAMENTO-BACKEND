@@ -15,6 +15,6 @@ public interface EstoqueService {
 
     public EstoqueDTO buscarEstoquePorId(UUID idEstoque) throws ValidacaoException;
 
-    public List<EstoqueDTO> buscarEstoquesDoProfissional(UUID idProfissional);
+    public List<EstoqueDTO> buscarEstoquesDoProfissional(UUID idProfissional) throws ValidacaoException;
 }
 

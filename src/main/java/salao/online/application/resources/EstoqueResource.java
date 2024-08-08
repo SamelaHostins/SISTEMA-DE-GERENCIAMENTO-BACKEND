@@ -21,7 +21,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import salao.online.application.dtos.dtosDoEstoque.CriarEstoqueDTO;
 import salao.online.application.dtos.dtosDoEstoque.EstoqueDTO;
-import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.application.services.interfaces.EstoqueService;
 import salao.online.domain.exceptions.ValidacaoException;
 

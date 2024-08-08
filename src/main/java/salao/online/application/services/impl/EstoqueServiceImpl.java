@@ -4,14 +4,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
-import salao.online.application.dtos.TipoServicoEnumDTO;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import salao.online.application.dtos.dtosDoEstoque.CriarEstoqueDTO;
 import salao.online.application.dtos.dtosDoEstoque.EstoqueDTO;
-import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.application.mappers.EstoqueMapper;
 import salao.online.application.mappers.ProdutoMapper;
 import salao.online.application.mappers.ProfissionalMapper;

@@ -52,7 +52,7 @@ public class Cliente extends Informacao {
         this.agendamentos = agendamentos;
     }
 
-    public Cliente atualizarCadastroCliente(String novoNome, String novoSobrenome, String novoNomeSocial,
+    public Cliente atualizarCliente(String novoNome, String novoSobrenome, String novoNomeSocial,
             int novaIdade, String novoEmail, String novoTelefone, String novaSenha) {
         setNome(novoNome);
         setSobrenome(novoSobrenome);

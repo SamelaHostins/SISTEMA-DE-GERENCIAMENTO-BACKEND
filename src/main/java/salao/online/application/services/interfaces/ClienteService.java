@@ -13,13 +13,13 @@ public interface ClienteService {
 
     public CriarClienteDTO cadastrarCliente(CriarClienteDTO clienteDTO);
 
-    public AtualizarClienteDTO atualizarCadastroCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException;
+    public AtualizarClienteDTO atualizarCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException;
 
     public boolean atualizarClienteEspecial(UUID idCliente) throws ValidacaoException;
 
     public BuscarClienteDTO buscarClientePorId(UUID idCliente) throws ValidacaoException;
 
-    public void deletarCadastroCliente(UUID idCliente) throws ValidacaoException;
+    public void deletarCliente(UUID idCliente) throws ValidacaoException;
 
     public List<BuscarClienteDTO> buscarClientesPorNome();
 

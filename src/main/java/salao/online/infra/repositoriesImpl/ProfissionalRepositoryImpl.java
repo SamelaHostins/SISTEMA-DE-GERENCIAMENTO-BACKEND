@@ -18,7 +18,7 @@ import salao.online.infra.repositories.ProfissionalRepository;
 public class ProfissionalRepositoryImpl implements ProfissionalRepository {
 
     @Override
-    public Optional<Profissional> deletarCadastroDoProfissional(UUID idProfissional) {
+    public Optional<Profissional> deletarProfissional(UUID idProfissional) {
         Optional<Profissional> profissionalOptional = findByIdOptional(idProfissional);
         if (profissionalOptional.isPresent()) {
             deleteById(idProfissional);

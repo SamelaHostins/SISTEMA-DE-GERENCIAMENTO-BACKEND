@@ -16,5 +16,7 @@ public interface ProdutoService {
     public ProdutoDTO buscarProdutoPorId(UUID idProduto) throws ValidacaoException;
 
     public List<ProdutoDTO> listarProdutosDoEstoque(UUID idEstoque);
+
+    public void deletarProduto(UUID idProduto) throws ValidacaoException;
 }
 

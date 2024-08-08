@@ -12,11 +12,11 @@ public interface ProfissionalService {
 
     public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO);
 
-    public ProfissionalDTO atualizarCadastroDoProfissional(ProfissionalDTO profissionalDTO) throws ValidacaoException;
+    public ProfissionalDTO atualizarProfissional(ProfissionalDTO profissionalDTO) throws ValidacaoException;
 
     public BuscarProfissionalDTO buscarProfissionalPorId(UUID idProfissional) throws ValidacaoException;
 
     public ListarProfissionalDTO listarProfissionalPorId(UUID idProfissional) throws ValidacaoException;
 
-    public void deletarCadastroDoProfissional(UUID idProfissional) throws ValidacaoException;
+    public void deletarProfissional(UUID idProfissional) throws ValidacaoException;
 }

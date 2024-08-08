@@ -12,6 +12,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -62,6 +63,25 @@ public class ProdutoResource {
             LOG.info("Requisição recebida - Buscar o Produto");
             ProdutoDTO produtoDTO = produtoService.buscarProdutoPorId(idProduto);
             return Response.status(200).entity(produtoDTO).build();
+        } catch (ValidacaoException ex) {
+            return Response.status(404).entity(ex.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+        }
+    }
+
+    @Operation(summary = "Deletando o cadastro de um Produto")
+    @APIResponse(responseCode = "200", description = "Cadastro deletado com sucesso!")
+    @APIResponse(responseCode = "404", description = "O produto não foi encontrado")
+    @DELETE
+    @Transactional
+    @Path("/deletar/{id_produto}")
+    public Response deletarProduto(@PathParam("id_produto") UUID idProduto)
+            throws ValidacaoException {
+        try {
+            LOG.info("Requisição recebida - Deletar o cadastro do produto");
+            produtoService.deletarProduto(idProduto);
+            return Response.status(200).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {

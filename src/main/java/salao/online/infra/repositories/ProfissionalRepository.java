@@ -13,7 +13,7 @@ import salao.online.domain.exceptions.ValidacaoException;
 
 public interface ProfissionalRepository extends PanacheRepositoryBase<Profissional, UUID> {
 
-    public Optional<Profissional> deletarCadastroDoProfissional(UUID idProfissional);
+    public Optional<Profissional> deletarProfissional(UUID idProfissional);
 
     public List<Servico> buscarServicosDoProfissional(UUID idProfissional, TipoServicoEnum tipoServico)
             throws ValidacaoException;

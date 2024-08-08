@@ -74,18 +74,18 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public void deletarCadastroCliente(UUID idCliente) throws ValidacaoException {
+    public void deletarCliente(UUID idCliente) throws ValidacaoException {
         logger.info("Validando se o Cliente existe");
         buscarClientePorId(idCliente);
         clienteRepository.deletarCadastroDeCliente(idCliente);
     }
 
     @Override
-    public AtualizarClienteDTO atualizarCadastroCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException {
+    public AtualizarClienteDTO atualizarCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException {
         Optional<Cliente> clienteOptional = clienteRepository.findByIdOptional(clienteDTO.getIdCliente());
         if (clienteOptional.isPresent()) {
             Cliente cliente = clienteOptional.get();
-            cliente.atualizarCadastroCliente(clienteDTO.getNome(), clienteDTO.getSobrenome(),
+            cliente.atualizarCliente(clienteDTO.getNome(), clienteDTO.getSobrenome(),
                     clienteDTO.getNomeSocial(), clienteDTO.getIdade(), clienteDTO.getEmail(),
                     clienteDTO.getTelefone(), clienteDTO.getSenha());
             if (clienteDTO.getNomeSocial() != null && !clienteDTO.getNomeSocial().isEmpty()) {

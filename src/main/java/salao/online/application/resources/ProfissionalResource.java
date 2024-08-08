@@ -97,11 +97,11 @@ public class ProfissionalResource {
     @DELETE
     @Transactional
     @Path("/deletar/{id_profissional}")
-    public Response deletarCadastroDoProfissional(@PathParam("id_profissional") UUID idProfissional)
+    public Response deletarProfissional(@PathParam("id_profissional") UUID idProfissional)
             throws ValidacaoException {
         try {
             LOG.info("Requisição recebida - Deletar o cadastro do Profissional");
-            profissionalService.deletarCadastroDoProfissional(idProfissional);
+            profissionalService.deletarProfissional(idProfissional);
             return Response.status(200).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
@@ -117,11 +117,11 @@ public class ProfissionalResource {
     @PUT
     @Transactional
     @Path("/atualizar/{id_profissional}")
-    public Response atualizarCadastroProfissional(@RequestBody ProfissionalDTO profissionalDTO)
+    public Response atualizarProfissional(@RequestBody ProfissionalDTO profissionalDTO)
             throws ValidacaoException {
         try {
             LOG.info("Requisição recebida - Atualizar o cadastro do Profissional");
-            ProfissionalDTO profissional = profissionalService.atualizarCadastroDoProfissional(profissionalDTO);
+            ProfissionalDTO profissional = profissionalService.atualizarProfissional(profissionalDTO);
             return Response.status(200).entity(profissional).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();

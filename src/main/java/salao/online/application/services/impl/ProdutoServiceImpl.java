@@ -60,6 +60,13 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
+    public void deletarProduto(UUID idProduto) throws ValidacaoException {
+        logger.info("Validando se o produto existe");
+        buscarProdutoPorId(idProduto);
+        produtoRepository.deletarProduto(idProduto);
+    }
+
+    @Override
     public List<ProdutoDTO> listarProdutosDoEstoque(UUID idEstoque) {
         List<Produto> produtos = estoqueRepository.listarProdutosDoEstoque(idEstoque);
         return produtos.stream()

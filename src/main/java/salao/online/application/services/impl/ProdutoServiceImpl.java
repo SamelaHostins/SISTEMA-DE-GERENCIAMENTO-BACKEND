@@ -38,7 +38,7 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public CriarProdutoDTO cadastrarProduto(CriarProdutoDTO produtoDTO) throws ValidacaoException {
-        Produto produto = produtoMapper.toEntityCriar(produtoDTO);
+        Produto produto = produtoMapper.criarDtoToEntity(produtoDTO);
         logger.info("Salvando o produto criado");
         produtoRepository.persistAndFlush(produto);
         return produtoMapper.toCriarDto(produto);

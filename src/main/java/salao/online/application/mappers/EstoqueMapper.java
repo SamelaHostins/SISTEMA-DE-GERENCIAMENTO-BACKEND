@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import salao.online.application.dtos.dtosDoEstoque.CriarEstoqueDTO;
 import salao.online.application.dtos.dtosDoEstoque.EstoqueDTO;
 import salao.online.domain.entities.Estoque;
 
@@ -20,6 +21,10 @@ public interface EstoqueMapper {
     @Mapping(source = "profissional.idProfissional", target = "idProfissional")
     @Named("mapToDTO")
     EstoqueDTO toDto(Estoque entity);
+
+    CriarEstoqueDTO toCriarDto(Estoque dto);
+
+    Estoque criarDtoToEntity (CriarEstoqueDTO dto);
 
     @IterableMapping(qualifiedByName = "mapToDTO")
     @Named("mapListToDtoList")

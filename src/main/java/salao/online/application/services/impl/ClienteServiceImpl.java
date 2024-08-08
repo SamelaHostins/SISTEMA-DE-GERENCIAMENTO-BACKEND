@@ -53,7 +53,7 @@ public class ClienteServiceImpl implements ClienteService {
         }
         logger.info("Salvando o cliente no bd");
         clienteRepository.persistAndFlush(cliente);
-        return clienteMapper.toDtoCriar(cliente);
+        return clienteMapper.toCriarDto(cliente);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class ClienteServiceImpl implements ClienteService {
             }
             logger.info("Salvando registro atualizado");
             clienteRepository.persistAndFlush(cliente);
-            return clienteMapper.toDtoAtualizar(cliente);
+            return clienteMapper.toAtualizarDto(cliente);
         } else {
             throw new ValidacaoException(MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro());
         }
@@ -145,7 +145,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     private BuscarClienteDTO getBuscarClienteDTO(Cliente cliente) {
-        BuscarClienteDTO clienteDTO = clienteMapper.toDtoBuscar(cliente);
+        BuscarClienteDTO clienteDTO = clienteMapper.toBuscarDto(cliente);
         clienteDTO.setAvaliacoes(avaliacaoMapper.toDtoList(cliente.getAvaliacoes()));
         clienteDTO.setAgendamentos(agendamentoMapper.toDtoList(cliente.getAgendamentos()));
         return clienteDTO;

@@ -24,14 +24,14 @@ public interface ServicoMapper {
     @Named("mapToDTO")
     ServicoDTO toDto(Servico entity);
 
+    CriarServicoDTO toDtoCriar(Servico entity);
+
+    Servico criarDtoToEntity(CriarServicoDTO dto);
+
+    AtualizarServicoDTO toDtoAtualizar(Servico entity);
+
     @IterableMapping(qualifiedByName = "mapToDTO")
     @Named("mapListToDtoList")
     List<ServicoDTO> toDtoList(List<Servico> servicos);
 
-    @InheritInverseConfiguration
-    Servico criarDtoToEntity(CriarServicoDTO dto);
-
-    CriarServicoDTO toDtoCriar(Servico entity);
-
-    AtualizarServicoDTO toDtoAtualizar (Servico entity);
 }

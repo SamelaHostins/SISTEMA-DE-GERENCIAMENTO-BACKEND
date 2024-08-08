@@ -20,10 +20,10 @@ public interface ClienteMapper {
     @InheritInverseConfiguration
     Cliente criarDtoToEntity (CriarClienteDTO dto);
 
-    CriarClienteDTO toDtoCriar (Cliente entity);
+    CriarClienteDTO toCriarDto (Cliente entity);
 
-    AtualizarClienteDTO toDtoAtualizar (Cliente entity);
+    AtualizarClienteDTO toAtualizarDto (Cliente entity);
 
-    BuscarClienteDTO toDtoBuscar (Cliente entity);
+    BuscarClienteDTO toBuscarDto (Cliente entity);
 
 }

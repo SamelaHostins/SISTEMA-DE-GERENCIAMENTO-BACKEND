@@ -68,7 +68,7 @@ public class Profissional extends Informacao {
         this.estoques = estoques;
     }
 
-    public Profissional atualizarCadastroProfissional(String novoNome, String novoSobrenome, String novoNomeSocial,
+    public Profissional atualizarProfissional(String novoNome, String novoSobrenome, String novoNomeSocial,
             int novaIdade, String novoEmail, String novoTelefone, String novaSenha, String novaRua,
             String novoBairro, String novaCidade, int novoNumero, String novoCep) {
         setNome(novoNome);

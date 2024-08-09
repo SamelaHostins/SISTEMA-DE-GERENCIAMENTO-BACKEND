@@ -113,10 +113,8 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
                         return new BigDecimal(soma)
                                         .divide(new BigDecimal(notas.size()), 1,
                                                         RoundingMode.UP);
-                } else {
-                        throw new ValidacaoException(
-                                        MensagemErroValidacaoEnum.AVALIACAO_INSUFICIENTE.getMensagemErro());
                 }
+                return null;
         }
 
         private AvaliacaoDTO getAvaliacaoDto(Avaliacao avaliacao) {

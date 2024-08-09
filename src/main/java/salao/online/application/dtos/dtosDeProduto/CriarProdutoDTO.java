@@ -1,7 +1,6 @@
-package salao.online.application.dtos;
+package salao.online.application.dtos.dtosDeProduto;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,10 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProdutoDTO {
-
-    private UUID idProduto;
-    private UUID idEstoque;
+public class CriarProdutoDTO {
+    
     private String nome;
     private LocalDate dtEntradaProduto;
     private LocalDate dtValidadeProduto;

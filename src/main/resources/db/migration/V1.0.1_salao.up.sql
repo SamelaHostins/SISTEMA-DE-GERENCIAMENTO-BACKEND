@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS salao;
 -- Tabela cliente
 CREATE TABLE IF NOT EXISTS salao.cliente (
    id_cliente UUID NOT NULL PRIMARY KEY,
-   especial BOOLEAN 
+   especial BOOLEAN,
    nome VARCHAR(25) NOT NULL,
    sobrenome VARCHAR(25) NOT NULL,
    nome_social VARCHAR(25),

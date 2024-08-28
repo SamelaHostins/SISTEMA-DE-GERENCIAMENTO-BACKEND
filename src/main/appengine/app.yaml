@@ -1,1 +1,2 @@
 runtime: java21
+entrypoint: java -jar target/api-salao-1.0.0-SNAPSHOT-runner.jar

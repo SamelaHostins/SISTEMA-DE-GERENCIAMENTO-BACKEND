@@ -20,7 +20,7 @@ public class ClienteDTO {
     private String nome;
     private String sobrenome;
     private String nomeSocial;
-    private int idade;
+    private short idade;
     private String email;
     private String telefone;
     private String usuario;

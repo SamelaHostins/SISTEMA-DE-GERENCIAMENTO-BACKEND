@@ -127,7 +127,7 @@ public class ClienteServiceImpl implements ClienteService {
         distribuicao.put("acima_40", 0);
 
         for (BuscarClienteDTO cliente : clientes) {
-            int idade = cliente.getIdade();
+            short idade = cliente.getIdade();
             if (idade < 18) {
                 distribuicao.put("abaixo_18", distribuicao.get("abaixo_18") + 1);
             } else if (idade <= 25) {

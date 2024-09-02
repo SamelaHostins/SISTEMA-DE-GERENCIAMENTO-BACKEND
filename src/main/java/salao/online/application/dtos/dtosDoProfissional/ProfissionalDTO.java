@@ -19,7 +19,7 @@ public class ProfissionalDTO{
     private UUID idProfissional;
     private String nome;
     private String sobrenome;
-    private int idade;
+    private short idade;
     private String email;
     private String telefone;
     private String usuario;

@@ -23,7 +23,7 @@ public abstract class Informacao {
     private @Getter @Setter String nomeSocial;
 
     @NotNull
-    private @Getter @Setter int idade;
+    private @Getter @Setter short idade;
 
     @NotNull
     private @Getter @Setter String email;
@@ -37,7 +37,7 @@ public abstract class Informacao {
     @NotNull
     private @Getter @Setter String senha;
 
-    public Informacao(String nome, String sobrenome, String nomeSocial, int idade, String email, String telefone,
+    public Informacao(String nome, String sobrenome, String nomeSocial, short idade, String email, String telefone,
             String usuario,
             String senha) {
         this.nome = nome;

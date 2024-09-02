@@ -22,7 +22,7 @@ public class BuscarClienteDTO {
     private String sobrenome;
     private String nomeSocial;
     private String usuario;
-    private int idade;
+    private short idade;
     private String email;
     private String telefone;
     private List<AvaliacaoDTO> avaliacoes;

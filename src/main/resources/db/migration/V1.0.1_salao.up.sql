@@ -120,3 +120,10 @@ CREATE TABLE IF NOT EXISTS salao.avaliacao (
    CHECK (nota >= 0 AND nota <= 5),
    CHECK (dt_avaliacao >= CURRENT_DATE)
 );
+
+-- Tabela imagem
+CREATE TABLE IF NOT EXISTS salao.imagem (
+    id_imagem UUID NOT NULL PRIMARY KEY,
+    nome_arquivo VARCHAR(255) NOT NULL,
+    url_imagem TEXT NOT NULL
+);

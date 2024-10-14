@@ -22,8 +22,10 @@ public class Imagem {
     @NotNull
     private @Getter UUID idImagem;
 
+    @Column(name = "nome_arquivo")
     private @Getter @Setter String nomeArquivo;
 
+    @Column(name = "url_imagem")
     private @Getter @Setter String urlImagem;
 
     public Imagem(String urlImagem, String nomeArquivo) {

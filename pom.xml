@@ -139,9 +139,8 @@
         </dependency>
         <!-- útil para o upload de arquivos em aplicações web -->
         <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-multipart-provider</artifactId>
-            <version>6.2.10.Final</version>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-resteasy-multipart</artifactId>
         </dependency>
     </dependencies>
 

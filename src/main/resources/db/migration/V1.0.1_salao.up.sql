@@ -124,6 +124,5 @@ CREATE TABLE IF NOT EXISTS salao.avaliacao (
 -- Tabela imagem
 CREATE TABLE IF NOT EXISTS salao.imagem (
     id_imagem UUID NOT NULL PRIMARY KEY,
-    nome_arquivo VARCHAR(255) NOT NULL,
     url_imagem TEXT NOT NULL
 );

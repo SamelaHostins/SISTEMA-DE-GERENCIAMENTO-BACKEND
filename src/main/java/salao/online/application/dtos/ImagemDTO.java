@@ -16,4 +16,6 @@ public class ImagemDTO {
     private UUID idImagem;
     private String urlImagem;
     private String nomeArquivo;
+    private UUID idProfissional;
+    private UUID idCliente;
 }

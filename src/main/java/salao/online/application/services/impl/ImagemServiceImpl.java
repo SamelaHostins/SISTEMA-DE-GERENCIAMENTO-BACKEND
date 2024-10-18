@@ -13,11 +13,15 @@ import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import salao.online.application.dtos.ImagemDTO;
 import salao.online.application.mappers.ImagemMapper;
 import salao.online.application.services.interfaces.ImagemService;
+import salao.online.domain.entities.Cliente;
 import salao.online.domain.entities.Imagem;
+import salao.online.domain.entities.Profissional;
+import salao.online.domain.enums.TipoImagemEnum;
+import salao.online.infra.repositories.ClienteRepository;
 import salao.online.infra.repositories.ImagemRepository;
+import salao.online.infra.repositories.ProfissionalRepository;
 
 @ApplicationScoped
 public class ImagemServiceImpl implements ImagemService {
@@ -27,6 +31,12 @@ public class ImagemServiceImpl implements ImagemService {
 
     @Inject
     ImagemRepository imagemRepository;
+
+    @Inject
+    ProfissionalRepository profissionalRepository;
+
+    @Inject
+    ClienteRepository clienteRepository;
 
     @Inject
     ImagemMapper imagemMapper;
@@ -63,7 +73,8 @@ public class ImagemServiceImpl implements ImagemService {
     }
 
     @Override
-    public Imagem salvarImagem(InputStream imageBytes, String nomeArquivo) {
+    public Imagem salvarImagem(InputStream imageBytes, String nomeArquivo, TipoImagemEnum tipoImagem,
+            UUID usuarioId, boolean isProfissional) {
         // Realiza o upload da imagem para o Cloudinary e obtém a URL da imagem
         String urlImagem = uploadImagem(imageBytes, nomeArquivo);
         if (urlImagem == null) {
@@ -73,6 +84,16 @@ public class ImagemServiceImpl implements ImagemService {
         Imagem imagem = new Imagem();
         imagem.setUrlImagem(urlImagem);
         imagem.setNomeArquivo(nomeArquivo);
+        imagem.setTipoImagem(tipoImagem);
+
+        if (isProfissional) {
+            Profissional profissional = profissionalRepository.findById(usuarioId);
+            imagem.setProfissional(profissional);
+        } else {
+            Cliente cliente = clienteRepository.findById(usuarioId);
+            imagem.setCliente(cliente);
+        }
+
         logger.info("Salvando a imagem no banco de dados com a URL: " + urlImagem);
         imagemRepository.persistAndFlush(imagem);
         return imagem;

@@ -49,6 +49,10 @@ public class Profissional extends Informacao {
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
+    private @Getter List<Imagem> imagens;
+
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
     private @Getter List<Servico> servicos;
 
     @JsonManagedReference
@@ -57,13 +61,14 @@ public class Profissional extends Informacao {
 
     public Profissional(String nome, String sobrenome, String nomeSocial, int idade, String email,
             String telefone, String usuario, String senha, String rua, String bairro, String cidade,
-            int numero, String cep, List<Servico> servicos, List<Estoque> estoques) {
+            int numero, String cep, List<Imagem> imagens, List<Servico> servicos, List<Estoque> estoques) {
         super(nome, sobrenome, nomeSocial, idade, email, telefone, usuario, senha);
         this.rua = rua;
         this.bairro = bairro;
         this.cidade = cidade;
         this.numero = numero;
         this.cep = cep;
+        this.imagens = imagens;
         this.servicos = servicos;
         this.estoques = estoques;
     }

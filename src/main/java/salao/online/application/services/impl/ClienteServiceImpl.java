@@ -19,6 +19,7 @@ import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
 import salao.online.application.mappers.AgendamentoMapper;
 import salao.online.application.mappers.AvaliacaoMapper;
 import salao.online.application.mappers.ClienteMapper;
+import salao.online.application.mappers.ImagemMapper;
 import salao.online.application.services.interfaces.ClienteService;
 import salao.online.domain.entities.Cliente;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
@@ -36,6 +37,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Inject
     AgendamentoMapper agendamentoMapper;
+
+    @Inject
+    ImagemMapper imagemMapper;
 
     @Inject
     ClienteRepository clienteRepository;
@@ -148,6 +152,7 @@ public class ClienteServiceImpl implements ClienteService {
         BuscarClienteDTO clienteDTO = clienteMapper.toDtoBuscar(cliente);
         clienteDTO.setAvaliacoes(avaliacaoMapper.toDtoList(cliente.getAvaliacoes()));
         clienteDTO.setAgendamentos(agendamentoMapper.toDtoList(cliente.getAgendamentos()));
+        clienteDTO.setImagens(imagemMapper.toDtoImagemDoClienteList(cliente.getImagens()));
         return clienteDTO;
     }
 

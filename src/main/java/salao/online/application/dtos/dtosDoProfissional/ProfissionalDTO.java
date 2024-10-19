@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import salao.online.application.dtos.dtosDeImagem.ImagensDoProfissionalDTO;
 import salao.online.application.dtos.dtosDoEstoque.EstoqueDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 
@@ -32,4 +33,5 @@ public class ProfissionalDTO{
     private UUID idEndereco;
     private List<ServicoDTO> servicos;
     private List<EstoqueDTO> estoques;
+    private List<ImagensDoProfissionalDTO> imagens; 
 }

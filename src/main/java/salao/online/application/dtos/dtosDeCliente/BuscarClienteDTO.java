@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import salao.online.application.dtos.AgendamentoDTO;
 import salao.online.application.dtos.AvaliacaoDTO;
+import salao.online.application.dtos.dtosDeImagem.ImagensDoClienteDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,4 +28,5 @@ public class BuscarClienteDTO {
     private String telefone;
     private List<AvaliacaoDTO> avaliacoes;
     private List<AgendamentoDTO> agendamentos;
+    private List<ImagensDoClienteDTO> imagens;
 }

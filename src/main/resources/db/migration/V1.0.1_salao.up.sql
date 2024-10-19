@@ -123,6 +123,11 @@ CREATE TABLE IF NOT EXISTS salao.avaliacao (
 
 -- Tabela imagem
 CREATE TABLE IF NOT EXISTS salao.imagem (
-    id_imagem UUID NOT NULL PRIMARY KEY,
-    url_imagem TEXT NOT NULL
+   id_imagem UUID NOT NULL PRIMARY KEY,
+   url_imagem TEXT NOT NULL,
+   tipo_imagem SMALLINT NOT NULL CHECK (tipo_imagem BETWEEN 0 AND 1),
+   id_profissional UUID,
+   id_cliente UUID,
+   FOREIGN KEY (id_profissional) REFERENCES salao.profissional(id_profissional),
+   FOREIGN KEY (id_cliente) REFERENCES salao.cliente(id_cliente)
 );

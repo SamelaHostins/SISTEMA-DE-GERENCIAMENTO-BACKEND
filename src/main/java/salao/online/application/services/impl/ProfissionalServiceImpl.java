@@ -13,6 +13,7 @@ import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ProfissionalDTO;
 import salao.online.application.mappers.EstoqueMapper;
+import salao.online.application.mappers.ImagemMapper;
 import salao.online.application.mappers.ProfissionalMapper;
 import salao.online.application.mappers.ServicoMapper;
 import salao.online.application.services.interfaces.ProfissionalService;
@@ -34,6 +35,9 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     EstoqueMapper estoqueMapper;
 
     @Inject
+    ImagemMapper imagemMapper;
+
+    @Inject
     ProfissionalRepository profissionalRepository;
 
     private static Logger logger = LoggerFactory.getLogger(LoggerFactory.class);
@@ -42,6 +46,11 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     @Transactional
     public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO) {
         Profissional profissional = profissionalMapper.criarDtoToEntity(profissionalDTO);
+        if (profissionalDTO.getNomeSocial() != null && !profissionalDTO.getNomeSocial().isEmpty()) {
+            profissional.setUsuario(profissionalDTO.getNomeSocial());
+        } else {
+            profissional.setUsuario(profissionalDTO.getNome() + " " + profissionalDTO.getSobrenome());
+        }
         logger.info("Salvando o profissional criado");
         profissionalRepository.persistAndFlush(profissional);
         return profissionalMapper.toDtoCriar(profissional);
@@ -81,6 +90,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
         BuscarProfissionalDTO profissionalDTO = profissionalMapper.toDtoBuscar(profissional);
         profissionalDTO.setServicos(servicoMapper.toDtoList(profissional.getServicos()));
         profissionalDTO.setEstoques(estoqueMapper.toDtoList(profissional.getEstoques()));
+        profissionalDTO.setImagens(imagemMapper.toDtoImagemDoProfissionalList(profissional.getImagens()));
         return profissionalDTO;
     }
 

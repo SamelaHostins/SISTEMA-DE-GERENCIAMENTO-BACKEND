@@ -13,7 +13,6 @@ import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import salao.online.application.mappers.ImagemMapper;
 import salao.online.application.services.interfaces.ImagemService;
 import salao.online.domain.entities.Cliente;
 import salao.online.domain.entities.Imagem;
@@ -38,9 +37,6 @@ public class ImagemServiceImpl implements ImagemService {
     @Inject
     ClienteRepository clienteRepository;
 
-    @Inject
-    ImagemMapper imagemMapper;
-
     public ImagemServiceImpl() {
         // Configurar Cloudinary com suas credenciais
         this.cloudinary = new Cloudinary(ObjectUtils.asMap(
@@ -50,17 +46,10 @@ public class ImagemServiceImpl implements ImagemService {
     }
 
     public String uploadImagem(InputStream imageBytes, String nomeArquivo) {
+        byte[] bytes = null;
         try {
-            // Converter InputStream para byte[]
-            byte[] bytes = imageBytes.readAllBytes();
-
-            Map<String, Object> options = new HashMap<>();
-            options.put("public_id", nomeArquivo);
-
-            @SuppressWarnings("unchecked")
-            Map<String, Object> uploadedFile = cloudinary.uploader().upload(bytes, options);
-            return (String) uploadedFile.get("secure_url");
-        } catch (Exception e) {
+            bytes = imageBytes.readAllBytes();
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         } finally {
@@ -69,6 +58,18 @@ public class ImagemServiceImpl implements ImagemService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        Map<String, Object> options = new HashMap<>();
+        options.put("public_id", nomeArquivo);
+
+        logger.info("Fazendo o upload no Cloudinary");
+        try {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> uploadedFile = cloudinary.uploader().upload(bytes, options);
+            return (String) uploadedFile.get("secure_url");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -81,6 +82,7 @@ public class ImagemServiceImpl implements ImagemService {
             logger.error("Falha no upload da imagem.");
             throw new RuntimeException("Erro ao fazer upload da imagem.");
         }
+        logger.info("Criando a imagem com a url: " + urlImagem);
         Imagem imagem = new Imagem();
         imagem.setUrlImagem(urlImagem);
         imagem.setNomeArquivo(nomeArquivo);

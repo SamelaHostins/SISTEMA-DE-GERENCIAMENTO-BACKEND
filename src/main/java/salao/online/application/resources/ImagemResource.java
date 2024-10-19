@@ -17,10 +17,12 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import salao.online.application.services.interfaces.ImagemService;
 import salao.online.domain.entities.Imagem;
+import salao.online.domain.enums.TipoImagemEnum;
 
 @Path("/imagem")
 @Tag(name = "Endpoints do Cloudinary - Imagem")
@@ -57,12 +59,13 @@ public class ImagemResource {
     @POST
     @Transactional
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Path("/salvar")
+    @Path("/salvar/{tipo_imagem}/{id}/{boolean}")
     public Response salvarImagem(@RestForm("imageBytes") InputStream imageBytes,
-            @RestForm("nomeArquivo") String nomeArquivo) {
+            @RestForm("nomeArquivo") String nomeArquivo, @PathParam("tipo_imagem") TipoImagemEnum tipoImagem,
+            @PathParam("id") UUID usuarioId, @PathParam("boolean") boolean isProfissional) {
         try {
             LOG.info("Requisição recebida - Salvar Imagem");
-            Imagem imagem = imagemService.salvarImagem(imageBytes, nomeArquivo);
+            Imagem imagem = imagemService.salvarImagem(imageBytes, nomeArquivo, tipoImagem, usuarioId, isProfissional);
             return Response.ok(Map.of("url", imagem.getUrlImagem())).build();
         } catch (Exception ex) {
             return Response.status(500).entity("Ocorreu um erro na requisição.").build();

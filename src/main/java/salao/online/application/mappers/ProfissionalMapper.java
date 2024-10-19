@@ -9,7 +9,7 @@ import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ProfissionalDTO;
 import salao.online.domain.entities.Profissional;
 
-@Mapper(componentModel = "cdi", uses = { EstoqueMapper.class, ServicoMapper.class })
+@Mapper(componentModel = "cdi", uses = { EstoqueMapper.class, ServicoMapper.class, ImagemMapper.class })
 public interface ProfissionalMapper {
 
     @InheritInverseConfiguration

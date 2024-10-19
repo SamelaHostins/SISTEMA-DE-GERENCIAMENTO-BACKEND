@@ -1,4 +1,4 @@
-package salao.online.application.dtos;
+package salao.online.application.dtos.dtosDeImagem;
 
 import java.util.UUID;
 
@@ -11,11 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ImagemDTO {
+public class ImagensDoProfissionalDTO {
 
     private UUID idImagem;
     private String urlImagem;
-    private String nomeArquivo;
     private UUID idProfissional;
-    private UUID idCliente;
 }

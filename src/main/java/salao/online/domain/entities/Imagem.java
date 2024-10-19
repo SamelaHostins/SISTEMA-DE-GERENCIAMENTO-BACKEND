@@ -2,6 +2,8 @@ package salao.online.domain.entities;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import io.smallrye.common.constraint.NotNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,10 +38,12 @@ public class Imagem {
     private @Getter @Setter String urlImagem;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "id_profissional", nullable = true)
     private @Getter @Setter Profissional profissional;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "id_cliente", nullable = true)
     private @Getter @Setter Cliente cliente;
 

@@ -9,13 +9,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import salao.online.application.dtos.AgendamentoDTO;
 import salao.online.application.dtos.AvaliacaoDTO;
+import salao.online.application.dtos.dtosDeImagem.ImagensDoClienteDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class ClienteDTO {
-    
+
     private UUID idCliente;
     private String nome;
     private String sobrenome;
@@ -27,4 +28,5 @@ public class ClienteDTO {
     private String senha;
     private List<AvaliacaoDTO> avaliacoes;
     private List<AgendamentoDTO> agendamentos;
+    private List<ImagensDoClienteDTO> imagens;
 }

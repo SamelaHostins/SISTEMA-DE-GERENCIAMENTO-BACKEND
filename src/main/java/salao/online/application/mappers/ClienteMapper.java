@@ -9,7 +9,7 @@ import salao.online.application.dtos.dtosDeCliente.ClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
 import salao.online.domain.entities.Cliente;
 
-@Mapper(componentModel = "cdi", uses = {AvaliacaoMapper.class, AgendamentoMapper.class})
+@Mapper(componentModel = "cdi", uses = {AvaliacaoMapper.class, AgendamentoMapper.class, ImagemMapper.class})
 public interface ClienteMapper {
 
     @InheritInverseConfiguration

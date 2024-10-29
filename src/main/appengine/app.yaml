@@ -1,0 +1,2 @@
+runtime: java21
+entrypoint: java -jar target/code-with-quarkus-1.0.0-SNAPSHOT.jar

@@ -11,8 +11,8 @@ public interface ImagemService {
 
       public String uploadImagem(InputStream imageBytes, String nomeArquivo);
 
-      public Imagem salvarImagem(InputStream imageBytes, String nomeArquivo, TipoImagemEnum tipoImagem,
-            UUID usuarioId, boolean isProfissional);
+      public Imagem salvarImagem(String urlImagem, String nomeArquivo, TipoImagemEnum tipoImagem,
+      UUID usuarioId, boolean isProfissional);
 
       public Imagem buscarImagemPorId(UUID id);
 }

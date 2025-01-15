@@ -1,5 +1,6 @@
 package salao.online.application.resources;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.UUID;
@@ -31,43 +32,63 @@ public class ImagemResource {
     @Inject
     ImagemService imagemService;
 
-    private static final org.jboss.logging.Logger LOG = org.jboss.logging.Logger.getLogger(ProfissionalResource.class);
+    private static final org.jboss.logging.Logger LOG = org.jboss.logging.Logger.getLogger(ImagemResource.class);
 
     @POST
     @Path("/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadImagem(@RestForm("imageBytes") InputStream imageBytes,
             @RestForm("nomeArquivo") String nomeArquivo) {
-        String url = null;
         try {
-            url = imagemService.uploadImagem(imageBytes, nomeArquivo);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            if (imageBytes == null || nomeArquivo == null || nomeArquivo.isEmpty()) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("Parâmetros inválidos: certifique-se de fornecer a imagem e o nome do arquivo.")
+                        .build();
+            }
 
-        if (url != null) {
-            return Response.ok(Map.of("url", url)).build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            String url = imagemService.uploadImagem(imageBytes, nomeArquivo);
+
+            if (url != null) {
+                LOG.info("Upload realizado com sucesso. URL: " + url);
+                return Response.ok(Map.of("url", url)).build();
+            } else {
+                LOG.error("Falha ao realizar o upload da imagem.");
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+        } catch (Exception e) {
+            LOG.error("Erro ao fazer upload da imagem: ", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao realizar o upload da imagem.")
+                    .build();
         }
     }
 
-    @Operation(summary = "Salvar uma imagem")
+    @Operation(summary = "Salvar uma imagem no banco de dados")
     @APIResponse(responseCode = "200", description = "Imagem salva com sucesso!")
-    @APIResponse(responseCode = "500", description = "Ocorreu um erro na requisição.")
+    @APIResponse(responseCode = "500", description = "Erro ao salvar a imagem.")
     @POST
-    @Transactional
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Path("/salvar/{tipo_imagem}/{id}/{boolean}")
-    public Response salvarImagem(@RestForm("imageBytes") InputStream imageBytes,
-            @RestForm("nomeArquivo") String nomeArquivo, @PathParam("tipo_imagem") TipoImagemEnum tipoImagem,
-            @PathParam("id") UUID usuarioId, @PathParam("boolean") boolean isProfissional) {
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response salvarImagem(Map<String, String> payload,
+            @PathParam("tipo_imagem") TipoImagemEnum tipoImagem,
+            @PathParam("id") UUID usuarioId,
+            @PathParam("boolean") boolean isProfissional) {
         try {
             LOG.info("Requisição recebida - Salvar Imagem");
-            Imagem imagem = imagemService.salvarImagem(imageBytes, nomeArquivo, tipoImagem, usuarioId, isProfissional);
+
+            // Extrai a URL do payload
+            String urlImagem = payload.get("url");
+            String nomeArquivo = payload.get("nomeArquivo");
+
+            // Salva a URL no banco de dados
+            Imagem imagem = imagemService.salvarImagem(urlImagem, nomeArquivo, tipoImagem, usuarioId, isProfissional);
+
+            // Retorna a URL da imagem salva
             return Response.ok(Map.of("url", imagem.getUrlImagem())).build();
         } catch (Exception ex) {
-            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+            LOG.error("Erro ao salvar imagem no banco de dados", ex);
+            return Response.status(500).entity("Erro ao salvar a imagem.").build();
         }
     }
 
@@ -77,19 +98,21 @@ public class ImagemResource {
     public Response getImagem(@PathParam("id") UUID id) {
         try {
             Imagem imagem = imagemService.buscarImagemPorId(id);
+
             if (imagem != null) {
+                LOG.info("Imagem encontrada. URL: " + imagem.getUrlImagem());
                 return Response.ok(Map.of("url", imagem.getUrlImagem())).build();
             } else {
+                LOG.warn("Imagem não encontrada. ID: " + id);
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("Imagem não encontrada.")
                         .build();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Erro ao buscar a imagem: ", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Erro ao buscar a imagem.")
                     .build();
         }
     }
-
 }

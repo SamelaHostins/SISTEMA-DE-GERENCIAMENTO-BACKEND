@@ -2,9 +2,14 @@ package salao.online.application.services.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -46,43 +51,54 @@ public class ImagemServiceImpl implements ImagemService {
     }
 
     public String uploadImagem(InputStream imageBytes, String nomeArquivo) {
-        byte[] bytes = null;
+        Path tempFilePath = null;
         try {
-            bytes = imageBytes.readAllBytes();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            try {
-                imageBytes.close(); // Fechar o InputStream
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        Map<String, Object> options = new HashMap<>();
-        options.put("public_id", nomeArquivo);
+            // Crie um arquivo temporário para leitura dos bytes, se necessário
+            tempFilePath = Files.createTempFile("upload_", nomeArquivo);
+            Files.copy(imageBytes, tempFilePath, StandardCopyOption.REPLACE_EXISTING);
 
-        logger.info("Fazendo o upload no Cloudinary");
-        try {
+            // Leia os bytes do arquivo temporário
+            byte[] bytes = Files.readAllBytes(tempFilePath);
+            Map<String, Object> options = new HashMap<>();
+            options.put("public_id", nomeArquivo);
+
+            logger.info("Fazendo o upload no Cloudinary");
             @SuppressWarnings("unchecked")
             Map<String, Object> uploadedFile = cloudinary.uploader().upload(bytes, options);
             return (String) uploadedFile.get("secure_url");
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            logger.error("Erro ao fazer upload no Cloudinary", e);
+            throw new RuntimeException("Erro ao fazer upload da imagem.");
+        } finally {
+            // Fechar o InputStream e excluir o arquivo temporário
+            try {
+                imageBytes.close();
+                logger.info("InputStream fechado com sucesso.");
+            } catch (IOException e) {
+                logger.error("Erro ao fechar InputStream", e);
+            }
+
+            // Excluir o arquivo temporário, se criado
+            if (tempFilePath != null) {
+                try {
+                    Files.deleteIfExists(tempFilePath);
+                    logger.info("Arquivo temporário excluído com sucesso.");
+                } catch (IOException e) {
+                    logger.error("Erro ao excluir o arquivo temporário: ", e);
+                }
+            }
         }
     }
 
     @Override
-    public Imagem salvarImagem(InputStream imageBytes, String nomeArquivo, TipoImagemEnum tipoImagem,
+    public Imagem salvarImagem(String urlImagem, String nomeArquivo, TipoImagemEnum tipoImagem,
             UUID usuarioId, boolean isProfissional) {
-        // Realiza o upload da imagem para o Cloudinary e obtém a URL da imagem
-        String urlImagem = uploadImagem(imageBytes, nomeArquivo);
-        if (urlImagem == null) {
-            logger.error("Falha no upload da imagem.");
-            throw new RuntimeException("Erro ao fazer upload da imagem.");
+        if (urlImagem == null || urlImagem.isEmpty()) {
+            logger.error("URL da imagem é nula ou vazia.");
+            throw new IllegalArgumentException("A URL da imagem não pode ser nula ou vazia.");
         }
-        logger.info("Criando a imagem com a url: " + urlImagem);
+
+        logger.info("Criando a imagem com a URL: " + urlImagem);
         Imagem imagem = new Imagem();
         imagem.setUrlImagem(urlImagem);
         imagem.setNomeArquivo(nomeArquivo);
@@ -90,9 +106,15 @@ public class ImagemServiceImpl implements ImagemService {
 
         if (isProfissional) {
             Profissional profissional = profissionalRepository.findById(usuarioId);
+            if (profissional == null) {
+                throw new IllegalArgumentException("Profissional não encontrado.");
+            }
             imagem.setProfissional(profissional);
         } else {
             Cliente cliente = clienteRepository.findById(usuarioId);
+            if (cliente == null) {
+                throw new IllegalArgumentException("Cliente não encontrado");
+            }
             imagem.setCliente(cliente);
         }
 

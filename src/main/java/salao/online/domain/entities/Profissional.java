@@ -59,7 +59,7 @@ public class Profissional extends Informacao {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
     private @Getter List<Estoque> estoques;
 
-    public Profissional(String nome, String sobrenome, String nomeSocial, int idade, String email,
+    public Profissional(String nome, String sobrenome, String nomeSocial, short idade, String email,
             String telefone, String usuario, String senha, String rua, String bairro, String cidade,
             int numero, String cep, List<Imagem> imagens, List<Servico> servicos, List<Estoque> estoques) {
         super(nome, sobrenome, nomeSocial, idade, email, telefone, usuario, senha);
@@ -73,8 +73,8 @@ public class Profissional extends Informacao {
         this.estoques = estoques;
     }
 
-    public Profissional atualizarCadastroProfissional(String novoNome, String novoSobrenome, String novoNomeSocial,
-            int novaIdade, String novoEmail, String novoTelefone, String novaSenha, String novaRua,
+    public Profissional atualizarProfissional(String novoNome, String novoSobrenome, String novoNomeSocial,
+            short novaIdade, String novoEmail, String novoTelefone, String novaSenha, String novaRua,
             String novoBairro, String novaCidade, int novoNumero, String novoCep) {
         setNome(novoNome);
         setSobrenome(novoSobrenome);

@@ -1,6 +1,7 @@
 package salao.online.application.mappers;
 
-import salao.online.application.dtos.ProdutoDTO;
+import salao.online.application.dtos.dtosDeProduto.CriarProdutoDTO;
+import salao.online.application.dtos.dtosDeProduto.ProdutoDTO;
 import salao.online.domain.entities.Produto;
 
 import java.util.List;
@@ -20,6 +21,10 @@ public interface ProdutoMapper {
     @Mapping(source = "estoque.idEstoque", target = "idEstoque")
     @Named("mapToDTO")
     ProdutoDTO toDto(Produto entity);
+
+    CriarProdutoDTO toCriarDto(Produto entity);
+
+    Produto criarDtoToEntity(CriarProdutoDTO dto);
 
     @IterableMapping(qualifiedByName = "mapToDTO")
     @Named("mapListToDtoList")

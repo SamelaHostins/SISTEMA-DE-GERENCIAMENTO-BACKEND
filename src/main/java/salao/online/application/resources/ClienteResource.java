@@ -93,11 +93,11 @@ public class ClienteResource {
     @DELETE
     @Transactional
     @Path("/deletar/{id_cliente}")
-    public Response deletarCadastroCliente(@PathParam("id_cliente") UUID idCliente)
+    public Response deletarCliente(@PathParam("id_cliente") UUID idCliente)
             throws ValidacaoException {
         try {
             LOG.info("Requisição recebida - Deletar o cadastro do Cliente");
-            clienteService.deletarCadastroCliente(idCliente);
+            clienteService.deletarCliente(idCliente);
             return Response.status(200).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
@@ -112,11 +112,11 @@ public class ClienteResource {
     @PUT
     @Transactional
     @Path("/atualizar/{id_cliente}")
-    public Response atualizarCadastroCliente(@RequestBody AtualizarClienteDTO clienteDTO)
+    public Response atualizarCliente(@RequestBody AtualizarClienteDTO clienteDTO)
             throws ValidacaoException {
         try {
             LOG.info("Requisição recebida - Atualizar o cadastro do Cliente");
-            AtualizarClienteDTO clienteAtualizado = clienteService.atualizarCadastroCliente(clienteDTO);
+            AtualizarClienteDTO clienteAtualizado = clienteService.atualizarCliente(clienteDTO);
             return Response.status(200).entity(clienteAtualizado).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();

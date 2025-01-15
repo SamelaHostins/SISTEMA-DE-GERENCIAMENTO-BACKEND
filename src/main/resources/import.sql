@@ -1,20 +1,20 @@
 -- Inserir dados na tabela Cliente
-INSERT INTO salao.cliente (id_cliente, especial, nome, sobrenome, idade, email, telefone, senha) 
+INSERT INTO salao.cliente (id_cliente, especial, nome, sobrenome, nome_social, idade, email, telefone, usuario, senha) 
 VALUES 
-  ('234e5678-e89b-12d3-a456-426614174001', false, 'Ana', 'Silva', 28, 'ana.silva@example.com', '12345678901', 'Senha1234'),
-  ('334e5678-e89b-12d3-a456-426614174002', true, 'Bruno', 'Oliveira', 34, 'bruno.oliveira@example.com', '23456789012', 'Senha1234'),
-  ('434e5678-e89b-12d3-a456-426614174003', false, 'Carla', 'Souza', 25, 'carla.souza@example.com', '34567890123', 'Senha1234'),
-  ('534e5678-e89b-12d3-a456-426614174004', true, 'Diego', 'Pereira', 30, 'diego.pereira@example.com', '45678901234', 'Senha1234'),
-  ('634e5678-e89b-12d3-a456-426614174005', false, 'Elisa', 'Lima', 22, 'elisa.lima@example.com', '56789012345', 'Senha1234');
+  ('234e5678-e89b-12d3-a456-426614174001', false, 'Ana', 'Silva', 'Ana Silva', 28, 'ana.silva@example.com', '12345678901', 'ana.silva', 'Senha1234'),
+  ('334e5678-e89b-12d3-a456-426614174002', true, 'Bruno', 'Oliveira', 'Bruno Oliveira', 34, 'bruno.oliveira@example.com', '23456789012', 'bruno.oliveira', 'Senha1234'),
+  ('434e5678-e89b-12d3-a456-426614174003', false, 'Carla', 'Souza', 'Carla Souza', 25, 'carla.souza@example.com', '34567890123', 'carla.souza', 'Senha1234'),
+  ('534e5678-e89b-12d3-a456-426614174004', true, 'Diego', 'Pereira', 'Diego Pereira', 30, 'diego.pereira@example.com', '45678901234', 'diego.pereira', 'Senha1234'),
+  ('634e5678-e89b-12d3-a456-426614174005', false, 'Elisa', 'Lima', 'Elisa Lima', 22, 'elisa.lima@example.com', '56789012345', 'elisa.lima', 'Senha1234');
 
 -- Inserir dados na tabela Profissional
 INSERT INTO salao.profissional (id_profissional, metodos_de_pagamento, rua, bairro, cidade, numero, cep) 
 VALUES 
-  ('345e6789-e89b-12d3-a456-426614174002', 'Cartão de crédito', '123e4567-e89b-12d3-a456-426614174000', 'Rua A', 'Bairro X', 'Cidade Y', 123, '12345-678'),
-  ('445e6789-e89b-12d3-a456-426614174003', 'Dinheiro', '223e4567-e89b-12d3-a456-426614174001', 'Rua B', 'Bairro Y', 'Cidade Z', 456, '23456-789'),
-  ('545e6789-e89b-12d3-a456-426614174004', 'Transferência bancária', '323e4567-e89b-12d3-a456-426614174002', 'Rua C', 'Bairro Z', 'Cidade X', 789, '34567-890'),
-  ('645e6789-e89b-12d3-a456-426614174005', 'PIX', '423e4567-e89b-12d3-a456-426614174003', 'Rua D', 'Bairro W', 'Cidade Y', 1011, '45678-901'),
-  ('745e6789-e89b-12d3-a456-426614174006', 'Boleto', '523e4567-e89b-12d3-a456-426614174004', 'Rua E', 'Bairro V', 'Cidade Z', 1213, '56789-012');
+  ('345e6789-e89b-12d3-a456-426614174002', 'Cartão de crédito', 'Rua A', 'Bairro X', 'Cidade Y', 123, '12345-678'),
+  ('445e6789-e89b-12d3-a456-426614174003', 'Dinheiro', 'Rua B', 'Bairro Y', 'Cidade Z', 456, '23456-789'),
+  ('545e6789-e89b-12d3-a456-426614174004', 'Transferência bancária', 'Rua C', 'Bairro Z', 'Cidade X', 789, '34567-890'),
+  ('645e6789-e89b-12d3-a456-426614174005', 'PIX', 'Rua D', 'Bairro W', 'Cidade Y', 1011, '45678-901'),
+  ('745e6789-e89b-12d3-a456-426614174006', 'Boleto', 'Rua E', 'Bairro V', 'Cidade Z', 1213, '56789-012');
 
 -- Inserir dados na tabela Estoque
 INSERT INTO salao.estoque (id_estoque, nome, qtd_de_produtos, id_profissional) 
@@ -47,8 +47,8 @@ VALUES
 INSERT INTO salao.profissional_metodo_pagamento (id_profissional, id_metodo_pagamento) 
 VALUES 
   ('345e6789-e89b-12d3-a456-426614174002', '123e4567-e89b-12d3-a456-426614174000'),  -- Relacionando o profissional com Cartão de crédito
-  ('445e6789-e89b-12d3-a456-426614174003', '223e4567-e89b-12d3-a456-426614174001'),  -- Relacionando o profissional com Dinheiro
- 
+  ('445e6789-e89b-12d3-a456-426614174003', '223e4567-e89b-12d3-a456-426614174001');  -- Relacionando o profissional com Dinheiro
+
 -- Inserir dados na tabela Avaliacao
 INSERT INTO salao.avaliacao (id_avaliacao, nota, dt_avaliacao, id_cliente, id_servico) 
 VALUES 

@@ -57,7 +57,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     }
 
     @Override
-    public ProfissionalDTO atualizarCadastroDoProfissional(ProfissionalDTO profissionalDTO) throws ValidacaoException {
+    public ProfissionalDTO atualizarProfissional(ProfissionalDTO profissionalDTO) throws ValidacaoException {
         throw new UnsupportedOperationException("Unimplemented method 'atualizarProfissional'");
     }
 
@@ -80,10 +80,10 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     }
 
     @Override
-    public void deletarCadastroDoProfissional(UUID idProfissional) throws ValidacaoException {
+    public void deletarProfissional(UUID idProfissional) throws ValidacaoException {
         logger.info("Validando se o Cliente existe");
         buscarProfissionalPorId(idProfissional);
-        profissionalRepository.deletarCadastroDoProfissional(idProfissional);
+        profissionalRepository.deletarProfissional(idProfissional);
     }
 
     private BuscarProfissionalDTO getBuscarProfissionalDTO(Profissional profissional) {

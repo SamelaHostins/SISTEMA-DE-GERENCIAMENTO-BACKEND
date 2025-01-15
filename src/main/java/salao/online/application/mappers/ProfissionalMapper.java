@@ -17,10 +17,9 @@ public interface ProfissionalMapper {
 
     ProfissionalDTO toDto(Profissional entity);
 
-    @InheritInverseConfiguration
-    Profissional criarDtoToEntity(CriarProfissionalDTO dto);
-
     CriarProfissionalDTO toDtoCriar(Profissional entity);
+
+    Profissional criarDtoToEntity(CriarProfissionalDTO dto);
 
     BuscarProfissionalDTO toDtoBuscar (Profissional entity);
 

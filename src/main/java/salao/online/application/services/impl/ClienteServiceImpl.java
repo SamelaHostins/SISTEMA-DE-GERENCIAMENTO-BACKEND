@@ -57,15 +57,39 @@ public class ClienteServiceImpl implements ClienteService {
         }
         logger.info("Salvando o cliente no bd");
         clienteRepository.persistAndFlush(cliente);
-        return clienteMapper.toDtoCriar(cliente);
+        return clienteMapper.toCriarDto(cliente);
     }
 
     @Override
-    public AtualizarClienteDTO atualizarCadastroCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException {
+    public BuscarClienteDTO buscarClientePorId(UUID idCliente) throws ValidacaoException {
+        logger.info("Validando se o Cliente existe");
+        Cliente cliente = clienteRepository.findByIdOptional(idCliente)
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro()));
+        return getBuscarClienteDTO(cliente);
+    }
+
+    @Override
+    public List<BuscarClienteDTO> buscarClientesPorNome() {
+        logger.info("Buscando de forma ordenada os clientes cadastrados");
+        return clienteRepository.buscarClientesPorNome().stream()
+                .map(cliente -> getBuscarClienteDTO(cliente))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deletarCliente(UUID idCliente) throws ValidacaoException {
+        logger.info("Validando se o Cliente existe");
+        buscarClientePorId(idCliente);
+        clienteRepository.deletarCadastroDeCliente(idCliente);
+    }
+
+    @Override
+    public AtualizarClienteDTO atualizarCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException {
         Optional<Cliente> clienteOptional = clienteRepository.findByIdOptional(clienteDTO.getIdCliente());
         if (clienteOptional.isPresent()) {
             Cliente cliente = clienteOptional.get();
-            cliente.atualizarCadastroCliente(clienteDTO.getNome(), clienteDTO.getSobrenome(),
+            cliente.atualizarCliente(clienteDTO.getNome(), clienteDTO.getSobrenome(),
                     clienteDTO.getNomeSocial(), clienteDTO.getIdade(), clienteDTO.getEmail(),
                     clienteDTO.getTelefone(), clienteDTO.getSenha());
             if (clienteDTO.getNomeSocial() != null && !clienteDTO.getNomeSocial().isEmpty()) {
@@ -75,7 +99,7 @@ public class ClienteServiceImpl implements ClienteService {
             }
             logger.info("Salvando registro atualizado");
             clienteRepository.persistAndFlush(cliente);
-            return clienteMapper.toDtoAtualizar(cliente);
+            return clienteMapper.toAtualizarDto(cliente);
         } else {
             throw new ValidacaoException(MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro());
         }
@@ -95,30 +119,6 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public BuscarClienteDTO buscarClientePorId(UUID idCliente) throws ValidacaoException {
-        logger.info("Validando se o Cliente existe");
-        Cliente cliente = clienteRepository.findByIdOptional(idCliente)
-                .orElseThrow(() -> new ValidacaoException(
-                        MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro()));
-        return getBuscarClienteDTO(cliente);
-    }
-
-    @Override
-    public void deletarCadastroCliente(UUID idCliente) throws ValidacaoException {
-        logger.info("Validando se o Cliente existe");
-        buscarClientePorId(idCliente);
-        clienteRepository.deletarCadastroDeCliente(idCliente);
-    }
-
-    @Override
-    public List<BuscarClienteDTO> buscarClientesPorNome() {
-        logger.info("Buscando de forma ordenada os clientes cadastrados");
-        return clienteRepository.buscarClientesPorNome().stream()
-                .map(cliente -> getBuscarClienteDTO(cliente))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public Map<String, Integer> obterFaixasEtariasDasClientes() {
         List<BuscarClienteDTO> clientes = clienteRepository.buscarClientesPorNome().stream()
                 .map(cliente -> getBuscarClienteDTO(cliente))
@@ -131,7 +131,7 @@ public class ClienteServiceImpl implements ClienteService {
         distribuicao.put("acima_40", 0);
 
         for (BuscarClienteDTO cliente : clientes) {
-            int idade = cliente.getIdade();
+            short idade = cliente.getIdade();
             if (idade < 18) {
                 distribuicao.put("abaixo_18", distribuicao.get("abaixo_18") + 1);
             } else if (idade <= 25) {
@@ -149,7 +149,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     private BuscarClienteDTO getBuscarClienteDTO(Cliente cliente) {
-        BuscarClienteDTO clienteDTO = clienteMapper.toDtoBuscar(cliente);
+        BuscarClienteDTO clienteDTO = clienteMapper.toBuscarDto(cliente);
         clienteDTO.setAvaliacoes(avaliacaoMapper.toDtoList(cliente.getAvaliacoes()));
         clienteDTO.setAgendamentos(agendamentoMapper.toDtoList(cliente.getAgendamentos()));
         clienteDTO.setImagens(imagemMapper.toDtoImagemDoClienteList(cliente.getImagens()));

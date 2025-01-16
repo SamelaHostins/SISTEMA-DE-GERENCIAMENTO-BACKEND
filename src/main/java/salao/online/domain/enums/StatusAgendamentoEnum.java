@@ -12,4 +12,14 @@ public enum StatusAgendamentoEnum {
     private StatusAgendamentoEnum(int statusAgendamento) {
         this.statusAgendamento = statusAgendamento;
     }
+
+    // Método personalizado para buscar o enum pelo valor inteiro
+    public static StatusAgendamentoEnum fromStatusAgendamento(int statusAgendamento) {
+        for (StatusAgendamentoEnum tipo : StatusAgendamentoEnum.values()) {
+            if (tipo.getStatusAgendamento() == statusAgendamento) {
+                return tipo;
+            }
+        }
+        throw new IllegalArgumentException("Tipo de serviço inválido: " + statusAgendamento);
+    }
 }

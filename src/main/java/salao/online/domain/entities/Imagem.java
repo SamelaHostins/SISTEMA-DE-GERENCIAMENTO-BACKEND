@@ -40,23 +40,24 @@ public class Imagem {
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "id_profissional", nullable = true)
-    private @Getter @Setter Profissional profissional;
+    private Profissional profissional;
 
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "id_cliente", nullable = true)
-    private @Getter @Setter Cliente cliente;
+    private Cliente cliente;
 
     @NotNull
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "tipo_imagem", nullable = false)
-    private @Getter @Setter TipoImagemEnum tipoImagem;
+    private TipoImagemEnum tipoImagem;
 
-    public Imagem(String urlImagem, String nomeArquivo, TipoImagemEnum tipoImagem) {
-        this.urlImagem = urlImagem;
+    public Imagem() {
+    }
+
+    public Imagem(String nomeArquivo, String urlImagem, TipoImagemEnum tipoImagem) {
         this.nomeArquivo = nomeArquivo;
+        this.urlImagem = urlImagem;
         this.tipoImagem = tipoImagem;
     }
-    
-    public Imagem() {}
 }

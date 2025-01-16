@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
@@ -18,6 +16,8 @@ import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import salao.online.application.dtos.SalvarImagemDTO;
+import salao.online.application.dtos.TipoImagemEnumDTO;
 import salao.online.application.services.interfaces.ImagemService;
 import salao.online.domain.entities.Cliente;
 import salao.online.domain.entities.Imagem;
@@ -91,37 +91,30 @@ public class ImagemServiceImpl implements ImagemService {
     }
 
     @Override
-    public Imagem salvarImagem(String urlImagem, String nomeArquivo, TipoImagemEnum tipoImagem,
-            UUID usuarioId, boolean isProfissional) {
-        if (urlImagem == null || urlImagem.isEmpty()) {
-            logger.error("URL da imagem é nula ou vazia.");
-            throw new IllegalArgumentException("A URL da imagem não pode ser nula ou vazia.");
-        }
-
-        logger.info("Criando a imagem com a URL: " + urlImagem);
-        Imagem imagem = new Imagem();
-        imagem.setUrlImagem(urlImagem);
-        imagem.setNomeArquivo(nomeArquivo);
-        imagem.setTipoImagem(tipoImagem);
-
-        if (isProfissional) {
-            Profissional profissional = profissionalRepository.findById(usuarioId);
+    public SalvarImagemDTO salvarImagem(SalvarImagemDTO dto) {
+        Imagem imagem = imagemMapper.toEntity(dto);
+    
+        // Verificar e associar corretamente
+        if (dto.isProfissional()) {
+            Profissional profissional = profissionalRepository.findById(dto.getUsuarioId());
             if (profissional == null) {
                 throw new IllegalArgumentException("Profissional não encontrado.");
             }
             imagem.setProfissional(profissional);
         } else {
-            Cliente cliente = clienteRepository.findById(usuarioId);
+            Cliente cliente = clienteRepository.findById(dto.getUsuarioId());
             if (cliente == null) {
-                throw new IllegalArgumentException("Cliente não encontrado");
+                throw new IllegalArgumentException("Cliente não encontrado.");
             }
             imagem.setCliente(cliente);
         }
-
-        logger.info("Salvando a imagem no banco de dados com a URL: " + urlImagem);
+    
+        // Salvar a imagem no banco
         imagemRepository.persistAndFlush(imagem);
-        return imagem;
+    
+        return imagemMapper.toDto(imagem);
     }
+    
 
     public Imagem buscarImagemPorId(UUID id) {
         return imagemRepository.findById(id);

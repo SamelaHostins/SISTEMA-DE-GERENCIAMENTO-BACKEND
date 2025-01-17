@@ -7,12 +7,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import io.vertx.core.impl.logging.Logger;
+import io.vertx.core.impl.logging.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-
-import io.vertx.core.impl.logging.Logger;
-import io.vertx.core.impl.logging.LoggerFactory;
 import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
@@ -152,7 +151,7 @@ public class ClienteServiceImpl implements ClienteService {
         BuscarClienteDTO clienteDTO = clienteMapper.toBuscarDto(cliente);
         clienteDTO.setAvaliacoes(avaliacaoMapper.toDtoList(cliente.getAvaliacoes()));
         clienteDTO.setAgendamentos(agendamentoMapper.toDtoList(cliente.getAgendamentos()));
-        clienteDTO.setImagens(imagemMapper.toDtoImagemDoClienteList(cliente.getImagens()));
+        clienteDTO.setImagens(imagemMapper.toClienteDtoList(cliente.getImagens()));
         return clienteDTO;
     }
 

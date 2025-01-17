@@ -13,7 +13,6 @@ import lombok.Setter;
 @Setter
 public class ImagensDoProfissionalDTO {
 
-    private UUID idImagem;
     private String urlImagem;
     private UUID idProfissional;
 }

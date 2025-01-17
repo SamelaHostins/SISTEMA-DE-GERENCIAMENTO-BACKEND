@@ -40,12 +40,12 @@ public class Imagem {
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "id_profissional", nullable = true)
-    private Profissional profissional;
+    private @Getter @Setter Profissional profissional;
 
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "id_cliente", nullable = true)
-    private Cliente cliente;
+    private @Getter @Setter Cliente cliente;
 
     @NotNull
     @Enumerated(EnumType.ORDINAL)
@@ -60,4 +60,5 @@ public class Imagem {
         this.urlImagem = urlImagem;
         this.tipoImagem = tipoImagem;
     }
+
 }

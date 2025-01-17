@@ -16,7 +16,17 @@ public class SalvarImagemDTO {
     private String urlImagem;
     private String nomeArquivo;
     private TipoImagemEnumDTO tipoImagem;
-    private UUID usuarioId;
-    private boolean isProfissional;
+    private UUID idUsuario;
+    
+    // Renomeado para "profissional" para evitar ambiguidades
+    private boolean ehProfissional;
+
+    public boolean ehProfissional() {
+        return ehProfissional;
+    }
+
+    public void setEhProfissional(boolean ehProfissional) {
+        this.ehProfissional = ehProfissional;
+    }
 
 }

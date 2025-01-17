@@ -1,6 +1,5 @@
 package salao.online.application.resources;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.UUID;
@@ -23,7 +22,6 @@ import jakarta.ws.rs.core.Response;
 import salao.online.application.dtos.SalvarImagemDTO;
 import salao.online.application.services.interfaces.ImagemService;
 import salao.online.domain.entities.Imagem;
-import salao.online.domain.enums.TipoImagemEnum;
 
 @Path("/imagem")
 @Tag(name = "Endpoints do Cloudinary - Imagem")
@@ -35,6 +33,7 @@ public class ImagemResource {
 
     private static final org.jboss.logging.Logger LOG = org.jboss.logging.Logger.getLogger(ImagemResource.class);
 
+    @Operation(summary = "Faz o upload de uma imagem para o Cloudinary")
     @POST
     @Path("/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -70,24 +69,14 @@ public class ImagemResource {
     @POST
     @Path("/salvar")
     @Transactional
-    public Response salvarImagem(SalvarImagemDTO payload) {
+    public Response salvarImagem(SalvarImagemDTO dto) {
         try {
-            LOG.info("Requisição recebida - Salvar Imagem");
-    
-            // Chama o serviço para salvar a imagem
-            SalvarImagemDTO resposta = imagemService.salvarImagem(
-                    payload.getUrlImagem(),
-                    payload.getNomeArquivo(),
-                    TipoImagemEnum.valueOf(payload.getTipoImagem().getTipoImagem()),
-                    payload.getUsuarioId(),
-                    payload.isProfissional()
-            );
-    
-            // Retorna o DTO como resposta
+            SalvarImagemDTO resposta = imagemService.salvarImagem(dto);
             return Response.ok(resposta).build();
-        } catch (Exception ex) {
-            LOG.error("Erro ao salvar imagem no banco de dados", ex);
-            return Response.status(500).entity("Erro ao salvar a imagem.").build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao salvar imagem.").build();
         }
     }
 

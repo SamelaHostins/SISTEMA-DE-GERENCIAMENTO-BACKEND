@@ -90,7 +90,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
         BuscarProfissionalDTO profissionalDTO = profissionalMapper.toDtoBuscar(profissional);
         profissionalDTO.setServicos(servicoMapper.toDtoList(profissional.getServicos()));
         profissionalDTO.setEstoques(estoqueMapper.toDtoList(profissional.getEstoques()));
-        profissionalDTO.setImagens(imagemMapper.toDtoImagemDoProfissionalList(profissional.getImagens()));
+        profissionalDTO.setImagens(imagemMapper.toProfissionalDtoList(profissional.getImagens()));
         return profissionalDTO;
     }
 

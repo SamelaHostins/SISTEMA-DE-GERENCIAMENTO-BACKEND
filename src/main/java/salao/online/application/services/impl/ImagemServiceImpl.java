@@ -17,12 +17,11 @@ import io.vertx.core.impl.logging.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import salao.online.application.dtos.SalvarImagemDTO;
-import salao.online.application.dtos.TipoImagemEnumDTO;
+import salao.online.application.mappers.ImagemMapper;
 import salao.online.application.services.interfaces.ImagemService;
 import salao.online.domain.entities.Cliente;
 import salao.online.domain.entities.Imagem;
 import salao.online.domain.entities.Profissional;
-import salao.online.domain.enums.TipoImagemEnum;
 import salao.online.infra.repositories.ClienteRepository;
 import salao.online.infra.repositories.ImagemRepository;
 import salao.online.infra.repositories.ProfissionalRepository;
@@ -41,6 +40,9 @@ public class ImagemServiceImpl implements ImagemService {
 
     @Inject
     ClienteRepository clienteRepository;
+
+    @Inject
+    ImagemMapper imagemMapper;
 
     public ImagemServiceImpl() {
         // Configurar Cloudinary com suas credenciais
@@ -93,28 +95,27 @@ public class ImagemServiceImpl implements ImagemService {
     @Override
     public SalvarImagemDTO salvarImagem(SalvarImagemDTO dto) {
         Imagem imagem = imagemMapper.toEntity(dto);
-    
+
         // Verificar e associar corretamente
-        if (dto.isProfissional()) {
-            Profissional profissional = profissionalRepository.findById(dto.getUsuarioId());
+        if (dto.ehProfissional()) {
+            Profissional profissional = profissionalRepository.findById(dto.getIdUsuario());
             if (profissional == null) {
                 throw new IllegalArgumentException("Profissional não encontrado.");
             }
             imagem.setProfissional(profissional);
         } else {
-            Cliente cliente = clienteRepository.findById(dto.getUsuarioId());
+            Cliente cliente = clienteRepository.findById(dto.getIdUsuario());
             if (cliente == null) {
                 throw new IllegalArgumentException("Cliente não encontrado.");
             }
             imagem.setCliente(cliente);
         }
-    
+
         // Salvar a imagem no banco
         imagemRepository.persistAndFlush(imagem);
-    
+
         return imagemMapper.toDto(imagem);
     }
-    
 
     public Imagem buscarImagemPorId(UUID id) {
         return imagemRepository.findById(id);

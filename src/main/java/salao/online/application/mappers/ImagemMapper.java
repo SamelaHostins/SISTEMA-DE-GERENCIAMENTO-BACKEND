@@ -20,7 +20,7 @@ public interface ImagemMapper {
     // Se profissional não for nulo, o ID do profissional será usado.
     // Caso contrário, o ID do cliente será usado
     @Mapping(target = "ehProfissional", expression = "java(entity.getProfissional() != null)") // Atualizado
-    @Mapping(target = "idUsuario", expression = "java(entity.getProfissional() != null ? entity.getProfissional().getProfissional() : entity.getCliente().getCliente())")
+    @Mapping(target = "idUsuario", expression = "java(entity.getProfissional() != null ? entity.getProfissional().getIdProfissional() : entity.getCliente().getIdCliente())")
     @Mapping(target = "tipoImagem", ignore = true)
     SalvarImagemDTO toDto(Imagem entity);
 

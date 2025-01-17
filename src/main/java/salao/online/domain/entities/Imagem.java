@@ -50,7 +50,7 @@ public class Imagem {
     @NotNull
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "tipo_imagem", nullable = false)
-    private TipoImagemEnum tipoImagem;
+    private @Getter @Setter TipoImagemEnum tipoImagem;
 
     public Imagem() {
     }

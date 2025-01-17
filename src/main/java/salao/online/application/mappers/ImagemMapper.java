@@ -5,7 +5,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import salao.online.application.dtos.SalvarImagemDTO;
+import salao.online.application.dtos.dtosDeImagem.ImagemDTO;
 import salao.online.application.dtos.dtosDeImagem.ImagensDoClienteDTO;
 import salao.online.application.dtos.dtosDeImagem.ImagensDoProfissionalDTO;
 import salao.online.domain.entities.Imagem;
@@ -15,22 +15,18 @@ public interface ImagemMapper {
 
     @Mapping(target = "profissional", ignore = true)
     @Mapping(target = "cliente", ignore = true)
-    Imagem toEntity(SalvarImagemDTO dto);
+    Imagem fromDtoToEntity(ImagemDTO dto);
 
-    // Se profissional não for nulo, o ID do profissional será usado.
-    // Caso contrário, o ID do cliente será usado
-    @Mapping(target = "ehProfissional", expression = "java(entity.getProfissional() != null)") // Atualizado
+    @Mapping(target = "ehProfissional", expression = "java(entity.getProfissional() != null)")
     @Mapping(target = "idUsuario", expression = "java(entity.getProfissional() != null ? entity.getProfissional().getIdProfissional() : entity.getCliente().getIdCliente())")
     @Mapping(target = "tipoImagem", ignore = true)
-    SalvarImagemDTO toDto(Imagem entity);
+    ImagemDTO fromEntityToDto(Imagem entity);
 
-    @Mapping(target = "idProfissional", source = "profissional.idProfissional")
-    ImagensDoProfissionalDTO toProfissionalDto(Imagem entity);
+    ImagensDoProfissionalDTO fromEntityToProfissionalDto(Imagem entity);
 
-    List<ImagensDoProfissionalDTO> toProfissionalDtoList(List<Imagem> imagens);
+    List<ImagensDoProfissionalDTO> fromEntityListToProfissionalDtoList(List<Imagem> imagens);
 
-    @Mapping(target = "idCliente", source = "cliente.idCliente")
-    ImagensDoClienteDTO toClienteDto(Imagem entity);
+    ImagensDoClienteDTO fromEntityToClienteDto(Imagem entity);
 
-    List<ImagensDoClienteDTO> toClienteDtoList(List<Imagem> imagens);
+    List<ImagensDoClienteDTO> fromEntityListToClienteDtoList(List<Imagem> imagens);
 }

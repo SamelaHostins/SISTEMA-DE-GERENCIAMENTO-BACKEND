@@ -14,10 +14,9 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import jakarta.inject.Inject;
-
-import salao.online.application.dtos.TipoServicoEnumDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
+import salao.online.application.dtos.dtosDoServico.TipoServicoEnumDTO;
 import salao.online.application.services.interfaces.ServicoService;
 import salao.online.domain.exceptions.ValidacaoException;
 

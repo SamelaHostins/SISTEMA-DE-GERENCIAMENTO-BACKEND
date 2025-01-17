@@ -48,7 +48,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional
     public CriarClienteDTO cadastrarCliente(CriarClienteDTO clienteDTO) {
-        Cliente cliente = clienteMapper.criarDtoToEntity(clienteDTO);
+        Cliente cliente = clienteMapper.fromCriarDtoToEntity(clienteDTO);
         if (clienteDTO.getNomeSocial() != null && !clienteDTO.getNomeSocial().isEmpty()) {
             cliente.setUsuario(clienteDTO.getNomeSocial());
         } else {
@@ -56,7 +56,7 @@ public class ClienteServiceImpl implements ClienteService {
         }
         logger.info("Salvando o cliente no bd");
         clienteRepository.persistAndFlush(cliente);
-        return clienteMapper.toCriarDto(cliente);
+        return clienteMapper.fromEntityToCriarDto(cliente);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class ClienteServiceImpl implements ClienteService {
             }
             logger.info("Salvando registro atualizado");
             clienteRepository.persistAndFlush(cliente);
-            return clienteMapper.toAtualizarDto(cliente);
+            return clienteMapper.fromEntityToAtualizarDto(cliente);
         } else {
             throw new ValidacaoException(MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro());
         }
@@ -148,10 +148,10 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     private BuscarClienteDTO getBuscarClienteDTO(Cliente cliente) {
-        BuscarClienteDTO clienteDTO = clienteMapper.toBuscarDto(cliente);
-        clienteDTO.setAvaliacoes(avaliacaoMapper.toDtoList(cliente.getAvaliacoes()));
-        clienteDTO.setAgendamentos(agendamentoMapper.toDtoList(cliente.getAgendamentos()));
-        clienteDTO.setImagens(imagemMapper.toClienteDtoList(cliente.getImagens()));
+        BuscarClienteDTO clienteDTO = clienteMapper.fromEntityToBuscarDto(cliente);
+        clienteDTO.setAvaliacoes(avaliacaoMapper.fromEntityListToDtoList(cliente.getAvaliacoes()));
+        clienteDTO.setAgendamentos(agendamentoMapper.fromEntityListToDtoList(cliente.getAgendamentos()));
+        clienteDTO.setImagens(imagemMapper.fromEntityListToClienteDtoList(cliente.getImagens()));
         return clienteDTO;
     }
 

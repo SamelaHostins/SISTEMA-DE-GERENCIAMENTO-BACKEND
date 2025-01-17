@@ -1,4 +1,4 @@
-package salao.online.application.dtos;
+package salao.online.application.dtos.dtosDoServico;
 
 import lombok.Getter;
 

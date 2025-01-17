@@ -15,14 +15,15 @@ import org.mapstruct.Mapping;
 public interface AvaliacaoMapper {
 
     @InheritInverseConfiguration
-    Avaliacao toEntity(AvaliacaoDTO dto);
+    @Mapping(target = "atualizarAvaliacao", ignore = true)
+    Avaliacao fromDtoToEntity(AvaliacaoDTO dto);
 
     @Mapping(source = "cliente.idCliente", target = "idCliente")
     @Mapping(source = "servico.idServico", target = "idServico")
-    @Named("mapToDTO")
-    AvaliacaoDTO toDto(Avaliacao entity);
+    @Named("fromEntityToDto")
+    AvaliacaoDTO fromEntityToDto(Avaliacao entity);
 
-    @IterableMapping(qualifiedByName = "mapToDTO")
-    @Named("mapListToDtoList")
-    List<AvaliacaoDTO> toDtoList(List<Avaliacao> avaliacoes);
+    @IterableMapping(qualifiedByName = "fromEntityToDto")
+    @Named("fromEntityListToDtoList")
+    List<AvaliacaoDTO> fromEntityListToDtoList(List<Avaliacao> avaliacoes);
 }

@@ -1,4 +1,4 @@
-package salao.online.application.dtos;
+package salao.online.application.dtos.dtosDeImagem;
 
 import java.util.UUID;
 
@@ -11,14 +11,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SalvarImagemDTO {
+public class ImagemDTO {
 
     private String urlImagem;
     private String nomeArquivo;
     private TipoImagemEnumDTO tipoImagem;
     private UUID idUsuario;
-    
-    // Renomeado para "profissional" para evitar ambiguidades
     private boolean ehProfissional;
 
     public boolean ehProfissional() {

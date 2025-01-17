@@ -43,10 +43,10 @@ public class EstoqueServiceImpl implements EstoqueService {
 
     @Override
     public CriarEstoqueDTO cadastrarEstoque(CriarEstoqueDTO estoqueDTO) {
-        Estoque estoque = estoqueMapper.criarDtoToEntity(estoqueDTO);
+        Estoque estoque = estoqueMapper.fromCriarDtoToEntity(estoqueDTO);
         logger.info("Salvando o estoque criado");
         estoqueRepository.persistAndFlush(estoque);
-        return estoqueMapper.toCriarDto(estoque);
+        return estoqueMapper.fromEntityToCriarDto(estoque);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class EstoqueServiceImpl implements EstoqueService {
         logger.info("Validando se o Estoque existe");
         Estoque estoque = estoqueRepository.findByIdOptional(idEstoque)
                 .orElseThrow(() -> new ValidacaoException(
-                        MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
+                        MensagemErroValidacaoEnum.ESTOQUE_NAO_ENCONTRADO.getMensagemErro()));
         return getEstoqueDTO(estoque);
     }
 
@@ -79,9 +79,9 @@ public class EstoqueServiceImpl implements EstoqueService {
     }
 
     private EstoqueDTO getEstoqueDTO(Estoque estoque) {
-        EstoqueDTO estoqueDTO = estoqueMapper.toDto(estoque);
-        estoqueDTO.setIdProfissional(profissionalMapper.toDto(estoque.getProfissional()).getIdProfissional());
-        estoqueDTO.setProdutos(produtoMapper.toDtoList(estoque.getProdutos()));
+        EstoqueDTO estoqueDTO = estoqueMapper.fromEntityToDto(estoque);
+        estoqueDTO.setIdProfissional(profissionalMapper.fromEntityToDto(estoque.getProfissional()).getIdProfissional());
+        estoqueDTO.setProdutos(produtoMapper.fromEntityListToDtoList(estoque.getProdutos()));
         return estoqueDTO;
     }
 

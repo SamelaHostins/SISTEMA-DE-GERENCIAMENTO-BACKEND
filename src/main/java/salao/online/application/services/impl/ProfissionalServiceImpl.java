@@ -45,7 +45,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     @Override
     @Transactional
     public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO) {
-        Profissional profissional = profissionalMapper.criarDtoToEntity(profissionalDTO);
+        Profissional profissional = profissionalMapper.fromCriarDtoToEntity(profissionalDTO);
         if (profissionalDTO.getNomeSocial() != null && !profissionalDTO.getNomeSocial().isEmpty()) {
             profissional.setUsuario(profissionalDTO.getNomeSocial());
         } else {
@@ -53,7 +53,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
         }
         logger.info("Salvando o profissional criado");
         profissionalRepository.persistAndFlush(profissional);
-        return profissionalMapper.toDtoCriar(profissional);
+        return profissionalMapper.fromEntityToCriarDto(profissional);
     }
 
     @Override
@@ -87,16 +87,16 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     }
 
     private BuscarProfissionalDTO getBuscarProfissionalDTO(Profissional profissional) {
-        BuscarProfissionalDTO profissionalDTO = profissionalMapper.toDtoBuscar(profissional);
-        profissionalDTO.setServicos(servicoMapper.toDtoList(profissional.getServicos()));
-        profissionalDTO.setEstoques(estoqueMapper.toDtoList(profissional.getEstoques()));
-        profissionalDTO.setImagens(imagemMapper.toProfissionalDtoList(profissional.getImagens()));
+        BuscarProfissionalDTO profissionalDTO = profissionalMapper.fromEntityToBuscarDto(profissional);
+        profissionalDTO.setServicos(servicoMapper.fromEntityListToDtoList(profissional.getServicos()));
+        profissionalDTO.setEstoques(estoqueMapper.fromEntityListToDtoList(profissional.getEstoques()));
+        profissionalDTO.setImagens(imagemMapper.fromEntityListToProfissionalDtoList(profissional.getImagens()));
         return profissionalDTO;
     }
 
     private ListarProfissionalDTO getListarProfissionalDTO(Profissional profissional) {
-        ListarProfissionalDTO profissionalDTO = profissionalMapper.toDtoListar(profissional);
-        profissionalDTO.setServicos(servicoMapper.toDtoList(profissional.getServicos()));
+        ListarProfissionalDTO profissionalDTO = profissionalMapper.fromEntityToListarDto(profissional);
+        profissionalDTO.setServicos(servicoMapper.fromEntityListToDtoList(profissional.getServicos()));
         return profissionalDTO;
     }
 

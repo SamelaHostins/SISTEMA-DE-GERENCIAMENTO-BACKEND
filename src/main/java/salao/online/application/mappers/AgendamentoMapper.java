@@ -15,14 +15,14 @@ import org.mapstruct.Mapping;
 public interface AgendamentoMapper {
 
     @InheritInverseConfiguration
-    Agendamento toEntity(AgendamentoDTO dto);
+    Agendamento fromDtoToEntity(AgendamentoDTO dto);
 
     @Mapping(source = "cliente.idCliente", target = "idCliente")
     @Mapping(source = "servico.idServico", target = "idServico")
-    @Named("mapToDTO")
-    AgendamentoDTO toDto(Agendamento entity);
+    @Named("fromEntityToDto")
+    AgendamentoDTO fromEntityToDto(Agendamento entity);
 
-    @IterableMapping(qualifiedByName = "mapToDTO")
-    @Named("mapListToDtoList")
-    List<AgendamentoDTO> toDtoList(List<Agendamento> agendamentos);
+    @IterableMapping(qualifiedByName = "fromEntityToDto")
+    @Named("fromEntityListToDtoList")
+    List<AgendamentoDTO> fromEntityListToDtoList(List<Agendamento> agendamentos);
 }

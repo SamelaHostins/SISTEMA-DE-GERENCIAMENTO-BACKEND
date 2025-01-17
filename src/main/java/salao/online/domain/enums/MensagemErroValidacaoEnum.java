@@ -9,6 +9,9 @@ public enum MensagemErroValidacaoEnum {
 
     // Mensagens de erro de Profissional
     PROFISSIONAL_NAO_ENCONTRADO("O profissional não foi encontrado."),
+    
+    // Mensagens de erro de Estoque
+    ESTOQUE_NAO_ENCONTRADO("O estoque não foi encontrado."),
 
     // Mensagem de erro de Serviço
     SERVICO_NAO_ENCONTRADO("O serviço não foi encontrado."),

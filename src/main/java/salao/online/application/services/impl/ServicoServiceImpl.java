@@ -9,10 +9,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
-import salao.online.application.dtos.TipoServicoEnumDTO;
 import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
+import salao.online.application.dtos.dtosDoServico.TipoServicoEnumDTO;
 import salao.online.application.mappers.AgendamentoMapper;
 import salao.online.application.mappers.AvaliacaoMapper;
 import salao.online.application.mappers.ProdutoMapper;
@@ -59,10 +59,10 @@ public class ServicoServiceImpl implements ServicoService {
 
     @Override
     public CriarServicoDTO cadastrarServico(CriarServicoDTO servicoDTO) {
-        Servico servico = servicoMapper.criarDtoToEntity(servicoDTO);
+        Servico servico = servicoMapper.fromCriarDtoToEntity(servicoDTO);
         logger.info("Salvando o servico criado");
         servicoRepository.persistAndFlush(servico);
-        return servicoMapper.toDtoCriar(servico);
+        return servicoMapper.fromEntityToCriarDto(servico);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class ServicoServiceImpl implements ServicoService {
                     servicoDTO.getTermosECondicoes(), servicoDTO.getValor());
             logger.info("Salvando registro atualizado");
             servicoRepository.persistAndFlush(servico);
-            return servicoMapper.toDtoAtualizar(servico);
+            return servicoMapper.fromEntityToAtualizarDto(servico);
         } else {
             throw new ValidacaoException(MensagemErroValidacaoEnum.SERVICO_NAO_ENCONTRADO.getMensagemErro());
         }
@@ -125,10 +125,10 @@ public class ServicoServiceImpl implements ServicoService {
     }
 
     private ServicoDTO getServicoDTO(Servico servico) {
-        ServicoDTO servicoDTO = servicoMapper.toDto(servico);
-        servicoDTO.setIdProfissional(profissionalMapper.toDto(servico.getProfissional()).getIdProfissional());
-        servicoDTO.setAvaliacoes(avaliacaoMapper.toDtoList(servico.getAvaliacoes()));
-        servicoDTO.setAgendamentos(agendamentoMapper.toDtoList(servico.getAgendamentos()));
+        ServicoDTO servicoDTO = servicoMapper.fromEntityToDto(servico);
+        servicoDTO.setIdProfissional(profissionalMapper.fromEntityToListarDto(servico.getProfissional()).getIdProfissional());
+        servicoDTO.setAvaliacoes(avaliacaoMapper.fromEntityListToDtoList(servico.getAvaliacoes()));
+        servicoDTO.setAgendamentos(agendamentoMapper.fromEntityListToDtoList(servico.getAgendamentos()));
         return servicoDTO;
     }
 }

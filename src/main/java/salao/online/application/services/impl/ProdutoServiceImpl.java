@@ -12,6 +12,7 @@ import salao.online.application.dtos.dtosDeProduto.CriarProdutoDTO;
 import salao.online.application.dtos.dtosDeProduto.ProdutoDTO;
 import salao.online.application.mappers.EstoqueMapper;
 import salao.online.application.mappers.ProdutoMapper;
+import salao.online.application.services.interfaces.EstoqueService;
 import salao.online.application.services.interfaces.ProdutoService;
 import salao.online.domain.entities.Produto;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
@@ -29,6 +30,9 @@ public class ProdutoServiceImpl implements ProdutoService {
     EstoqueMapper estoqueMapper;
 
     @Inject
+    EstoqueService estoqueService;
+
+    @Inject
     ProdutoRepository produtoRepository;
 
     @Inject
@@ -38,10 +42,11 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public CriarProdutoDTO cadastrarProduto(CriarProdutoDTO produtoDTO) throws ValidacaoException {
-        Produto produto = produtoMapper.criarDtoToEntity(produtoDTO);
+        Produto produto = produtoMapper.fromCriarDtoToEntity(produtoDTO);
+        estoqueService.buscarEstoquePorId(produtoDTO.getIdEstoque());
         logger.info("Salvando o produto criado");
         produtoRepository.persistAndFlush(produto);
-        return produtoMapper.toCriarDto(produto);
+        return produtoMapper.fromEntityToCriarDto(produto);
     }
 
     // não está pronto ainda
@@ -75,8 +80,8 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     private ProdutoDTO getProdutoDTO(Produto produto) {
-        ProdutoDTO produtoDTO = produtoMapper.toDto(produto);
-        produtoDTO.setIdEstoque(estoqueMapper.toDto(produto.getEstoque()).getIdEstoque());
+        ProdutoDTO produtoDTO = produtoMapper.fromEntityToDto(produto);
+        produtoDTO.setIdEstoque(estoqueMapper.fromEntityToDto(produto.getEstoque()).getIdEstoque());
         return produtoDTO;
     }
 }

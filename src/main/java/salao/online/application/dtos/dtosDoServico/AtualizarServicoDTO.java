@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import salao.online.application.dtos.TipoServicoEnumDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor

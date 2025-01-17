@@ -1,6 +1,5 @@
 package salao.online.application.mappers;
 
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 
 import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
@@ -9,21 +8,18 @@ import salao.online.application.dtos.dtosDeCliente.ClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
 import salao.online.domain.entities.Cliente;
 
-@Mapper(componentModel = "cdi", uses = {AvaliacaoMapper.class, AgendamentoMapper.class, ImagemMapper.class})
+@Mapper(componentModel = "cdi", uses = { AvaliacaoMapper.class, AgendamentoMapper.class, ImagemMapper.class })
 public interface ClienteMapper {
 
-    @InheritInverseConfiguration
-    Cliente toEntity(ClienteDTO dto);
+    Cliente fromDtoToEntity(ClienteDTO dto);
 
-    ClienteDTO toDto(Cliente entity);
+    ClienteDTO fromEntityToDto(Cliente entity);
 
-    @InheritInverseConfiguration
-    Cliente criarDtoToEntity (CriarClienteDTO dto);
+    Cliente fromCriarDtoToEntity(CriarClienteDTO dto);
 
-    CriarClienteDTO toCriarDto (Cliente entity);
+    CriarClienteDTO fromEntityToCriarDto(Cliente entity);
 
-    AtualizarClienteDTO toAtualizarDto (Cliente entity);
+    AtualizarClienteDTO fromEntityToAtualizarDto(Cliente entity);
 
-    BuscarClienteDTO toBuscarDto (Cliente entity);
-
+    BuscarClienteDTO fromEntityToBuscarDto(Cliente entity);
 }

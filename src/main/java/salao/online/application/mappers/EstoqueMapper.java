@@ -2,7 +2,6 @@ package salao.online.application.mappers;
 
 import java.util.List;
 
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,18 +14,22 @@ import salao.online.domain.entities.Estoque;
 @Mapper(componentModel = "cdi", uses = ProdutoMapper.class)
 public interface EstoqueMapper {
 
-    @InheritInverseConfiguration
-    Estoque toEntity(EstoqueDTO dto);
+    Estoque fromDtoToEntity(EstoqueDTO dto);
 
+    @Mapping(source = "idEstoque", target = "idEstoque")
+    @Mapping(source = "nome", target = "nome")
+    @Mapping(source = "produtos", target = "produtos")
     @Mapping(source = "profissional.idProfissional", target = "idProfissional")
-    @Named("mapToDTO")
-    EstoqueDTO toDto(Estoque entity);
+    @Mapping(expression = "java(entity.getProdutos() != null ? entity.getProdutos().size() : 0)", target = "qtdDeProdutos")
+    @Named("fromEntityToDto")
+    EstoqueDTO fromEntityToDto(Estoque entity);
 
-    CriarEstoqueDTO toCriarDto(Estoque dto);
+    CriarEstoqueDTO fromEntityToCriarDto(Estoque entity);
 
-    Estoque criarDtoToEntity (CriarEstoqueDTO dto);
+    Estoque fromCriarDtoToEntity(CriarEstoqueDTO dto);
 
-    @IterableMapping(qualifiedByName = "mapToDTO")
-    @Named("mapListToDtoList")
-    List<EstoqueDTO> toDtoList(List<Estoque> estoques);
+    @IterableMapping(qualifiedByName = "fromEntityToDto")
+    @Named("fromEntityListToDtoList")
+    List<EstoqueDTO> fromEntityListToDtoList(List<Estoque> estoques);
 }
+

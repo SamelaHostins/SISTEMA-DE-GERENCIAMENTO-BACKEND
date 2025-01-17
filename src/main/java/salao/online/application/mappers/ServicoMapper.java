@@ -2,7 +2,6 @@ package salao.online.application.mappers;
 
 import java.util.List;
 
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,24 +13,22 @@ import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.domain.entities.Servico;
 
 @Mapper(componentModel = "cdi", uses = AvaliacaoMapper.class)
-
 public interface ServicoMapper {
 
-    @InheritInverseConfiguration
-    Servico toEntity(ServicoDTO dto);
+    @Mapping(target = "agendamentos", source = "agendamentos")
+    Servico fromDtoToEntity(ServicoDTO dto);
 
     @Mapping(source = "profissional.idProfissional", target = "idProfissional")
-    @Named("mapToDTO")
-    ServicoDTO toDto(Servico entity);
+    @Named("fromEntityToDto")
+    ServicoDTO fromEntityToDto(Servico entity);
 
-    CriarServicoDTO toDtoCriar(Servico entity);
+    CriarServicoDTO fromEntityToCriarDto(Servico entity);
 
-    Servico criarDtoToEntity(CriarServicoDTO dto);
+    Servico fromCriarDtoToEntity(CriarServicoDTO dto);
 
-    AtualizarServicoDTO toDtoAtualizar(Servico entity);
+    AtualizarServicoDTO fromEntityToAtualizarDto(Servico entity);
 
-    @IterableMapping(qualifiedByName = "mapToDTO")
-    @Named("mapListToDtoList")
-    List<ServicoDTO> toDtoList(List<Servico> servicos);
-
+    @IterableMapping(qualifiedByName = "fromEntityToDto")
+    @Named("fromEntityListToDtoList")
+    List<ServicoDTO> fromEntityListToDtoList(List<Servico> servicos);
 }

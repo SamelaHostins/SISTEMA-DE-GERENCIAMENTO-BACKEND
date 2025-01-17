@@ -15,18 +15,19 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "cdi")
 public interface ProdutoMapper {
 
-    @InheritInverseConfiguration
-    Produto toEntity(ProdutoDTO dto);
-
     @Mapping(source = "estoque.idEstoque", target = "idEstoque")
-    @Named("mapToDTO")
-    ProdutoDTO toDto(Produto entity);
+    @Named("fromEntityToDto")
+    ProdutoDTO fromEntityToDto(Produto entity);
 
-    CriarProdutoDTO toCriarDto(Produto entity);
+    @InheritInverseConfiguration
+    Produto fromDtoToEntity(ProdutoDTO dto);
 
-    Produto criarDtoToEntity(CriarProdutoDTO dto);
+    CriarProdutoDTO fromEntityToCriarDto(Produto entity);
 
-    @IterableMapping(qualifiedByName = "mapToDTO")
-    @Named("mapListToDtoList")
-    List<ProdutoDTO> toDtoList(List<Produto> produtos);
+    Produto fromCriarDtoToEntity(CriarProdutoDTO dto);
+
+    @IterableMapping(qualifiedByName = "fromEntityToDto")
+    @Named("fromEntityListToDtoList")
+    List<ProdutoDTO> fromEntityListToDtoList(List<Produto> produtos);
 }
+

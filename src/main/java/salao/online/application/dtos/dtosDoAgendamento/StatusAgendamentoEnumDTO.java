@@ -1,4 +1,4 @@
-package salao.online.application.dtos;
+package salao.online.application.dtos.dtosDoAgendamento;
 
 import java.util.Arrays;
 

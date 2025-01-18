@@ -1,6 +1,6 @@
 package salao.online.application.mappers;
 
-import salao.online.application.dtos.AgendamentoDTO;
+import salao.online.application.dtos.dtosDoAgendamento.AgendamentoDTO;
 import salao.online.domain.entities.Agendamento;
 
 import java.util.List;

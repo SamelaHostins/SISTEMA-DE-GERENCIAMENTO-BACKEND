@@ -46,11 +46,6 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     @Transactional
     public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO) {
         Profissional profissional = profissionalMapper.fromCriarDtoToEntity(profissionalDTO);
-        if (profissionalDTO.getNomeSocial() != null && !profissionalDTO.getNomeSocial().isEmpty()) {
-            profissional.setUsuario(profissionalDTO.getNomeSocial());
-        } else {
-            profissional.setUsuario(profissionalDTO.getNome() + " " + profissionalDTO.getSobrenome());
-        }
         logger.info("Salvando o profissional criado");
         profissionalRepository.persistAndFlush(profissional);
         return profissionalMapper.fromEntityToCriarDto(profissional);

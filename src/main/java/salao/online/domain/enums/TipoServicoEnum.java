@@ -13,7 +13,10 @@ public enum TipoServicoEnum {
     }
 
     // Método personalizado para buscar o enum pelo valor inteiro
-    public static TipoServicoEnum fromTipoServico(int tipoServico) {
+    public static TipoServicoEnum fromTipoServico(Integer tipoServico) {
+        if (tipoServico == null) {
+            throw new IllegalArgumentException("Tipo de serviço não pode ser nulo.");
+        }
         for (TipoServicoEnum tipo : TipoServicoEnum.values()) {
             if (tipo.getTipoServico() == tipoServico) {
                 return tipo;
@@ -21,4 +24,5 @@ public enum TipoServicoEnum {
         }
         throw new IllegalArgumentException("Tipo de serviço inválido: " + tipoServico);
     }
+
 }

@@ -14,13 +14,14 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "cdi")
 public interface AgendamentoMapper {
 
-    @InheritInverseConfiguration
-    Agendamento fromDtoToEntity(AgendamentoDTO dto);
-
     @Mapping(source = "cliente.idCliente", target = "idCliente")
     @Mapping(source = "servico.idServico", target = "idServico")
+    @Mapping(source = "idAgendamento", target = "idAgendamento")
     @Named("fromEntityToDto")
     AgendamentoDTO fromEntityToDto(Agendamento entity);
+
+    @InheritInverseConfiguration
+    Agendamento fromDtoToEntity(AgendamentoDTO dto);
 
     @IterableMapping(qualifiedByName = "fromEntityToDto")
     @Named("fromEntityListToDtoList")

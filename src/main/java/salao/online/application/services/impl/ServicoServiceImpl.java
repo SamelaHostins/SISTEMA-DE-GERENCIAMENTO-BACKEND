@@ -1,14 +1,13 @@
 package salao.online.application.services.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
@@ -18,7 +17,6 @@ import salao.online.application.mappers.AvaliacaoMapper;
 import salao.online.application.mappers.ProdutoMapper;
 import salao.online.application.mappers.ProfissionalMapper;
 import salao.online.application.mappers.ServicoMapper;
-import salao.online.application.mappers.TipoServicoEnumMapper;
 import salao.online.application.services.interfaces.ServicoService;
 import salao.online.domain.entities.Profissional;
 import salao.online.domain.entities.Servico;
@@ -47,9 +45,6 @@ public class ServicoServiceImpl implements ServicoService {
     AgendamentoMapper agendamentoMapper;
 
     @Inject
-    TipoServicoEnumMapper tipoServicoMapper;
-
-    @Inject
     ServicoRepository servicoRepository;
 
     @Inject
@@ -67,18 +62,22 @@ public class ServicoServiceImpl implements ServicoService {
 
     @Override
     public AtualizarServicoDTO atualizarServico(AtualizarServicoDTO servicoDTO) throws ValidacaoException {
-        Optional<Servico> servicoOptional = servicoRepository.findByIdOptional(servicoDTO.getIdServico());
-        if (servicoOptional.isPresent()) {
-            Servico servico = servicoOptional.get();
-            TipoServicoEnum tipoServico = tipoServicoMapper.toEntity(servicoDTO.getTipoServico());
-            servico.atualizarCadastroServico(tipoServico, servicoDTO.getNome(), servicoDTO.getEspecificacao(),
-                    servicoDTO.getTermosECondicoes(), servicoDTO.getValor());
-            logger.info("Salvando registro atualizado");
-            servicoRepository.persistAndFlush(servico);
-            return servicoMapper.fromEntityToAtualizarDto(servico);
-        } else {
-            throw new ValidacaoException(MensagemErroValidacaoEnum.SERVICO_NAO_ENCONTRADO.getMensagemErro());
-        }
+        Servico servico = servicoRepository.findByIdOptional(servicoDTO.getIdServico())
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.SERVICO_NAO_ENCONTRADO.getMensagemErro()));
+
+        TipoServicoEnum tipoServico = TipoServicoEnum.valueOf(servicoDTO.getTipoServico().name());
+
+        servico.atualizarCadastroServico(tipoServico,
+                servicoDTO.getNome(),
+                servicoDTO.getEspecificacao(),
+                servicoDTO.getTermosECondicoes(),
+                servicoDTO.getValor());
+
+        logger.info("Salvando registro atualizado");
+        servicoRepository.persistAndFlush(servico);
+
+        return servicoMapper.fromEntityToAtualizarDto(servico);
     }
 
     @Override
@@ -92,20 +91,23 @@ public class ServicoServiceImpl implements ServicoService {
     }
 
     @Override
-    public List<ServicoDTO> listarServicosDoProfissional(UUID idProfissional, TipoServicoEnumDTO tipoServicoDTO)
+    public List<ServicoDTO> listarServicosDoProfissional(UUID idProfissional, int tipoServico)
             throws ValidacaoException {
         logger.info("Obtendo informações para listar os serviços");
         Profissional profissional = profissionalRepository.findById(idProfissional);
-        if (profissional.getIdProfissional() == null) {
+        if (profissional == null || profissional.getIdProfissional() == null) {
             throw new ValidacaoException(MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro());
-        } else {
-            TipoServicoEnum tipoServico = tipoServicoMapper.toEntity(tipoServicoDTO);
-            List<Servico> servicos = profissionalRepository
-                    .buscarServicosDoProfissional(profissional.getIdProfissional(), tipoServico);
-            return servicos.stream()
-                    .map(servico -> getServicoDTO(servico))
-                    .collect(Collectors.toList());
         }
+
+        TipoServicoEnumDTO tipoServicoDTO = TipoServicoEnumDTO.fromTipoServico(tipoServico);
+        TipoServicoEnum tipoServicoEnum = TipoServicoEnum.valueOf(tipoServicoDTO.name());
+
+        List<Servico> servicos = profissionalRepository.buscarServicosDoProfissional(profissional.getIdProfissional(),
+                tipoServicoEnum);
+
+        return servicos.stream()
+                .map(this::getServicoDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -126,7 +128,8 @@ public class ServicoServiceImpl implements ServicoService {
 
     private ServicoDTO getServicoDTO(Servico servico) {
         ServicoDTO servicoDTO = servicoMapper.fromEntityToDto(servico);
-        servicoDTO.setIdProfissional(profissionalMapper.fromEntityToListarDto(servico.getProfissional()).getIdProfissional());
+        servicoDTO.setIdProfissional(
+                profissionalMapper.fromEntityToListarDto(servico.getProfissional()).getIdProfissional());
         servicoDTO.setAvaliacoes(avaliacaoMapper.fromEntityListToDtoList(servico.getAvaliacoes()));
         servicoDTO.setAgendamentos(agendamentoMapper.fromEntityListToDtoList(servico.getAgendamentos()));
         return servicoDTO;

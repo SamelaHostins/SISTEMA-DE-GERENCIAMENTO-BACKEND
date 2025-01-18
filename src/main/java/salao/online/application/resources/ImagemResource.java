@@ -31,52 +31,6 @@ public class ImagemResource {
 
     private static final org.jboss.logging.Logger LOG = org.jboss.logging.Logger.getLogger(ImagemResource.class);
 
-    // @Operation(summary = "Faz o upload de uma imagem para o Cloudinary e salva no
-    // banco de dados")
-    // @POST
-    // @Transactional
-    // @Path("/upload/{tipoImagem}/{idUsuario}/{ehProfissional}")
-    // @Consumes(MediaType.MULTIPART_FORM_DATA)
-    // public Response uploadImagem(
-    // @RestForm("imageBytes") InputStream imageBytes,
-    // @RestForm("nomeArquivo") String nomeArquivo,
-    // @PathParam("tipoImagem") int tipoImagem,
-    // @PathParam("idUsuario") UUID idUsuario,
-    // @PathParam("ehProfissional") boolean ehProfissional) {
-    // try {
-    // // Validação dos parâmetros
-    // if (imageBytes == null || nomeArquivo == null || nomeArquivo.isEmpty()) {
-    // return Response.status(Response.Status.BAD_REQUEST)
-    // .entity("Parâmetros inválidos: certifique-se de fornecer a imagem e o nome do
-    // arquivo.")
-    // .build();
-    // } // Determinar o tipo de imagem com base no enum
-    // TipoImagemEnum tipoImagemEnum = TipoImagemEnum.fromTipoImagem(tipoImagem);
-
-    // String url = imagemService.uploadImagem(imageBytes, nomeArquivo,
-    // tipoImagemEnum, idUsuario, ehProfissional);
-
-    // if (url != null) {
-    // LOG.info("Upload realizado com sucesso. URL: " + url);
-    // return Response.ok(Map.of("url", url)).build();
-    // } else {
-    // LOG.error("Falha ao realizar o upload da imagem.");
-    // return Response.status(Response.Status.BAD_REQUEST).entity("Falha ao realizar
-    // o upload da imagem.")
-    // .build();
-    // }
-    // } catch (IllegalArgumentException e) {
-    // LOG.error("Erro de validação: ", e);
-    // return
-    // Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-    // } catch (Exception e) {
-    // LOG.error("Erro ao fazer upload da imagem: ", e);
-    // return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-    // .entity("Erro ao realizar o upload da imagem.")
-    // .build();
-    // }
-    // }
-
     @POST
     @Transactional
     @Path("/upload/{tipoImagem}/{idUsuario}/{ehProfissional}")

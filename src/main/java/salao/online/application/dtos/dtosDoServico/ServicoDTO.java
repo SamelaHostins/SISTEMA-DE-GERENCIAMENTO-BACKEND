@@ -21,6 +21,7 @@ public class ServicoDTO {
     private String especificacao;
     private String termosECondicoes;
     private double valor;
+    private TipoServicoEnumDTO tipoServico;
     private UUID idProfissional;
     private List<AvaliacaoDTO> avaliacoes;
     private List<AgendamentoDTO> agendamentos;

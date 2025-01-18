@@ -10,21 +10,20 @@ import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ProfissionalDTO;
 import salao.online.domain.entities.Profissional;
 
-@Mapper(componentModel = "cdi", uses = { EstoqueMapper.class, ServicoMapper.class, ImagemMapper.class })
+@Mapper(componentModel = "cdi", uses = { EstoqueMapper.class, ServicoMapper.class, ImagemMapper.class,
+        AgendamentoMapper.class, AvaliacaoMapper.class })
 public interface ProfissionalMapper {
 
     @Mapping(target = "nome", source = "nome")
     @Mapping(target = "sobrenome", source = "sobrenome")
     @Mapping(target = "email", source = "email")
     @Mapping(target = "telefone", source = "telefone")
-    @Mapping(source = "imagens", target = "imagens") 
+    @Mapping(source = "estoques", target = "estoques")
+    @Mapping(source = "servicos", target = "servicos")
+    @Mapping(source = "imagens", target = "imagens")
     ProfissionalDTO fromEntityToDto(Profissional entity);
 
-    @Mapping(target = "nome", source = "nome")
-    @Mapping(target = "sobrenome", source = "sobrenome")
-    @Mapping(target = "email", source = "email")
-    @Mapping(target = "telefone", source = "telefone")
-    @Mapping(source = "imagens", target = "imagens") 
+    @InheritInverseConfiguration
     Profissional fromDtoToEntity(ProfissionalDTO dto);
 
     CriarProfissionalDTO fromEntityToCriarDto(Profissional entity);

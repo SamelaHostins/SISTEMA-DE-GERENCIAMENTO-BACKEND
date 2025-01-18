@@ -45,21 +45,20 @@ public class Cliente extends Informacao {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente")
     private @Getter List<Imagem> imagens;
 
-    public Cliente(String nome, String sobrenome, String nomeSocial, short idade, String email, String telefone,
+    public Cliente(String nome, String sobrenome, short idade, String email, String telefone,
             String usuario, String senha, Boolean especial, List<Avaliacao> avaliacoes,
             List<Agendamento> agendamentos, List<Imagem> imagens) {
-        super(nome, sobrenome, nomeSocial, idade, email, telefone, usuario, senha);
+        super(nome, sobrenome, idade, email, telefone, usuario, senha);
         this.especial = false;
         this.avaliacoes = avaliacoes;
         this.agendamentos = agendamentos;
         this.imagens = imagens;
     }
 
-    public Cliente atualizarCliente(String novoNome, String novoSobrenome, String novoNomeSocial,
+    public Cliente atualizarCliente(String novoNome, String novoSobrenome,
             short novaIdade, String novoEmail, String novoTelefone, String novaSenha) {
         setNome(novoNome);
         setSobrenome(novoSobrenome);
-        setNomeSocial(novoNomeSocial);
         setIdade(novaIdade);
         setEmail(novoEmail);
         setTelefone(novoTelefone);

@@ -21,7 +21,6 @@ public class BuscarClienteDTO {
     private UUID idCliente;
     private String nome;
     private String sobrenome;
-    private String nomeSocial;
     private String usuario;
     private short idade;
     private String email;

@@ -13,7 +13,7 @@ public class CriarClienteDTO{
 
     private String nome;
     private String sobrenome;
-    private String nomeSocial;
+
     private short idade;
     private String email;
     private String telefone;

@@ -3,20 +3,26 @@ package salao.online.application.resources;
 import java.util.List;
 import java.util.UUID;
 
-import jakarta.transaction.Transactional;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
-import org.eclipse.microprofile.openapi.annotations.*;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
-import salao.online.application.dtos.dtosDoServico.TipoServicoEnumDTO;
 import salao.online.application.services.interfaces.ServicoService;
 import salao.online.domain.exceptions.ValidacaoException;
 
@@ -44,6 +50,39 @@ public class ServicoResource {
             return Response.status(200).entity(servicoDTO).build();
         } catch (Exception ex) {
             return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+        }
+    }
+
+    @Operation(summary = "Atualizar serviço", description = "Atualiza as informações de um serviço existente.")
+    @APIResponse(responseCode = "200", description = "Serviço atualizado com sucesso!")
+    @APIResponse(responseCode = "404", description = "Serviço não encontrado.")
+    @APIResponse(responseCode = "400", description = "Requisição inválida.")
+    @APIResponse(responseCode = "500", description = "Erro interno no servidor.")
+    @PUT
+    @Path("/servicos/{id_servico}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response atualizarServico(
+            @PathParam("id_servico") UUID idServico,
+            AtualizarServicoDTO servicoDTO) {
+        try {
+            LOG.info("Recebendo solicitação para atualizar o serviço com ID: " + idServico);
+            AtualizarServicoDTO servicoAtualizado = servicoService.atualizarServico(servicoDTO);
+
+            LOG.info(String.format("Serviço com ID: %s atualizado com sucesso.", idServico));
+            return Response.ok(servicoAtualizado).build();
+
+        } catch (ValidacaoException ex) {
+            LOG.error(String.format("Erro de validação ao atualizar serviço: %s", ex.getMessage()));
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(ex.getMessage())
+                    .build();
+
+        } catch (Exception ex) {
+            LOG.error("Erro ao atualizar serviço: ", ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Ocorreu um erro ao processar a solicitação.")
+                    .build();
         }
     }
 
@@ -75,13 +114,18 @@ public class ServicoResource {
     @Path("/listar-servicos/{id_profissional}/{tipo_servico}")
     public Response listarServicosDoProfissional(
             @PathParam("id_profissional") UUID idProfissional,
-            @QueryParam("tipo_servico") TipoServicoEnumDTO tipoServico) {
-
+            @PathParam("tipo_servico") int tipoServico) {
         try {
             LOG.info("Requisição recebida - listar os serviços de um profissional");
+
             List<ServicoDTO> servicos = servicoService.listarServicosDoProfissional(idProfissional, tipoServico);
+
             return Response.status(200).entity(servicos).build();
+        } catch (IllegalArgumentException ex) {
+            LOG.error("Erro de validação no tipo de serviço", ex);
+            return Response.status(400).entity("Tipo de serviço inválido.").build();
         } catch (Exception ex) {
+            LOG.error("Erro ao listar serviços do profissional", ex);
             return Response.status(500).entity("Ocorreu um erro na requisição.").build();
         }
     }

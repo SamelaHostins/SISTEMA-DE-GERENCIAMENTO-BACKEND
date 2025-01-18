@@ -14,14 +14,15 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "cdi")
 public interface AvaliacaoMapper {
 
+    @Mapping(source = "cliente.idCliente", target = "idCliente")
+    @Mapping(source = "servico.idServico", target = "idServico")
+    @Mapping(source = "idAvaliacao", target = "idAvaliacao")
+    @Named("fromEntityToDto")
+    AvaliacaoDTO fromEntityToDto(Avaliacao entity);
+
     @InheritInverseConfiguration
     @Mapping(target = "atualizarAvaliacao", ignore = true)
     Avaliacao fromDtoToEntity(AvaliacaoDTO dto);
-
-    @Mapping(source = "cliente.idCliente", target = "idCliente")
-    @Mapping(source = "servico.idServico", target = "idServico")
-    @Named("fromEntityToDto")
-    AvaliacaoDTO fromEntityToDto(Avaliacao entity);
 
     @IterableMapping(qualifiedByName = "fromEntityToDto")
     @Named("fromEntityListToDtoList")

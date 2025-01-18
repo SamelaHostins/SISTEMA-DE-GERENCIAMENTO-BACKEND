@@ -49,11 +49,6 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public CriarClienteDTO cadastrarCliente(CriarClienteDTO clienteDTO) {
         Cliente cliente = clienteMapper.fromCriarDtoToEntity(clienteDTO);
-        if (clienteDTO.getNomeSocial() != null && !clienteDTO.getNomeSocial().isEmpty()) {
-            cliente.setUsuario(clienteDTO.getNomeSocial());
-        } else {
-            cliente.setUsuario(clienteDTO.getNome() + " " + clienteDTO.getSobrenome());
-        }
         logger.info("Salvando o cliente no bd");
         clienteRepository.persistAndFlush(cliente);
         return clienteMapper.fromEntityToCriarDto(cliente);
@@ -88,14 +83,9 @@ public class ClienteServiceImpl implements ClienteService {
         Optional<Cliente> clienteOptional = clienteRepository.findByIdOptional(clienteDTO.getIdCliente());
         if (clienteOptional.isPresent()) {
             Cliente cliente = clienteOptional.get();
-            cliente.atualizarCliente(clienteDTO.getNome(), clienteDTO.getSobrenome(),
-                    clienteDTO.getNomeSocial(), clienteDTO.getIdade(), clienteDTO.getEmail(),
+            cliente.atualizarCliente(clienteDTO.getNome(), clienteDTO.getSobrenome(), clienteDTO.getIdade(),
+                    clienteDTO.getEmail(),
                     clienteDTO.getTelefone(), clienteDTO.getSenha());
-            if (clienteDTO.getNomeSocial() != null && !clienteDTO.getNomeSocial().isEmpty()) {
-                cliente.setUsuario(clienteDTO.getNomeSocial());
-            } else {
-                cliente.setUsuario(clienteDTO.getNome() + " " + clienteDTO.getSobrenome());
-            }
             logger.info("Salvando registro atualizado");
             clienteRepository.persistAndFlush(cliente);
             return clienteMapper.fromEntityToAtualizarDto(cliente);

@@ -22,12 +22,13 @@ public interface ProdutoMapper {
     @InheritInverseConfiguration
     Produto fromDtoToEntity(ProdutoDTO dto);
 
+    @Mapping(source = "estoque.idEstoque", target = "idEstoque")
     CriarProdutoDTO fromEntityToCriarDto(Produto entity);
 
+    @InheritInverseConfiguration
     Produto fromCriarDtoToEntity(CriarProdutoDTO dto);
 
     @IterableMapping(qualifiedByName = "fromEntityToDto")
     @Named("fromEntityListToDtoList")
     List<ProdutoDTO> fromEntityListToDtoList(List<Produto> produtos);
 }
-

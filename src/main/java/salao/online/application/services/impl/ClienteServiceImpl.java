@@ -1,5 +1,6 @@
 package salao.online.application.services.impl;
 
+import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,13 +46,34 @@ public class ClienteServiceImpl implements ClienteService {
 
     private static Logger logger = LoggerFactory.getLogger(LoggerFactory.class);
 
+    private String removeAcentos(String texto) {
+        if (texto == null) {
+            return null;
+        }
+        String normalized = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        return normalized.replaceAll("[^\\p{ASCII}]", "");
+    }
+
     @Override
     @Transactional
     public CriarClienteDTO cadastrarCliente(CriarClienteDTO clienteDTO) {
-        Cliente cliente = clienteMapper.fromCriarDtoToEntity(clienteDTO);
-        logger.info("Salvando o cliente no bd");
-        clienteRepository.persistAndFlush(cliente);
-        return clienteMapper.fromEntityToCriarDto(cliente);
+        try {
+            Cliente cliente = clienteMapper.fromCriarDtoToEntity(clienteDTO);
+
+            String[] sobrenomes = clienteDTO.getSobrenome().split(" ");
+            String ultimoSobrenome = sobrenomes[sobrenomes.length - 1];
+            String usuario = removeAcentos(clienteDTO.getNome().toLowerCase()) + "."
+                    + removeAcentos(ultimoSobrenome.toLowerCase());
+            cliente.setUsuario(usuario);
+
+            logger.info("Salvando o cliente no banco de dados");
+            clienteRepository.persistAndFlush(cliente);
+
+            return clienteMapper.fromEntityToCriarDto(cliente);
+        } catch (Exception e) {
+            logger.error("Erro ao cadastrar cliente", e);
+            throw new RuntimeException("Erro ao cadastrar cliente.", e);
+        }
     }
 
     @Override

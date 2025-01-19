@@ -10,4 +10,7 @@ public interface ImagemRepository extends PanacheRepositoryBase<Imagem, UUID> {
     public void salvarImagem(Imagem imagem);
 
     public void atualizarImagem(UUID id, Imagem novaImagem);
+
+    public boolean existeFotoDePerfil(UUID idUsuario, boolean ehProfissional);
+
 }

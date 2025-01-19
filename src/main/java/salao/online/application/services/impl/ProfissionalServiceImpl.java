@@ -1,6 +1,9 @@
 package salao.online.application.services.impl;
 
+import java.text.Normalizer;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -42,13 +45,35 @@ public class ProfissionalServiceImpl implements ProfissionalService {
 
     private static Logger logger = LoggerFactory.getLogger(LoggerFactory.class);
 
+    private String removeAcentos(String texto) {
+        if (texto == null) {
+            return null;
+        }
+        String normalized = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        return normalized.replaceAll("[^\\p{ASCII}]", "");
+    }
+
     @Override
     @Transactional
     public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO) {
-        Profissional profissional = profissionalMapper.fromCriarDtoToEntity(profissionalDTO);
-        logger.info("Salvando o profissional criado");
-        profissionalRepository.persistAndFlush(profissional);
-        return profissionalMapper.fromEntityToCriarDto(profissional);
+        try {
+            Profissional profissional = profissionalMapper.fromCriarDtoToEntity(profissionalDTO);
+            String[] sobrenomes = profissionalDTO.getSobrenome().split(" ");
+            String ultimoSobrenome = sobrenomes[sobrenomes.length - 1];
+
+            // Remover acentos e definir o nome de usuário
+            String usuario = removeAcentos(profissionalDTO.getNome().toLowerCase()) + "." +
+                    removeAcentos(ultimoSobrenome.toLowerCase());
+            profissional.setUsuario(usuario);
+
+            logger.info("Salvando o profissional no banco de dados");
+            profissionalRepository.persistAndFlush(profissional);
+
+            return profissionalMapper.fromEntityToCriarDto(profissional);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao cadastrar profissional.", e);
+        }
     }
 
     @Override
@@ -72,6 +97,15 @@ public class ProfissionalServiceImpl implements ProfissionalService {
                 .orElseThrow(() -> new ValidacaoException(
                         MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
         return getListarProfissionalDTO(profissional);
+    }
+
+    @Override
+    @Transactional
+    public List<ListarProfissionalDTO> listarTodosProfissionais() {
+        List<Profissional> profissionais = profissionalRepository.findAll().list();
+        return profissionais.stream()
+                .map(profissional -> profissionalMapper.fromEntityToListarDto(profissional))
+                .collect(Collectors.toList());
     }
 
     @Override

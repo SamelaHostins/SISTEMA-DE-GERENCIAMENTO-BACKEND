@@ -23,6 +23,8 @@ import salao.online.application.services.interfaces.ImagemService;
 import salao.online.domain.entities.Cliente;
 import salao.online.domain.entities.Imagem;
 import salao.online.domain.entities.Profissional;
+import salao.online.domain.enums.MensagemErroValidacaoEnum;
+import salao.online.domain.exceptions.ValidacaoException;
 import salao.online.infra.repositories.ClienteRepository;
 import salao.online.infra.repositories.ImagemRepository;
 import salao.online.infra.repositories.ProfissionalRepository;
@@ -53,16 +55,17 @@ public class ImagemServiceImpl implements ImagemService {
                 "api_secret", "ZRJ_kcRwt27XR7XPbWg9tgl1dAM"));
     }
 
-    // public String uploadImagem(InputStream imageBytes, String nomeArquivo,
-    // TipoImagemEnum tipoImagem,
-    // UUID idUsuario, boolean ehProfissional) {
+    // public String uploadImagem(InputStream imageBytes, String nomeArquivo, int
+    // tipoImagem, UUID idUsuario,
+    // boolean ehProfissional) {
+    // TipoImagemEnumDTO tipoImagemEnum =
+    // TipoImagemEnumDTO.fromTipoImagem(tipoImagem);
+
     // Path tempFilePath = null;
     // try {
-    // // Cria um arquivo temporário para leitura dos bytes
     // tempFilePath = Files.createTempFile("upload_", nomeArquivo);
     // Files.copy(imageBytes, tempFilePath, StandardCopyOption.REPLACE_EXISTING);
 
-    // // Le os bytes do arquivo temporário
     // byte[] bytes = Files.readAllBytes(tempFilePath);
     // Map<String, Object> options = new HashMap<>();
     // options.put("public_id", nomeArquivo);
@@ -71,18 +74,23 @@ public class ImagemServiceImpl implements ImagemService {
     // @SuppressWarnings("unchecked")
     // Map<String, Object> uploadedFile = cloudinary.uploader().upload(bytes,
     // options);
-    // // Recupera a URL segura gerada pelo Cloudinary
     // String secureUrl = (String) uploadedFile.get("secure_url");
 
-    // // Salvar as informações no banco de dados
-    // salvarImagem(secureUrl, nomeArquivo, tipoImagem, idUsuario, ehProfissional);
+    // ImagemDTO imagemDTO = new ImagemDTO();
+    // imagemDTO.setUrlImagem(secureUrl);
+    // imagemDTO.setNomeArquivo(nomeArquivo);
+    // imagemDTO.setTipoImagem(tipoImagemEnum);
+    // imagemDTO.setIdUsuario(idUsuario);
+    // imagemDTO.setEhProfissional(ehProfissional);
+
+    // salvarImagem(imagemDTO);
+
     // return secureUrl;
 
     // } catch (Exception e) {
     // logger.error("Erro ao fazer upload no Cloudinary", e);
     // throw new RuntimeException("Erro ao fazer upload da imagem.");
     // } finally {
-    // // Fechar o InputStream e excluir o arquivo temporário
     // try {
     // imageBytes.close();
     // logger.info("InputStream fechado com sucesso.");
@@ -92,45 +100,31 @@ public class ImagemServiceImpl implements ImagemService {
     // }
     // }
 
-    // public void salvarImagem(String urlImagem, String nomeArquivo, TipoImagemEnum
-    // tipoImagem, UUID idUsuario,
-    // boolean ehProfissional) {
-    // logger.info("Salvando informações do upload no banco de dados...");
+    private byte[] readBytesFromInputStream(InputStream inputStream, String fileName) throws IOException {
+        Path tempFilePath = Files.createTempFile("upload_", fileName);
+        Files.copy(inputStream, tempFilePath, StandardCopyOption.REPLACE_EXISTING);
+        byte[] bytes = Files.readAllBytes(tempFilePath);
+        Files.deleteIfExists(tempFilePath);
+        return bytes;
+    }
 
-    // Imagem imagem = new Imagem();
-    // imagem.setUrlImagem(urlImagem);
-    // imagem.setNomeArquivo(nomeArquivo);
-    // imagem.setTipoImagem(tipoImagem);
-
-    // if (ehProfissional) {
-    // Profissional profissional = profissionalRepository.findById(idUsuario);
-    // if (profissional == null) {
-    // throw new IllegalArgumentException("Profissional não encontrado.");
-    // }
-    // imagem.setProfissional(profissional);
-    // } else {
-    // Cliente cliente = clienteRepository.findById(idUsuario);
-    // if (cliente == null) {
-    // throw new IllegalArgumentException("Cliente não encontrado.");
-    // }
-    // imagem.setCliente(cliente);
-    // }
-
-    // imagemRepository.persistAndFlush(imagem);
-    // logger.info("Informações do upload salvas com sucesso no banco de dados.");
-    // }
+    private void verificarFotoDePerfilExistente(UUID idUsuario, boolean ehProfissional) {
+        boolean existeFotoDePerfil = imagemRepository.existeFotoDePerfil(idUsuario, ehProfissional);
+        if (existeFotoDePerfil) {
+            throw new IllegalArgumentException("Já existe uma foto de perfil para este usuário.");
+        }
+    }
 
     public String uploadImagem(InputStream imageBytes, String nomeArquivo, int tipoImagem, UUID idUsuario,
-            boolean ehProfissional) {
+            boolean ehProfissional) throws ValidacaoException {
         TipoImagemEnumDTO tipoImagemEnum = TipoImagemEnumDTO.fromTipoImagem(tipoImagem);
+        if (tipoImagemEnum == TipoImagemEnumDTO.PERFIL) {
+            verificarFotoDePerfilExistente(idUsuario, ehProfissional);
+        }
 
-        // Lógica de upload permanece a mesma
-        Path tempFilePath = null;
         try {
-            tempFilePath = Files.createTempFile("upload_", nomeArquivo);
-            Files.copy(imageBytes, tempFilePath, StandardCopyOption.REPLACE_EXISTING);
+            byte[] bytes = readBytesFromInputStream(imageBytes, nomeArquivo);
 
-            byte[] bytes = Files.readAllBytes(tempFilePath);
             Map<String, Object> options = new HashMap<>();
             options.put("public_id", nomeArquivo);
 
@@ -139,7 +133,6 @@ public class ImagemServiceImpl implements ImagemService {
             Map<String, Object> uploadedFile = cloudinary.uploader().upload(bytes, options);
             String secureUrl = (String) uploadedFile.get("secure_url");
 
-            // Cria o DTO
             ImagemDTO imagemDTO = new ImagemDTO();
             imagemDTO.setUrlImagem(secureUrl);
             imagemDTO.setNomeArquivo(nomeArquivo);
@@ -147,7 +140,6 @@ public class ImagemServiceImpl implements ImagemService {
             imagemDTO.setIdUsuario(idUsuario);
             imagemDTO.setEhProfissional(ehProfissional);
 
-            // Salva a imagem
             salvarImagem(imagemDTO);
 
             return secureUrl;
@@ -157,38 +149,87 @@ public class ImagemServiceImpl implements ImagemService {
             throw new RuntimeException("Erro ao fazer upload da imagem.");
         } finally {
             try {
-                imageBytes.close();
-                logger.info("InputStream fechado com sucesso.");
+                if (imageBytes != null) {
+                    imageBytes.close();
+                    logger.info("InputStream fechado com sucesso.");
+                }
             } catch (IOException e) {
                 logger.error("Erro ao fechar InputStream", e);
             }
         }
     }
 
-    public void salvarImagem(ImagemDTO imagemDTO) {
+    public void salvarImagem(ImagemDTO imagemDTO) throws ValidacaoException {
         logger.info("Salvando informações do upload no banco de dados...");
-
-        // Usa o mapper para criar a entidade
         Imagem imagem = imagemMapper.fromDtoToEntity(imagemDTO);
 
-        // Associa o profissional ou cliente, se necessário
         if (imagemDTO.isEhProfissional()) {
             Profissional profissional = profissionalRepository.findById(imagemDTO.getIdUsuario());
             if (profissional == null) {
-                throw new IllegalArgumentException("Profissional não encontrado.");
+                throw new ValidacaoException(
+                        MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro());
             }
             imagem.setProfissional(profissional);
         } else {
             Cliente cliente = clienteRepository.findById(imagemDTO.getIdUsuario());
             if (cliente == null) {
-                throw new IllegalArgumentException("Cliente não encontrado.");
+                throw new ValidacaoException(
+                        MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro());
             }
             imagem.setCliente(cliente);
         }
 
-        // Persiste no banco
         imagemRepository.persistAndFlush(imagem);
         logger.info("Informações do upload salvas com sucesso no banco de dados.");
+    }
+
+    public void atualizarImagem(UUID idImagem, InputStream novaImagemBytes, String novoNomeArquivo) {
+        Imagem imagemExistente = imagemRepository.findById(idImagem);
+        if (imagemExistente == null) {
+            throw new IllegalArgumentException("Imagem não encontrada.");
+        }
+
+        try {
+            logger.info("Excluindo imagem antiga do Cloudinary");
+            cloudinary.uploader().destroy(imagemExistente.getNomeArquivo(), new HashMap<>());
+
+            byte[] bytes = readBytesFromInputStream(novaImagemBytes, novoNomeArquivo);
+
+            Map<String, Object> options = new HashMap<>();
+            options.put("public_id", novoNomeArquivo);
+
+            logger.info("Fazendo upload da nova imagem");
+            @SuppressWarnings("unchecked")
+            Map<String, Object> uploadedFile = cloudinary.uploader().upload(bytes, options);
+            String newSecureUrl = (String) uploadedFile.get("secure_url");
+
+            imagemExistente.setUrlImagem(newSecureUrl);
+            imagemExistente.setNomeArquivo(novoNomeArquivo);
+            imagemRepository.persist(imagemExistente);
+
+        } catch (Exception e) {
+            logger.error("Erro ao atualizar imagem.", e);
+            throw new RuntimeException("Erro ao atualizar imagem.");
+        }
+    }
+
+    public void excluirImagem(UUID idImagem) {
+        Imagem imagem = imagemRepository.findById(idImagem);
+        if (imagem == null) {
+            throw new IllegalArgumentException("Imagem não encontrada.");
+        }
+
+        try {
+            logger.info("Excluindo imagem do Cloudinary");
+            cloudinary.uploader().destroy(imagem.getNomeArquivo(), new HashMap<>());
+
+            logger.info("Excluindo imagem do banco de dados");
+            imagemRepository.delete(imagem);
+
+        } catch (Exception e) {
+            logger.error("Erro ao excluir imagem.", e);
+            throw new RuntimeException("Erro ao excluir imagem.");
+        }
     }
 
     public Imagem buscarImagemPorId(UUID id) {

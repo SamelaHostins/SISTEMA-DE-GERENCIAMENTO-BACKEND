@@ -1,5 +1,6 @@
 package salao.online.application.services.interfaces;
 
+import java.util.List;
 import java.util.UUID;
 
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
@@ -17,6 +18,8 @@ public interface ProfissionalService {
     public BuscarProfissionalDTO buscarProfissionalPorId(UUID idProfissional) throws ValidacaoException;
 
     public ListarProfissionalDTO listarProfissionalPorId(UUID idProfissional) throws ValidacaoException;
+
+    public List<ListarProfissionalDTO> listarTodosProfissionais();
 
     public void deletarProfissional(UUID idProfissional) throws ValidacaoException;
 }

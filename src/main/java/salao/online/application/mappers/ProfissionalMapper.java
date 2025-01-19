@@ -32,5 +32,11 @@ public interface ProfissionalMapper {
 
     BuscarProfissionalDTO fromEntityToBuscarDto(Profissional entity);
 
+    @Mapping(target = "idProfissional", source = "idProfissional")
+    @Mapping(target = "usuario", source = "usuario")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "telefone", source = "telefone")
+    @Mapping(source = "servicos", target = "servicos")
+    @Mapping(source = "imagens", target = "imagens")
     ListarProfissionalDTO fromEntityToListarDto(Profissional entity);
 }

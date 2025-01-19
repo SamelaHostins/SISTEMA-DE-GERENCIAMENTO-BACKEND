@@ -1,5 +1,6 @@
 package salao.online.application.resources;
 
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.inject.Inject;
@@ -51,7 +52,8 @@ public class ProfissionalResource {
             CriarProfissionalDTO profissionalDTO = profissionalService.cadastrarProfissional(dto);
             return Response.status(200).entity(profissionalDTO).build();
         } catch (Exception ex) {
-            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+            LOG.error("Erro ao cadastrar profissional: {}", ex.getMessage(), ex);
+            return Response.status(500).entity("Erro ao cadastrar profissional: " + ex.getMessage()).build();
         }
     }
 
@@ -91,6 +93,22 @@ public class ProfissionalResource {
         }
     }
 
+    @Operation(summary = "Listar todos os profissionais", description = "Retorna uma lista de todos os profissionais cadastrados com seus serviços e imagens.")
+    @APIResponse(responseCode = "200", description = "Lista de profissionais retornada com sucesso.")
+    @APIResponse(responseCode = "500", description = "Erro ao processar a requisição.")
+    @GET
+    @Path("/listar")
+    public Response listarProfissionais() {
+        try {
+            LOG.info("Requisição recebida - Listar todos os profissionais");
+            List<ListarProfissionalDTO> profissionais = profissionalService.listarTodosProfissionais();
+            return Response.ok(profissionais).build();
+        } catch (Exception ex) {
+            LOG.error("Erro ao listar profissionais: {}", ex.getMessage(), ex);
+            return Response.status(500).entity("Ocorreu um erro ao listar profissionais.").build();
+        }
+    }
+
     @Operation(summary = "Deletando o cadastro de um Profissional")
     @APIResponse(responseCode = "200", description = "Cadastro deletado com sucesso!")
     @APIResponse(responseCode = "404", description = "O Profissional não foi encontrado")
@@ -110,7 +128,7 @@ public class ProfissionalResource {
         }
     }
 
-    //ainda não está pronto, mas pode add ele no front
+    // ainda não está pronto, mas pode add ele no front
     @Operation(summary = "Atualizando o cadastro de um Profissional")
     @APIResponse(responseCode = "200", description = "Cadastro atualizado com sucesso!")
     @APIResponse(responseCode = "404", description = "O Profissional não foi encontrado")

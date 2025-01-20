@@ -1,15 +1,20 @@
 package salao.online.application.services.interfaces;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
 
-import salao.online.domain.entities.Imagem;
+import salao.online.application.dtos.dtosDeImagem.ImagemDTO;
 import salao.online.domain.exceptions.ValidacaoException;
 
 public interface ImagemService {
 
-      public String uploadImagem(InputStream imageBytes, String nomeArquivo, int tipoImagem, UUID idUsuario,
+      public String uploadImagem(InputStream imageBytes, int tipoImagem, UUID idUsuario,
                   boolean ehProfissional) throws ValidacaoException;
 
-      public Imagem buscarImagemPorId(UUID id);
+      public void excluirImagem(UUID idImagem);
+
+      public ImagemDTO buscarImagemDePerfil(UUID idUsuario);
+
+      public List<ImagemDTO> buscarFotosDoPortfolio(UUID idUsuario);
 }

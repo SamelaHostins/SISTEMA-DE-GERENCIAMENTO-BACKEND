@@ -6,16 +6,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
+import io.quarkus.panache.common.Parameters;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import salao.online.application.dtos.dtosDeImagem.ImagemDTO;
 import salao.online.application.dtos.dtosDeImagem.TipoImagemEnumDTO;
 import salao.online.application.mappers.ImagemMapper;
@@ -24,6 +28,7 @@ import salao.online.domain.entities.Cliente;
 import salao.online.domain.entities.Imagem;
 import salao.online.domain.entities.Profissional;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
+import salao.online.domain.enums.TipoImagemEnum;
 import salao.online.domain.exceptions.ValidacaoException;
 import salao.online.infra.repositories.ClienteRepository;
 import salao.online.infra.repositories.ImagemRepository;
@@ -55,51 +60,6 @@ public class ImagemServiceImpl implements ImagemService {
                 "api_secret", "ZRJ_kcRwt27XR7XPbWg9tgl1dAM"));
     }
 
-    // public String uploadImagem(InputStream imageBytes, String nomeArquivo, int
-    // tipoImagem, UUID idUsuario,
-    // boolean ehProfissional) {
-    // TipoImagemEnumDTO tipoImagemEnum =
-    // TipoImagemEnumDTO.fromTipoImagem(tipoImagem);
-
-    // Path tempFilePath = null;
-    // try {
-    // tempFilePath = Files.createTempFile("upload_", nomeArquivo);
-    // Files.copy(imageBytes, tempFilePath, StandardCopyOption.REPLACE_EXISTING);
-
-    // byte[] bytes = Files.readAllBytes(tempFilePath);
-    // Map<String, Object> options = new HashMap<>();
-    // options.put("public_id", nomeArquivo);
-
-    // logger.info("Fazendo o upload no Cloudinary");
-    // @SuppressWarnings("unchecked")
-    // Map<String, Object> uploadedFile = cloudinary.uploader().upload(bytes,
-    // options);
-    // String secureUrl = (String) uploadedFile.get("secure_url");
-
-    // ImagemDTO imagemDTO = new ImagemDTO();
-    // imagemDTO.setUrlImagem(secureUrl);
-    // imagemDTO.setNomeArquivo(nomeArquivo);
-    // imagemDTO.setTipoImagem(tipoImagemEnum);
-    // imagemDTO.setIdUsuario(idUsuario);
-    // imagemDTO.setEhProfissional(ehProfissional);
-
-    // salvarImagem(imagemDTO);
-
-    // return secureUrl;
-
-    // } catch (Exception e) {
-    // logger.error("Erro ao fazer upload no Cloudinary", e);
-    // throw new RuntimeException("Erro ao fazer upload da imagem.");
-    // } finally {
-    // try {
-    // imageBytes.close();
-    // logger.info("InputStream fechado com sucesso.");
-    // } catch (IOException e) {
-    // logger.error("Erro ao fechar InputStream", e);
-    // }
-    // }
-    // }
-
     private byte[] readBytesFromInputStream(InputStream inputStream, String fileName) throws IOException {
         Path tempFilePath = Files.createTempFile("upload_", fileName);
         Files.copy(inputStream, tempFilePath, StandardCopyOption.REPLACE_EXISTING);
@@ -108,27 +68,18 @@ public class ImagemServiceImpl implements ImagemService {
         return bytes;
     }
 
-    private void verificarFotoDePerfilExistente(UUID idUsuario, boolean ehProfissional) {
-        boolean existeFotoDePerfil = imagemRepository.existeFotoDePerfil(idUsuario, ehProfissional);
-        if (existeFotoDePerfil) {
-            throw new IllegalArgumentException("Já existe uma foto de perfil para este usuário.");
-        }
-    }
-
-    public String uploadImagem(InputStream imageBytes, String nomeArquivo, int tipoImagem, UUID idUsuario,
+    @Transactional
+    public String uploadImagem(InputStream imageBytes, int tipoImagem, UUID idUsuario,
             boolean ehProfissional) throws ValidacaoException {
         TipoImagemEnumDTO tipoImagemEnum = TipoImagemEnumDTO.fromTipoImagem(tipoImagem);
-        if (tipoImagemEnum == TipoImagemEnumDTO.PERFIL) {
-            verificarFotoDePerfilExistente(idUsuario, ehProfissional);
-        }
 
         try {
+            String nomeArquivo = gerarNomeArquivoAutomatico(idUsuario);
             byte[] bytes = readBytesFromInputStream(imageBytes, nomeArquivo);
 
             Map<String, Object> options = new HashMap<>();
             options.put("public_id", nomeArquivo);
 
-            logger.info("Fazendo o upload no Cloudinary");
             @SuppressWarnings("unchecked")
             Map<String, Object> uploadedFile = cloudinary.uploader().upload(bytes, options);
             String secureUrl = (String) uploadedFile.get("secure_url");
@@ -145,16 +96,14 @@ public class ImagemServiceImpl implements ImagemService {
             return secureUrl;
 
         } catch (Exception e) {
-            logger.error("Erro ao fazer upload no Cloudinary", e);
-            throw new RuntimeException("Erro ao fazer upload da imagem.");
+            throw new RuntimeException("Erro ao fazer upload da imagem.", e);
         } finally {
             try {
                 if (imageBytes != null) {
                     imageBytes.close();
-                    logger.info("InputStream fechado com sucesso.");
                 }
             } catch (IOException e) {
-                logger.error("Erro ao fechar InputStream", e);
+                throw new RuntimeException("Erro ao fechar InputStream.", e);
             }
         }
     }
@@ -190,7 +139,6 @@ public class ImagemServiceImpl implements ImagemService {
         }
 
         try {
-            logger.info("Excluindo imagem antiga do Cloudinary");
             cloudinary.uploader().destroy(imagemExistente.getNomeArquivo(), new HashMap<>());
 
             byte[] bytes = readBytesFromInputStream(novaImagemBytes, novoNomeArquivo);
@@ -198,7 +146,6 @@ public class ImagemServiceImpl implements ImagemService {
             Map<String, Object> options = new HashMap<>();
             options.put("public_id", novoNomeArquivo);
 
-            logger.info("Fazendo upload da nova imagem");
             @SuppressWarnings("unchecked")
             Map<String, Object> uploadedFile = cloudinary.uploader().upload(bytes, options);
             String newSecureUrl = (String) uploadedFile.get("secure_url");
@@ -208,11 +155,11 @@ public class ImagemServiceImpl implements ImagemService {
             imagemRepository.persist(imagemExistente);
 
         } catch (Exception e) {
-            logger.error("Erro ao atualizar imagem.", e);
-            throw new RuntimeException("Erro ao atualizar imagem.");
+            throw new RuntimeException("Erro ao atualizar imagem.", e);
         }
     }
 
+    @Transactional
     public void excluirImagem(UUID idImagem) {
         Imagem imagem = imagemRepository.findById(idImagem);
         if (imagem == null) {
@@ -220,7 +167,7 @@ public class ImagemServiceImpl implements ImagemService {
         }
 
         try {
-            logger.info("Excluindo imagem do Cloudinary");
+            logger.info("Excluindo imagem do Cloudinary: {}" + imagem.getNomeArquivo());
             cloudinary.uploader().destroy(imagem.getNomeArquivo(), new HashMap<>());
 
             logger.info("Excluindo imagem do banco de dados");
@@ -228,12 +175,26 @@ public class ImagemServiceImpl implements ImagemService {
 
         } catch (Exception e) {
             logger.error("Erro ao excluir imagem.", e);
-            throw new RuntimeException("Erro ao excluir imagem.");
+            throw new RuntimeException("Erro ao excluir imagem.", e);
         }
     }
 
-    public Imagem buscarImagemPorId(UUID id) {
-        return imagemRepository.findById(id);
+    public ImagemDTO buscarImagemDePerfil(UUID idUsuario) {
+        Imagem imagem = imagemRepository.buscarFoto(idUsuario, TipoImagemEnum.PERFIL);
+        return imagem != null ? imagemMapper.fromEntityToDto(imagem) : null;
+    }
+
+    public List<ImagemDTO> buscarFotosDoPortfolio(UUID idUsuario) {
+        List<Imagem> imagens = imagemRepository.buscarFotos(idUsuario, TipoImagemEnum.PORT);
+        return imagens.stream()
+                .map(imagemMapper::fromEntityToDto)
+                .collect(Collectors.toList());
+    }
+
+    private String gerarNomeArquivoAutomatico(UUID idUsuario) {
+        String shortUuid = idUsuario.toString().substring(0, 8); // Primeiro segmento do UUID
+        long timestamp = System.currentTimeMillis() / 1000; // Segundos desde Unix Epoch
+        return shortUuid + "_" + timestamp;
     }
 
 }

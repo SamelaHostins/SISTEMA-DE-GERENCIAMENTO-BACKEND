@@ -23,7 +23,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import salao.online.application.dtos.dtosDeImagem.ImagemDTO;
 import salao.online.application.services.interfaces.ImagemService;
-import salao.online.domain.entities.Imagem;
 
 @Path("/imagem")
 @Tag(name = "Endpoints do Cloudinary - Imagem")

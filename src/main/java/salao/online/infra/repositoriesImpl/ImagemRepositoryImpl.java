@@ -3,7 +3,6 @@ package salao.online.infra.repositoriesImpl;
 import java.util.List;
 import java.util.UUID;
 
-import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

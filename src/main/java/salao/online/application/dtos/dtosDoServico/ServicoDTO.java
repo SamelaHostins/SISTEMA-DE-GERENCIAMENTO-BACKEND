@@ -20,6 +20,7 @@ public class ServicoDTO {
     private String nome;
     private String especificacao;
     private String termosECondicoes;
+    private String tempo;
     private double valor;
     private TipoServicoEnumDTO tipoServico;
     private UUID idProfissional;

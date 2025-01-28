@@ -1,5 +1,6 @@
 package salao.online.domain.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,23 +42,24 @@ public class Profissional extends Informacao {
     @NotEmpty
     private @Getter @Setter String cidade;
 
-    @NotEmpty
+    @NotNull
     private @Getter @Setter int numero;
 
     @NotNull
+    @Pattern(regexp = "\\d{5}-\\d{3}", message = "CEP inválido. Formato esperado: 00000-000")
     private @Getter @Setter String cep;
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
-    private @Getter List<Imagem> imagens;
+    private @Getter List<Imagem> imagens = new ArrayList<>();
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
-    private @Getter List<Servico> servicos;
+    private @Getter List<Servico> servicos = new ArrayList<>();
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
-    private @Getter List<Estoque> estoques;
+    private @Getter List<Estoque> estoques = new ArrayList<>();
 
     public Profissional(String nome, String sobrenome, short idade, String email,
             String telefone, String usuario, String senha, String rua, String bairro, String cidade,

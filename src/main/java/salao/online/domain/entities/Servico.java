@@ -3,6 +3,10 @@ package salao.online.domain.entities;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import io.smallrye.common.constraint.NotNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,21 +19,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import io.smallrye.common.constraint.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import salao.online.domain.enums.TipoServicoEnum;
 
 @Entity
-@Table(schema = "salao", name = "servico", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "id_profissional" }) })
+@Table(schema = "salao", name = "servico")
 public class Servico {
 
     protected Servico() {

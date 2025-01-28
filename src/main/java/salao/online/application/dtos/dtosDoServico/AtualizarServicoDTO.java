@@ -18,6 +18,7 @@ public class AtualizarServicoDTO {
     private TipoServicoEnumDTO tipoServico;
     private String especificacao;
     private String termosECondicoes;
+    private String tempo;
     private double valor;
     private UUID idProfissional;
 }

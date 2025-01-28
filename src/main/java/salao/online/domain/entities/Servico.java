@@ -50,6 +50,8 @@ public class Servico {
     @Column(name = "termos_e_condicoes")
     private @Getter @Setter String termosECondicoes;
 
+    private @Getter @Setter String tempo;
+
     @DecimalMin(value = "0.01", message = "O valor deve ser no mínimo 0.01")
     private @Getter @Setter double valor;
 
@@ -68,12 +70,13 @@ public class Servico {
     private @Getter List<Agendamento> agendamentos;
 
     public Servico(TipoServicoEnum tipoServico, String nome, String especificacao, String termosECondicoes,
-            double valor,
+            String tempo, double valor,
             Profissional profissional, List<Avaliacao> avaliacoes, List<Agendamento> agendamentos) {
         this.tipoServico = tipoServico;
         this.nome = nome;
         this.especificacao = especificacao;
         this.termosECondicoes = termosECondicoes;
+        this.tempo = tempo;
         this.valor = valor;
         this.profissional = profissional;
         this.avaliacoes = avaliacoes;
@@ -81,10 +84,11 @@ public class Servico {
     }
 
     public Servico atualizarCadastroServico(TipoServicoEnum novoTipoServico, String novoNome, String novaEspecificacao,
-            String novosTermosECondicoes, double novoValor) {
+            String novosTermosECondicoes, String novoTempo, double novoValor) {
         setTipoServico(novoTipoServico);
         setNome(novoNome);
         setEspecificacao(novaEspecificacao);
+        setTempo(novoTempo);
         setTermosECondicoes(novosTermosECondicoes);
         setValor(novoValor);
         return this;

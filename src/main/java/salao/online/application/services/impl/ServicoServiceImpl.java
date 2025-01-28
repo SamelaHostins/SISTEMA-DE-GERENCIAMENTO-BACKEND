@@ -72,6 +72,7 @@ public class ServicoServiceImpl implements ServicoService {
                 servicoDTO.getNome(),
                 servicoDTO.getEspecificacao(),
                 servicoDTO.getTermosECondicoes(),
+                servicoDTO.getTempo(),
                 servicoDTO.getValor());
 
         logger.info("Salvando registro atualizado");

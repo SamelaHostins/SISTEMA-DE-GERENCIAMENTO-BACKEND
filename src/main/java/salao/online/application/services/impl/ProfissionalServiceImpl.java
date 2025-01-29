@@ -15,6 +15,7 @@ import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ProfissionalDTO;
+import salao.online.application.dtos.dtosParaPesquisar.PesquisaProfissionalDTO;
 import salao.online.application.mappers.EstoqueMapper;
 import salao.online.application.mappers.ImagemMapper;
 import salao.online.application.mappers.ProfissionalMapper;
@@ -100,11 +101,18 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     }
 
     @Override
-    @Transactional
     public List<ListarProfissionalDTO> listarTodosProfissionais() {
         List<Profissional> profissionais = profissionalRepository.findAll().list();
         return profissionais.stream()
                 .map(profissional -> profissionalMapper.fromEntityToListarDto(profissional))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PesquisaProfissionalDTO> pesquisarTodosProfissionais() {
+        List<Profissional> profissionais = profissionalRepository.findAll().list();
+        return profissionais.stream()
+                .map(profissional -> profissionalMapper.fromEntityToPesquisaDto(profissional))
                 .collect(Collectors.toList());
     }
 

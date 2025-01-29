@@ -26,6 +26,7 @@ import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ProfissionalDTO;
+import salao.online.application.dtos.dtosParaPesquisar.PesquisaProfissionalDTO;
 import salao.online.application.services.interfaces.ProfissionalService;
 import salao.online.domain.exceptions.ValidacaoException;
 
@@ -106,6 +107,22 @@ public class ProfissionalResource {
         } catch (Exception ex) {
             LOG.error("Erro ao listar profissionais: {}", ex.getMessage(), ex);
             return Response.status(500).entity("Ocorreu um erro ao listar profissionais.").build();
+        }
+    }
+
+    @Operation(summary = "Pesquisa todos os profissionais", description = "Retorna uma pesquisa de todos os profissionais cadastrados com seus serviços e imagens.")
+    @APIResponse(responseCode = "200", description = "Pesquisa de profissionais retornada com sucesso.")
+    @APIResponse(responseCode = "500", description = "Erro ao processar a requisição.")
+    @GET
+    @Path("/pesquisar")
+    public Response PesquisarProfissionais() {
+        try {
+            LOG.info("Requisição recebida - Pesquisar todos os profissionais");
+            List<PesquisaProfissionalDTO> profissionais = profissionalService.pesquisarTodosProfissionais();
+            return Response.ok(profissionais).build();
+        } catch (Exception ex) {
+            LOG.error("Erro ao pesquisar profissionais: {}", ex.getMessage(), ex);
+            return Response.status(500).entity("Ocorreu um erro ao pesquisar profissionais.").build();
         }
     }
 

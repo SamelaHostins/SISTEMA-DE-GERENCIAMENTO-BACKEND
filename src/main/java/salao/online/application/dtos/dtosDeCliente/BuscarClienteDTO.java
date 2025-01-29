@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import salao.online.application.dtos.AvaliacaoDTO;
 import salao.online.application.dtos.dtosDeImagem.ImagensDoClienteDTO;
 import salao.online.application.dtos.dtosDoAgendamento.AgendamentoDTO;
+import salao.online.application.dtos.AvaliacaoDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor

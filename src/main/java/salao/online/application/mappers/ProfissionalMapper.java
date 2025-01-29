@@ -8,6 +8,7 @@ import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ProfissionalDTO;
+import salao.online.application.dtos.dtosParaPesquisar.PesquisaProfissionalDTO;
 import salao.online.domain.entities.Profissional;
 
 @Mapper(componentModel = "cdi", uses = { EstoqueMapper.class, ServicoMapper.class, ImagemMapper.class,
@@ -39,4 +40,8 @@ public interface ProfissionalMapper {
     @Mapping(source = "servicos", target = "servicos")
     @Mapping(source = "imagens", target = "imagens")
     ListarProfissionalDTO fromEntityToListarDto(Profissional entity);
+
+    PesquisaProfissionalDTO fromEntityToPesquisaDto (Profissional entity);
+
+    Profissional fromPesquisaDtoToEntity(ProfissionalDTO dto);
 }

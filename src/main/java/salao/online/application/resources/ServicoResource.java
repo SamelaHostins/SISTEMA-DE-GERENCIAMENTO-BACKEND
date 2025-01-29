@@ -153,7 +153,7 @@ public class ServicoResource {
     @APIResponse(responseCode = "200", description = "Pesquisa realizada com sucesso!")
     @APIResponse(responseCode = "500", description = "Erro no servidor")
     @GET
-    @Path("/pesquisar}")
+    @Path("/pesquisar")
     public List<PesquisaServicoDTO> pesquisaTodosServicos() {
         return servicoService.pesquisarTodosServicos();
     }
@@ -162,7 +162,7 @@ public class ServicoResource {
     @APIResponse(responseCode = "200", description = "Pesquisa realizada com sucesso!")
     @APIResponse(responseCode = "500", description = "Erro no servidor")
     @GET
-    @Path("/pesquisarLocal}")
+    @Path("/pesquisarLocal")
     public List<PesquisaLocalDTO> pesquisarTodasAsCidadesComServicos() {
         return servicoService.pesquisarTodasAsCidadesComServicos();
     }

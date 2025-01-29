@@ -3,7 +3,7 @@ package salao.online.application.mappers;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
+import org.mapstruct.Named;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
@@ -41,7 +41,13 @@ public interface ProfissionalMapper {
     @Mapping(source = "imagens", target = "imagens")
     ListarProfissionalDTO fromEntityToListarDto(Profissional entity);
 
-    PesquisaProfissionalDTO fromEntityToPesquisaDto (Profissional entity);
+    @Named("mapNomeCompleto") 
+    default String mapNomeCompleto(Profissional profissional) {
+        return profissional.getNome() + " " + profissional.getSobrenome();
+    }
 
-    Profissional fromPesquisaDtoToEntity(ProfissionalDTO dto);
+    @Mapping(source = "idProfissional", target = "idProfissional")
+    @Mapping(source = "usuario", target = "usuario")
+    @Mapping(source = ".", target = "nome", qualifiedByName = "mapNomeCompleto") 
+    PesquisaProfissionalDTO fromEntityToPesquisaDto(Profissional entity);
 }

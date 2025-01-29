@@ -112,7 +112,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     public List<PesquisaProfissionalDTO> pesquisarTodosProfissionais() {
         List<Profissional> profissionais = profissionalRepository.findAll().list();
         return profissionais.stream()
-                .map(profissional -> profissionalMapper.fromEntityToPesquisaDto(profissional))
+                .map(profissionalMapper::fromEntityToPesquisaDto)
                 .collect(Collectors.toList());
     }
 

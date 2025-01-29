@@ -8,9 +8,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import salao.online.application.dtos.dtosDoProfissional.ProfissionalDTO;
 import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
+import salao.online.application.dtos.dtosParaPesquisar.PesquisaProfissionalDTO;
+import salao.online.application.dtos.dtosParaPesquisar.PesquisaServicoDTO;
+import salao.online.domain.entities.Profissional;
 import salao.online.domain.entities.Servico;
 
 @Mapper(componentModel = "cdi", uses = { AvaliacaoMapper.class, AgendamentoMapper.class })
@@ -40,4 +44,8 @@ public interface ServicoMapper {
     @IterableMapping(qualifiedByName = "fromEntityToDto")
     @Named("fromEntityListToDtoList")
     List<ServicoDTO> fromEntityListToDtoList(List<Servico> servicos);
+
+    PesquisaServicoDTO fromEntityToPesquisaDto (Servico entity);
+
+    Servico fromPesquisaDtoToEntity(PesquisaServicoDTO dto);
 }

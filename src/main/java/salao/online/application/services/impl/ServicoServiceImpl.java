@@ -12,6 +12,7 @@ import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.application.dtos.dtosDoServico.TipoServicoEnumDTO;
+import salao.online.application.dtos.dtosParaPesquisar.PesquisaServicoDTO;
 import salao.online.application.mappers.AgendamentoMapper;
 import salao.online.application.mappers.AvaliacaoMapper;
 import salao.online.application.mappers.ProdutoMapper;
@@ -125,6 +126,23 @@ public class ServicoServiceImpl implements ServicoService {
                     .map(servico -> getServicoDTO(servico))
                     .collect(Collectors.toList());
         }
+    }
+
+    @Override
+    public List<PesquisaServicoDTO> pesquisarTodosServicos() {
+        List<Servico> servicos = servicoRepository.findAll().list();
+        return servicos.stream()
+                .map(servico -> {
+                    Profissional profissional = profissionalRepository
+                            .findById(servico.getProfissional().getIdProfissional());
+                    String nomeProfissional = profissional.getNome() + " " + profissional.getSobrenome();
+
+                    return new PesquisaServicoDTO(
+                            servico.getIdServico(),
+                            servico.getNome(),
+                            nomeProfissional);
+                })
+                .collect(Collectors.toList());
     }
 
     private ServicoDTO getServicoDTO(Servico servico) {

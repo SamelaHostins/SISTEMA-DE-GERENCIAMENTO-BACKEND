@@ -23,6 +23,7 @@ import jakarta.ws.rs.core.Response;
 import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
+import salao.online.application.dtos.dtosParaPesquisar.PesquisaServicoDTO;
 import salao.online.application.services.interfaces.ServicoService;
 import salao.online.domain.exceptions.ValidacaoException;
 
@@ -145,5 +146,14 @@ public class ServicoResource {
         } catch (Exception ex) {
             return Response.status(500).entity("Ocorreu um erro na requisição.").build();
         }
+    }
+
+    @Operation(summary = "Pesquisa todos os serviços")
+    @APIResponse(responseCode = "200", description = "Pesquisa realizada com sucesso!")
+    @APIResponse(responseCode = "500", description = "Erro no servidor")
+    @GET
+    @Path("/pesquisar}")
+    public List<PesquisaServicoDTO> pesquisaTodosServicos() {
+        return servicoService.pesquisarTodosServicos();
     }
 }

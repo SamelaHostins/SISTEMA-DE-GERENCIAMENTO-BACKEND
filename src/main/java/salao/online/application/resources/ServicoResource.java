@@ -23,6 +23,7 @@ import jakarta.ws.rs.core.Response;
 import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
+import salao.online.application.dtos.dtosParaPesquisar.PesquisaLocalDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaServicoDTO;
 import salao.online.application.services.interfaces.ServicoService;
 import salao.online.domain.exceptions.ValidacaoException;
@@ -155,5 +156,14 @@ public class ServicoResource {
     @Path("/pesquisar}")
     public List<PesquisaServicoDTO> pesquisaTodosServicos() {
         return servicoService.pesquisarTodosServicos();
+    }
+
+    @Operation(summary = "Pesquisa todos as cidades e seus serviços respectivamente")
+    @APIResponse(responseCode = "200", description = "Pesquisa realizada com sucesso!")
+    @APIResponse(responseCode = "500", description = "Erro no servidor")
+    @GET
+    @Path("/pesquisarLocal}")
+    public List<PesquisaLocalDTO> pesquisarTodasAsCidadesComServicos() {
+        return servicoService.pesquisarTodasAsCidadesComServicos();
     }
 }

@@ -12,6 +12,7 @@ import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.application.dtos.dtosDoServico.TipoServicoEnumDTO;
+import salao.online.application.dtos.dtosParaPesquisar.PesquisaLocalDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaServicoDTO;
 import salao.online.application.mappers.AgendamentoMapper;
 import salao.online.application.mappers.AvaliacaoMapper;
@@ -142,6 +143,27 @@ public class ServicoServiceImpl implements ServicoService {
                             servico.getNome(),
                             nomeProfissional);
                 })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PesquisaLocalDTO> pesquisarTodasAsCidadesComServicos() {
+        List<Servico> servicos = servicoRepository.findAll().list(); // Busca todos os serviços
+
+        return servicos.stream()
+                .collect(Collectors.groupingBy(servico -> servico.getProfissional().getCidade())) // Agrupa por cidade
+                .entrySet().stream()
+                .map(entry -> new PesquisaLocalDTO(
+                        entry.getKey(), // Cidade
+                        entry.getValue().stream()
+                                .map(servico -> servico.getProfissional().getNome() + " " + servico.getProfissional().getSobrenome())
+                                .distinct()
+                                .collect(Collectors.joining(", ")), // Lista de profissionais na cidade
+                        entry.getValue().stream()
+                                .map(Servico::getNome)
+                                .distinct()
+                                .collect(Collectors.joining(", ")) // Lista de serviços disponíveis na cidade
+                ))
                 .collect(Collectors.toList());
     }
 

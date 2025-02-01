@@ -11,6 +11,7 @@ import org.mapstruct.Named;
 import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
+import salao.online.application.dtos.dtosParaPesquisar.PesquisaLocalDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaServicoDTO;
 import salao.online.domain.entities.Servico;
 
@@ -44,10 +45,17 @@ public interface ServicoMapper {
 
     @Named("mapProfissionalNome")
     default String mapProfissionalNome(salao.online.domain.entities.Profissional profissional) {
-        return profissional.getNome() + " " + profissional.getSobrenome();
+        String[] partes = profissional.getSobrenome().trim().split("\\s+");
+        String ultimoSobrenome = partes[partes.length - 1];
+        return profissional.getNome() + " " + ultimoSobrenome;
     }
 
-    @Mapping(source = "nome", target = "nomeServico") // Mapeia corretamente o nome do serviço
-    @Mapping(source = "profissional", target = "nomeProfissional", qualifiedByName = "mapProfissionalNome")
-    PesquisaServicoDTO fromEntityToPesquisaDto (Servico entity);
+    @Mapping(source = "idServico", target = "idServico") 
+    @Mapping(source = "profissional.idProfissional", target = "idProfissional") 
+    @Mapping(source = "nome", target = "nomeServico") 
+    @Mapping(source = "profissional", target = "nomeProfissional", qualifiedByName = "mapProfissionalNome") 
+    PesquisaServicoDTO fromEntityToPesquisaDto(Servico entity);
+
+    List<PesquisaServicoDTO> fromEntityListToPesquisaDtoList(List<Servico> servicos);
+
 }

@@ -1,68 +1,69 @@
--- Inserir dados na tabela Cliente
-INSERT INTO salao.cliente (id_cliente, especial, nome, sobrenome, nome_social, idade, email, telefone, usuario, senha) 
-VALUES 
-  ('234e5678-e89b-12d3-a456-426614174001', false, 'Ana', 'Silva', 'Ana Silva', 28, 'ana.silva@example.com', '12345678901', 'ana.silva', 'Senha1234'),
-  ('334e5678-e89b-12d3-a456-426614174002', true, 'Bruno', 'Oliveira', 'Bruno Oliveira', 34, 'bruno.oliveira@example.com', '23456789012', 'bruno.oliveira', 'Senha1234'),
-  ('434e5678-e89b-12d3-a456-426614174003', false, 'Carla', 'Souza', 'Carla Souza', 25, 'carla.souza@example.com', '34567890123', 'carla.souza', 'Senha1234'),
-  ('534e5678-e89b-12d3-a456-426614174004', true, 'Diego', 'Pereira', 'Diego Pereira', 30, 'diego.pereira@example.com', '45678901234', 'diego.pereira', 'Senha1234'),
-  ('634e5678-e89b-12d3-a456-426614174005', false, 'Elisa', 'Lima', 'Elisa Lima', 22, 'elisa.lima@example.com', '56789012345', 'elisa.lima', 'Senha1234');
+-- 🔹 Extensão necessária para geração automática de UUIDs
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
--- Inserir dados na tabela Profissional
-INSERT INTO salao.profissional (id_profissional, metodos_de_pagamento, rua, bairro, cidade, numero, cep) 
+-- 🔹 Inserir dados na tabela Cliente
+INSERT INTO salao.cliente (especial, nome, sobrenome, nome_social, idade, email, telefone, usuario, senha) 
 VALUES 
-  ('345e6789-e89b-12d3-a456-426614174002', 'Cartão de crédito', 'Rua A', 'Bairro X', 'Cidade Y', 123, '12345-678'),
-  ('445e6789-e89b-12d3-a456-426614174003', 'Dinheiro', 'Rua B', 'Bairro Y', 'Cidade Z', 456, '23456-789'),
-  ('545e6789-e89b-12d3-a456-426614174004', 'Transferência bancária', 'Rua C', 'Bairro Z', 'Cidade X', 789, '34567-890'),
-  ('645e6789-e89b-12d3-a456-426614174005', 'PIX', 'Rua D', 'Bairro W', 'Cidade Y', 1011, '45678-901'),
-  ('745e6789-e89b-12d3-a456-426614174006', 'Boleto', 'Rua E', 'Bairro V', 'Cidade Z', 1213, '56789-012');
+  (false, 'Ana', 'Silva', 'Ana Silva', 28, 'ana.silva@example.com', '12345678901', 'ana.silva', 'Senha123'),
+  (true, 'Bruno', 'Oliveira', 'Bruno Oliveira', 34, 'bruno.oliveira@example.com', '23456789012', 'bruno.oliveira', 'Bruno567'),
+  (false, 'Carla', 'Souza', 'Carla Souza', 25, 'carla.souza@example.com', '34567890123', 'carla.souza', 'Carla789'),
+  (true, 'Diego', 'Pereira', 'Diego Pereira', 30, 'diego.pereira@example.com', '45678901234', 'diego.pereira', 'Diego456'),
+  (false, 'Elisa', 'Lima', 'Elisa Lima', 22, 'elisa.lima@example.com', '56789012345', 'elisa.lima', 'Elisa123');
 
--- Inserir dados na tabela Estoque
-INSERT INTO salao.estoque (id_estoque, nome, qtd_de_produtos, id_profissional) 
+-- 🔹 Inserir dados na tabela Profissional
+INSERT INTO salao.profissional (profissao, nome, sobrenome, idade, email, telefone, usuario, senha, rua, bairro, cidade, numero, cep) 
 VALUES 
-  ('456e7890-e89b-12d3-a456-426614174003', 'Estoque 1', 1, '345e6789-e89b-12d3-a456-426614174002'),
-  ('556e7890-e89b-12d3-a456-426614174004', 'Estoque 2', 1, '445e6789-e89b-12d3-a456-426614174003'),
-  ('656e7890-e89b-12d3-a456-426614174005', 'Estoque 3', 1, '545e6789-e89b-12d3-a456-426614174004'),
-  ('756e7890-e89b-12d3-a456-426614174006', 'Estoque 4', 1, '645e6789-e89b-12d3-a456-426614174005'),
-  ('856e7890-e89b-12d3-a456-426614174007', 'Estoque 5', 1, '745e6789-e89b-12d3-a456-426614174006');
+  ('Cabeleireiro', 'Ricardo', 'Santos Oliveira', 40, 'ricardo.oliveira@example.com', '47987654321', 'ricardoOliveira', 'Senha123', 'Rua das Acácias', 'Centro', 'Florianópolis', 200, '88000-001'),
+  ('Maquiadora', 'Fernanda', 'Lima Souza', 32, 'fernanda.lima@example.com', '31999987654', 'fernandaLima', 'Senha568', 'Rua das Palmeiras', 'Centro', 'São Paulo', 110, '04567-890');
 
--- Inserir dados na tabela Produto
-INSERT INTO salao.produto (id_produto, nome, dt_entrada, dt_validade, valor, id_estoque) 
+-- 🔹 Inserir dados na tabela Metodo Pagamento
+INSERT INTO salao.metodo_pagamento (nome) 
 VALUES 
-  ('567e8901-e89b-12d3-a456-426614174004', 'Produto 1', '2024-05-05', '2024-12-31', 10.99, '456e7890-e89b-12d3-a456-426614174003'),
-  ('667e8901-e89b-12d3-a456-426614174005', 'Produto 2', '2024-05-06', '2024-12-31', 20.99, '556e7890-e89b-12d3-a456-426614174004'),
-  ('767e8901-e89b-12d3-a456-426614174006', 'Produto 3', '2024-05-07', '2024-12-31', 15.99, '656e7890-e89b-12d3-a456-426614174005'),
-  ('867e8901-e89b-12d3-a456-426614174007', 'Produto 4', '2024-05-08', '2024-12-31', 25.99, '756e7890-e89b-12d3-a456-426614174006'),
-  ('967e8901-e89b-12d3-a456-426614174008', 'Produto 5', '2024-05-09', '2024-12-31', 30.99, '856e7890-e89b-12d3-a456-426614174007');
+  ('Cartão de Crédito'), 
+  ('Dinheiro'), 
+  ('PIX');
 
--- Inserir dados na tabela Servico
-INSERT INTO salao.servico (id_servico, nome, especificacao, termos_e_condicoes, valor, id_profissional) 
-VALUES 
-  ('678e9012-e89b-12d3-a456-426614174005', 'Serviço 1', 'Especificação do Serviço 1', 'Termos e Condições do Serviço 1', 50.00, '345e6789-e89b-12d3-a456-426614174002'),
-  ('778e9012-e89b-12d3-a456-426614174006', 'Serviço 2', 'Especificação do Serviço 2', 'Termos e Condições do Serviço 2', 60.00, '445e6789-e89b-12d3-a456-426614174003'),
-  ('878e9012-e89b-12d3-a456-426614174007', 'Serviço 3', 'Especificação do Serviço 3', 'Termos e Condições do Serviço 3', 70.00, '545e6789-e89b-12d3-a456-426614174004'),
-  ('978e9012-e89b-12d3-a456-426614174008', 'Serviço 4', 'Especificação do Serviço 4', 'Termos e Condições do Serviço 4', 80.00, '645e6789-e89b-12d3-a456-426614174005'),
-  ('a78e9012-e89b-12d3-a456-426614174009', 'Serviço 5', 'Especificação do Serviço 5', 'Termos e Condições do Serviço 5', 90.00, '745e6789-e89b-12d3-a456-426614174006');
-
--- Inserir dados na tabela profissional_metodo_pagamento
+-- 🔹 Inserir relação entre Profissional e Método de Pagamento
 INSERT INTO salao.profissional_metodo_pagamento (id_profissional, id_metodo_pagamento) 
 VALUES 
-  ('345e6789-e89b-12d3-a456-426614174002', '123e4567-e89b-12d3-a456-426614174000'),  -- Relacionando o profissional com Cartão de crédito
-  ('445e6789-e89b-12d3-a456-426614174003', '223e4567-e89b-12d3-a456-426614174001');  -- Relacionando o profissional com Dinheiro
+  ((SELECT id_profissional FROM salao.profissional WHERE nome = 'Ricardo' LIMIT 1), 
+   (SELECT id_metodo_pagamento FROM salao.metodo_pagamento WHERE nome = 'Cartão de Crédito')),
+  ((SELECT id_profissional FROM salao.profissional WHERE nome = 'Fernanda' LIMIT 1), 
+   (SELECT id_metodo_pagamento FROM salao.metodo_pagamento WHERE nome = 'PIX'));
 
--- Inserir dados na tabela Avaliacao
-INSERT INTO salao.avaliacao (id_avaliacao, nota, dt_avaliacao, id_cliente, id_servico) 
+-- 🔹 Inserir dados na tabela Estoque
+INSERT INTO salao.estoque (nome, qtd_de_produtos, id_profissional) 
 VALUES 
-  ('789e0123-e89b-12d3-a456-426614174006', 5, '2024-07-20', '234e5678-e89b-12d3-a456-426614174001', '678e9012-e89b-12d3-a456-426614174005'),
-  ('889e0123-e89b-12d3-a456-426614174007', 4, '2024-07-20', '334e5678-e89b-12d3-a456-426614174002', '778e9012-e89b-12d3-a456-426614174006'),
-  ('989e0123-e89b-12d3-a456-426614174008', 3, '2024-07-20', '434e5678-e89b-12d3-a456-426614174003', '878e9012-e89b-12d3-a456-426614174007'),
-  ('a89e0123-e89b-12d3-a456-426614174009', 2, '2024-07-20', '534e5678-e89b-12d3-a456-426614174004', '978e9012-e89b-12d3-a456-426614174008'),
-  ('b89e0123-e89b-12d3-a456-426614174010', 1, '2024-07-20', '634e5678-e89b-12d3-a456-426614174005', 'a78e9012-e89b-12d3-a456-426614174009');
+  ('Estoque Ricardo', 10, (SELECT id_profissional FROM salao.profissional WHERE nome = 'Ricardo' LIMIT 1)),
+  ('Estoque Fernanda', 15, (SELECT id_profissional FROM salao.profissional WHERE nome = 'Fernanda' LIMIT 1));
 
--- Inserir dados na tabela Agendamento
--- INSERT INTO salao.agendamento (id_agendamento, nome, hora, id_cliente, id_servico) 
--- VALUES 
---   ('890e1234-e89b-12d3-a456-426614174007', 'Agendamento 1', 14, '234e5678-e89b-12d3-a456-426614174001', '678e9012-e89b-12d3-a456-426614174005'),
---   ('990e1234-e89b-12d3-a456-426614174008', 'Agendamento 2', 15, '334e5678-e89b-12d3-a456-426614174002', '778e9012-e89b-12d3-a456-426614174006'),
---   ('a90e1234-e89b-12d3-a456-426614174009', 'Agendamento 3', 16, '434e5678-e89b-12d3-a456-426614174003', '878e9012-e89b-12d3-a456-426614174007'),
---   ('b90e1234-e89b-12d3-a456-426614174010', 'Agendamento 4', 17, '534e5678-e89b-12d3-a456-426614174004', '978e9012-e89b-12d3-a456-426614174008'),
---   ('c90e1234-e89b-12d3-a456-426614174011', 'Agendamento 5', 18, '634e5678-e89b-12d3-a456-426614174005', 'a78e9012-e89b-12d3-a456-426614174009');
+-- 🔹 Inserir dados na tabela Produto
+INSERT INTO salao.produto (nome, dt_entrada, dt_validade, valor, id_estoque) 
+VALUES 
+  ('Shampoo Profissional', '2024-05-05', '2025-12-31', 30.99, (SELECT id_estoque FROM salao.estoque WHERE nome = 'Estoque Ricardo' LIMIT 1)),
+  ('Base para Maquiagem', '2024-05-06', '2025-12-31', 45.99, (SELECT id_estoque FROM salao.estoque WHERE nome = 'Estoque Fernanda' LIMIT 1));
+
+-- 🔹 Inserir dados na tabela Servico
+INSERT INTO salao.servico (tipo_servico, nome, especificacao, termos_e_condicoes, tempo, valor, id_profissional) 
+VALUES 
+  (0, 'Corte Masculino', 'Corte de cabelo profissional', 'Termos padrão', '00:30', 80.00, (SELECT id_profissional FROM salao.profissional WHERE nome = 'Ricardo' LIMIT 1)),
+  (1, 'Maquiagem Completa', 'Maquiagem para eventos e festas', 'Termos padrão', '01:00', 150.00, (SELECT id_profissional FROM salao.profissional WHERE nome = 'Fernanda' LIMIT 1));
+
+-- 🔹 Inserir dados na tabela Avaliacao
+INSERT INTO salao.avaliacao (nota, dt_avaliacao, id_cliente, id_servico) 
+VALUES 
+  (5, CURRENT_DATE, (SELECT id_cliente FROM salao.cliente WHERE nome = 'Ana' LIMIT 1), 
+   (SELECT id_servico FROM salao.servico WHERE nome = 'Corte Masculino' LIMIT 1)),
+  (4, CURRENT_DATE, (SELECT id_cliente FROM salao.cliente WHERE nome = 'Bruno' LIMIT 1), 
+   (SELECT id_servico FROM salao.servico WHERE nome = 'Maquiagem Completa' LIMIT 1));
+
+-- 🔹 Inserir dados na tabela Agendamento
+INSERT INTO salao.agendamento (dt_agendamento, hora_agendamento, status_agendamento, id_cliente, id_servico) 
+VALUES 
+  (CURRENT_DATE + INTERVAL '7 days', '14:00', 1, 
+   (SELECT id_cliente FROM salao.cliente WHERE nome = 'Ana' LIMIT 1), 
+   (SELECT id_servico FROM salao.servico WHERE nome = 'Corte Masculino' LIMIT 1)),
+  (CURRENT_DATE + INTERVAL '7 days', '15:00', 1, 
+   (SELECT id_cliente FROM salao.cliente WHERE nome = 'Bruno' LIMIT 1), 
+   (SELECT id_servico FROM salao.servico WHERE nome = 'Maquiagem Completa' LIMIT 1));
+

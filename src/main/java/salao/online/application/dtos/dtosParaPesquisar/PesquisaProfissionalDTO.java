@@ -16,4 +16,5 @@ public class PesquisaProfissionalDTO {
     private UUID idProfissional;
     private String usuario;
     private String nome;
+    private String profissao;
 }

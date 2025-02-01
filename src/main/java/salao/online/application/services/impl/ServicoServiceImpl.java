@@ -1,6 +1,7 @@
 package salao.online.application.services.impl;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,7 @@ import salao.online.application.dtos.dtosParaPesquisar.PesquisaLocalDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaServicoDTO;
 import salao.online.application.mappers.AgendamentoMapper;
 import salao.online.application.mappers.AvaliacaoMapper;
+import salao.online.application.mappers.LocalMapper;
 import salao.online.application.mappers.ProdutoMapper;
 import salao.online.application.mappers.ProfissionalMapper;
 import salao.online.application.mappers.ServicoMapper;
@@ -45,6 +47,9 @@ public class ServicoServiceImpl implements ServicoService {
 
     @Inject
     AgendamentoMapper agendamentoMapper;
+
+    @Inject
+    LocalMapper localMapper;
 
     @Inject
     ServicoRepository servicoRepository;
@@ -132,38 +137,19 @@ public class ServicoServiceImpl implements ServicoService {
     @Override
     public List<PesquisaServicoDTO> pesquisarTodosServicos() {
         List<Servico> servicos = servicoRepository.findAll().list();
-        return servicos.stream()
-                .map(servico -> {
-                    Profissional profissional = profissionalRepository
-                            .findById(servico.getProfissional().getIdProfissional());
-                    String nomeProfissional = profissional.getNome() + " " + profissional.getSobrenome();
-
-                    return new PesquisaServicoDTO(
-                            servico.getIdServico(),
-                            servico.getNome(),
-                            nomeProfissional);
-                })
-                .collect(Collectors.toList());
+        return servicoMapper.fromEntityListToPesquisaDtoList(servicos);
     }
 
     @Override
     public List<PesquisaLocalDTO> pesquisarTodasAsCidadesComServicos() {
-        List<Servico> servicos = servicoRepository.findAll().list(); // Busca todos os serviços
+        List<Servico> servicos = servicoRepository.findAll().list();
+        Set<String> idsUnicos = servicos.stream()
+                .map(servico -> servico.getProfissional().getIdProfissional().toString())
+                .collect(Collectors.toSet());
 
         return servicos.stream()
-                .collect(Collectors.groupingBy(servico -> servico.getProfissional().getCidade())) // Agrupa por cidade
-                .entrySet().stream()
-                .map(entry -> new PesquisaLocalDTO(
-                        entry.getKey(), // Cidade
-                        entry.getValue().stream()
-                                .map(servico -> servico.getProfissional().getNome() + " " + servico.getProfissional().getSobrenome())
-                                .distinct()
-                                .collect(Collectors.joining(", ")), // Lista de profissionais na cidade
-                        entry.getValue().stream()
-                                .map(Servico::getNome)
-                                .distinct()
-                                .collect(Collectors.joining(", ")) // Lista de serviços disponíveis na cidade
-                ))
+                .map(localMapper::fromEntityToPesquisaLocalDto)
+                .filter(dto -> idsUnicos.remove(dto.getIdProfissional().toString())) 
                 .collect(Collectors.toList());
     }
 

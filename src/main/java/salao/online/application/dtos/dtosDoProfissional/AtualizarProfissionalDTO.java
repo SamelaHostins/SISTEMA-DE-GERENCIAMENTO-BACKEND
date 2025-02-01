@@ -14,6 +14,7 @@ import lombok.Setter;
 public class AtualizarProfissionalDTO {
 
     private UUID idCliente;
+    private String profissao;
     private String nome;
     private String sobrenome;
     private short idade;

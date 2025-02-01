@@ -19,6 +19,7 @@ import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 public class BuscarProfissionalDTO {
     
     private UUID idProfissional;
+    private String profissao;
     private String nome;
     private String sobrenome;
     private short idade;

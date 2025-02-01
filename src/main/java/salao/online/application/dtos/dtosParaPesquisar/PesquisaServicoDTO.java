@@ -13,6 +13,7 @@ import java.util.UUID;
 @Setter
 public class PesquisaServicoDTO {
     
+    private UUID idProfissional;
     private UUID idServico;
     private String nomeServico;
     private String nomeProfissional;

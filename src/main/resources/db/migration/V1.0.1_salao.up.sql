@@ -1,8 +1,11 @@
 CREATE SCHEMA IF NOT EXISTS salao;
 
+-- Extensão necessária para gerar UUID automaticamente
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 -- Tabela cliente
 CREATE TABLE IF NOT EXISTS salao.cliente (
-    id_cliente UUID NOT NULL PRIMARY KEY,
+    id_cliente UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     especial BOOLEAN,
     nome VARCHAR(25) NOT NULL,
     sobrenome VARCHAR(25) NOT NULL,
@@ -20,10 +23,10 @@ CREATE TABLE IF NOT EXISTS salao.cliente (
     CHECK (telefone ~ '^[0-9]+$')
 );
 
- 
 -- Tabela profissional
 CREATE TABLE IF NOT EXISTS salao.profissional (
-   id_profissional UUID NOT NULL PRIMARY KEY,
+   id_profissional UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+   profissao VARCHAR(30) NOT NULL,
    nome VARCHAR(25) NOT NULL,
    sobrenome VARCHAR(25) NOT NULL,
    nome_social VARCHAR(25),
@@ -36,8 +39,8 @@ CREATE TABLE IF NOT EXISTS salao.profissional (
    bairro VARCHAR(20),
    cidade VARCHAR(20),
    numero INT4,
-   cep VARCHAR(10) NOT NULL
-   CHECK (numero >= 0)
+   cep VARCHAR(10) NOT NULL,
+   CHECK (numero >= 0),
    CHECK (LENGTH(nome) >= 3 AND LENGTH(nome) <= 25),
    CHECK (LENGTH(sobrenome) >= 3 AND LENGTH(sobrenome) <= 25),
    CHECK (senha ~ '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8}$'),
@@ -47,14 +50,14 @@ CREATE TABLE IF NOT EXISTS salao.profissional (
 
 -- Tabela metodoPagamento
 CREATE TABLE IF NOT EXISTS salao.metodo_pagamento (
-   id_metodo_pagamento UUID NOT NULL PRIMARY KEY,
+   id_metodo_pagamento UUID PRIMARY KEY DEFAULT gen_random_uuid(),
    nome VARCHAR(20) NOT NULL UNIQUE,
    CHECK (LENGTH(nome) >= 3 AND LENGTH(nome) <= 20)
 );
 
 -- Tabela servico
 CREATE TABLE IF NOT EXISTS salao.servico (
-   id_servico UUID NOT NULL PRIMARY KEY,
+   id_servico UUID PRIMARY KEY DEFAULT gen_random_uuid(),
    tipo_servico INT4,
    nome VARCHAR(55) NOT NULL,
    especificacao VARCHAR(500),
@@ -68,7 +71,7 @@ CREATE TABLE IF NOT EXISTS salao.servico (
 
 -- Tabela agendamento
 CREATE TABLE IF NOT EXISTS salao.agendamento (
-   id_agendamento UUID NOT NULL PRIMARY KEY,
+   id_agendamento UUID PRIMARY KEY DEFAULT gen_random_uuid(),
    dt_agendamento DATE NOT NULL,
    hora_agendamento TIME NOT NULL,
    status_agendamento INT4,
@@ -90,7 +93,7 @@ CREATE TABLE IF NOT EXISTS salao.profissional_metodo_pagamento (
 
 -- Tabela estoque
 CREATE TABLE IF NOT EXISTS salao.estoque (
-   id_estoque UUID NOT NULL PRIMARY KEY,
+   id_estoque UUID PRIMARY KEY DEFAULT gen_random_uuid(),
    nome VARCHAR(55) NOT NULL,
    qtd_de_produtos INT4,
    id_profissional UUID NOT NULL,
@@ -100,7 +103,7 @@ CREATE TABLE IF NOT EXISTS salao.estoque (
 
 -- Tabela produto
 CREATE TABLE IF NOT EXISTS salao.produto (
-   id_produto UUID NOT NULL PRIMARY KEY,
+   id_produto UUID PRIMARY KEY DEFAULT gen_random_uuid(),
    nome VARCHAR(55),
    dt_entrada DATE,
    dt_validade DATE,
@@ -112,7 +115,7 @@ CREATE TABLE IF NOT EXISTS salao.produto (
 
 -- Tabela avaliacao
 CREATE TABLE IF NOT EXISTS salao.avaliacao (
-   id_avaliacao UUID NOT NULL PRIMARY KEY,
+   id_avaliacao UUID PRIMARY KEY DEFAULT gen_random_uuid(),
    nota INT4 NOT NULL,
    dt_avaliacao DATE,
    id_cliente UUID NOT NULL,
@@ -125,7 +128,7 @@ CREATE TABLE IF NOT EXISTS salao.avaliacao (
 
 -- Tabela imagem
 CREATE TABLE IF NOT EXISTS salao.imagem (
-   id_imagem UUID NOT NULL PRIMARY KEY,
+   id_imagem UUID PRIMARY KEY DEFAULT gen_random_uuid(),
    url_imagem TEXT NOT NULL,
    tipo_imagem SMALLINT NOT NULL CHECK (tipo_imagem BETWEEN 0 AND 1),
    id_profissional UUID,

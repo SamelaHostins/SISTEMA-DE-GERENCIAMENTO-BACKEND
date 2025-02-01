@@ -34,6 +34,9 @@ public class Profissional extends Informacao {
     private @Getter UUID idProfissional;
 
     @NotEmpty
+    private @Getter @Setter String profissao;
+
+    @NotEmpty
     private @Getter @Setter String rua;
 
     @NotEmpty
@@ -61,10 +64,11 @@ public class Profissional extends Informacao {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
     private @Getter List<Estoque> estoques = new ArrayList<>();
 
-    public Profissional(String nome, String sobrenome, short idade, String email,
+    public Profissional(String profissao, String nome, String sobrenome, short idade, String email,
             String telefone, String usuario, String senha, String rua, String bairro, String cidade,
             int numero, String cep, List<Imagem> imagens, List<Servico> servicos, List<Estoque> estoques) {
         super(nome, sobrenome, idade, email, telefone, usuario, senha);
+        this.profissao = profissao;
         this.rua = rua;
         this.bairro = bairro;
         this.cidade = cidade;
@@ -75,9 +79,10 @@ public class Profissional extends Informacao {
         this.estoques = estoques;
     }
 
-    public Profissional atualizarProfissional(String novoNome, String novoSobrenome,
+    public Profissional atualizarProfissional(String novaProfissao, String novoNome, String novoSobrenome,
             short novaIdade, String novoEmail, String novoTelefone, String novaSenha, String novaRua,
             String novoBairro, String novaCidade, int novoNumero, String novoCep) {
+        setProfissao(novaProfissao);
         setNome(novoNome);
         setSobrenome(novoSobrenome);
         setIdade(novaIdade);

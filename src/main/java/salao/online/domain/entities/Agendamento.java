@@ -2,6 +2,7 @@ package salao.online.domain.entities;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -44,7 +45,7 @@ public class Agendamento {
 
     @NotNull
     @Column(name = "hora_agendamento")
-    private @Getter Time horaAgendamento;
+    private @Getter LocalTime  horaAgendamento;
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
@@ -63,7 +64,7 @@ public class Agendamento {
     @JoinColumn(name = "id_servico")
     private @Getter Servico servico;
 
-    public Agendamento(LocalDate dataAgendamento, Time horaAgendamento,
+    public Agendamento(LocalDate dataAgendamento, LocalTime horaAgendamento,
             StatusAgendamentoEnum statusAgendamento, Cliente cliente, Servico servico) {
         this.dataAgendamento = dataAgendamento;
         this.horaAgendamento = horaAgendamento;

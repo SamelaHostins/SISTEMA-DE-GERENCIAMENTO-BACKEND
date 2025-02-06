@@ -15,12 +15,13 @@ import salao.online.application.dtos.AvaliacaoDTO;
 @NoArgsConstructor
 @Getter
 @Setter
-//Classe para que o cliente possa ver seu cadastro
+// Classe para que o cliente possa ver seu cadastro
 public class BuscarClienteDTO {
-    
+
     private UUID idCliente;
     private String nome;
     private String sobrenome;
+    private String nomeSocial;
     private String usuario;
     private short idade;
     private String email;

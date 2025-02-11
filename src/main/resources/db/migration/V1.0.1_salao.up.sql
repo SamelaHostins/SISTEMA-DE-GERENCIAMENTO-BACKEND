@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS salao.cliente (
     especial BOOLEAN,
     nome VARCHAR(25) NOT NULL,
     sobrenome VARCHAR(25) NOT NULL,
-    nome_social VARCHAR(25),
     idade SMALLINT NOT NULL,  
     email VARCHAR(30) NOT NULL,
     telefone VARCHAR(12) NOT NULL,
@@ -17,7 +16,6 @@ CREATE TABLE IF NOT EXISTS salao.cliente (
     senha VARCHAR(8) NOT NULL,
     CHECK (LENGTH(nome) >= 3 AND LENGTH(nome) <= 25),
     CHECK (LENGTH(sobrenome) >= 3 AND LENGTH(sobrenome) <= 25),
-    CHECK (LENGTH(nome_social) >= 3 AND LENGTH(nome_social) <= 25),
     CHECK (senha ~ '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8}$'),
     CHECK (idade > 0),
     CHECK (telefone ~ '^[0-9]+$')
@@ -26,10 +24,10 @@ CREATE TABLE IF NOT EXISTS salao.cliente (
 -- Tabela profissional
 CREATE TABLE IF NOT EXISTS salao.profissional (
    id_profissional UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+   instagram VARCHAR (30),
    profissao VARCHAR(30) NOT NULL,
    nome VARCHAR(25) NOT NULL,
    sobrenome VARCHAR(25) NOT NULL,
-   nome_social VARCHAR(25),
    idade SMALLINT NOT NULL,
    email VARCHAR(30) NOT NULL,
    telefone VARCHAR(12) NOT NULL,

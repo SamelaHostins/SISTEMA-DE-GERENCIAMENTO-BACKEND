@@ -12,6 +12,7 @@ import lombok.Setter;
 public class CriarProfissionalDTO{
 
     private String nome;
+    private String instagram;
     private String profissao;
     private String sobrenome;
     private short idade;

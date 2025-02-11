@@ -252,8 +252,6 @@ components:
           type: string
         sobrenome:
           type: string
-        nome_social:
-          type: string
         email:
           type: string
         telefone:
@@ -279,8 +277,6 @@ components:
         nome:
           type: string
         sobrenome:
-          type: string
-        nome_social:
           type: string
         email:
           type: string

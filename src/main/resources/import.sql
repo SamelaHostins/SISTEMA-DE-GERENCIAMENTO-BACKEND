@@ -2,13 +2,13 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- 🔹 Inserir dados na tabela Cliente
-INSERT INTO salao.cliente (especial, nome, sobrenome, nome_social, idade, email, telefone, usuario, senha) 
+INSERT INTO salao.cliente (especial, nome, sobrenome, idade, email, telefone, usuario, senha) 
 VALUES 
-  (false, 'Ana', 'Silva', 'Ana Silva', 28, 'ana.silva@example.com', '12345678901', 'ana.silva', 'Senha123'),
-  (true, 'Bruno', 'Oliveira', 'Bruno Oliveira', 34, 'bruno.oliveira@example.com', '23456789012', 'bruno.oliveira', 'Bruno567'),
-  (false, 'Carla', 'Souza', 'Carla Souza', 25, 'carla.souza@example.com', '34567890123', 'carla.souza', 'Carla789'),
-  (true, 'Diego', 'Pereira', 'Diego Pereira', 30, 'diego.pereira@example.com', '45678901234', 'diego.pereira', 'Diego456'),
-  (false, 'Elisa', 'Lima', 'Elisa Lima', 22, 'elisa.lima@example.com', '56789012345', 'elisa.lima', 'Elisa123');
+  (false, 'Ana', 'Silva', 28, 'ana.silva@example.com', '12345678901', 'ana.silva', 'Senha123'),
+  (true, 'Bruno', 'Oliveira',  34, 'bruno.oliveira@example.com', '23456789012', 'bruno.oliveira', 'Bruno567'),
+  (false, 'Carla', 'Souza',  25, 'carla.souza@example.com', '34567890123', 'carla.souza', 'Carla789'),
+  (true, 'Diego', 'Pereira', 30, 'diego.pereira@example.com', '45678901234', 'diego.pereira', 'Diego456'),
+  (false, 'Elisa', 'Lima',  22, 'elisa.lima@example.com', '56789012345', 'elisa.lima', 'Elisa123');
 
 -- 🔹 Inserir dados na tabela Profissional
 INSERT INTO salao.profissional (profissao, nome, sobrenome, idade, email, telefone, usuario, senha, rua, bairro, cidade, numero, cep) 

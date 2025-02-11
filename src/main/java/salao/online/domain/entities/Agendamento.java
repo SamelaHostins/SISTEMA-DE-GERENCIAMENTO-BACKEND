@@ -1,10 +1,13 @@
 package salao.online.domain.entities;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import io.smallrye.common.constraint.NotNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,11 +18,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import io.smallrye.common.constraint.NotNull;
 import jakarta.validation.constraints.FutureOrPresent;
 import lombok.Getter;
 import salao.online.domain.enums.StatusAgendamentoEnum;

@@ -11,11 +11,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AtualizarClienteDTO{
+public class AtualizarClienteDTO {
 
     private UUID idCliente;
     private String nome;
     private String sobrenome;
+    private String nomeSocial;
     private short idade;
     private String email;
     private String telefone;

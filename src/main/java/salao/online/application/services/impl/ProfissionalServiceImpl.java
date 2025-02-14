@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import io.vertx.core.impl.logging.Logger;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-
-import io.vertx.core.impl.logging.Logger;
-import io.vertx.core.impl.logging.LoggerFactory;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
@@ -21,13 +19,21 @@ import salao.online.application.mappers.ImagemMapper;
 import salao.online.application.mappers.ProfissionalMapper;
 import salao.online.application.mappers.ServicoMapper;
 import salao.online.application.services.interfaces.ProfissionalService;
+import salao.online.domain.entities.Endereco;
 import salao.online.domain.entities.Profissional;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
 import salao.online.domain.exceptions.ValidacaoException;
+import salao.online.infra.repositories.EnderecoRepository;
 import salao.online.infra.repositories.ProfissionalRepository;
 
 @ApplicationScoped
-public class ProfissionalServiceImpl implements ProfissionalService {
+public class ProfissionalServiceImpl implements ProfissionalService{
+
+    @Inject
+    ProfissionalRepository profissionalRepository;
+
+    @Inject
+    EnderecoRepository enderecoRepository;
 
     @Inject
     ProfissionalMapper profissionalMapper;
@@ -42,10 +48,9 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     ImagemMapper imagemMapper;
 
     @Inject
-    ProfissionalRepository profissionalRepository;
+    Logger logger;
 
-    private static Logger logger = LoggerFactory.getLogger(LoggerFactory.class);
-
+    
     private String removeAcentos(String texto) {
         if (texto == null) {
             return null;
@@ -58,40 +63,53 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     @Transactional
     public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO) throws ValidacaoException {
         try {
+            // 🔹 Verifica se já existe um profissional com o mesmo e-mail
             if (profissionalRepository.find("email", profissionalDTO.getEmail()).firstResultOptional().isPresent()) {
-                throw new ValidacaoException(MensagemErroValidacaoEnum.EMAIL_JA_CADASTRADO.getMensagemErro() + " " + profissionalDTO.getEmail());
+                throw new ValidacaoException(MensagemErroValidacaoEnum.EMAIL_JA_CADASTRADO.getMensagemErro() + " "
+                        + profissionalDTO.getEmail());
             }
-    
-            if (profissionalRepository.find("documento", profissionalDTO.getDocumento()).firstResultOptional().isPresent()) {
-                throw new ValidacaoException(MensagemErroValidacaoEnum.DOCUMENTO_JA_CADASTRADO.getMensagemErro() + " " + profissionalDTO.getDocumento());
+
+            if (profissionalRepository.find("documento", profissionalDTO.getDocumento()).firstResultOptional()
+                    .isPresent()) {
+                throw new ValidacaoException(MensagemErroValidacaoEnum.DOCUMENTO_JA_CADASTRADO.getMensagemErro() + " "
+                        + profissionalDTO.getDocumento());
             }
-    
+
+            if (profissionalDTO.getEndereco() == null) {
+                throw new ValidacaoException("O endereço é obrigatório para cadastro do profissional.");
+            }
+
             Profissional profissional = profissionalMapper.fromCriarDtoToEntity(profissionalDTO);
-    
+
+            Endereco endereco = profissional.getEndereco();
+            enderecoRepository.persist(endereco);
+            profissional.setEndereco(endereco);
+
             String[] sobrenomes = profissionalDTO.getSobrenome().split(" ");
             String ultimoSobrenome = sobrenomes[sobrenomes.length - 1];
-    
             String usuario = removeAcentos(profissionalDTO.getNome().toLowerCase()) + "." +
                     removeAcentos(ultimoSobrenome.toLowerCase());
             profissional.setUsuario(usuario);
-    
+
             logger.info("Salvando o profissional no banco de dados");
             profissionalRepository.persistAndFlush(profissional);
-    
+
             return profissionalMapper.fromEntityToCriarDto(profissional);
-    
+
         } catch (ValidacaoException e) {
             logger.warn("Erro de validação ao cadastrar profissional: " + e.getMessage());
-            throw e; // Lança a exceção personalizada para ser tratada no front-end
+            throw e;
+
         } catch (Exception e) {
             logger.error("Erro ao cadastrar profissional", e);
             throw new RuntimeException("Erro ao cadastrar profissional.", e);
         }
     }
-    
+
 
     @Override
-    public AtualizarProfissionalDTO atualizarProfissional(AtualizarProfissionalDTO profissionalDTO) throws ValidacaoException {
+    public AtualizarProfissionalDTO atualizarProfissional(AtualizarProfissionalDTO profissionalDTO)
+            throws ValidacaoException {
         throw new UnsupportedOperationException("Unimplemented method 'atualizarProfissional'");
     }
 

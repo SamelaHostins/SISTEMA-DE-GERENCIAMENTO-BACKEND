@@ -12,17 +12,17 @@ import salao.online.domain.exceptions.ValidacaoException;
 
 public interface ProfissionalService {
 
-    public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO) throws ValidacaoException;
+    CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO) throws ValidacaoException;
 
-    public AtualizarProfissionalDTO atualizarProfissional(AtualizarProfissionalDTO profissionalDTO) throws ValidacaoException;
+    AtualizarProfissionalDTO atualizarProfissional(AtualizarProfissionalDTO profissionalDTO) throws ValidacaoException;
 
-    public BuscarProfissionalDTO buscarProfissionalPorId(UUID idProfissional) throws ValidacaoException;
+    BuscarProfissionalDTO buscarProfissionalPorId(UUID idProfissional) throws ValidacaoException;
 
-    public ListarProfissionalDTO listarProfissionalPorId(UUID idProfissional) throws ValidacaoException;
+    ListarProfissionalDTO listarProfissionalPorId(UUID idProfissional) throws ValidacaoException;
 
-    public List<ListarProfissionalDTO> listarTodosProfissionais();
+    List<ListarProfissionalDTO> listarTodosProfissionais();
 
-    public void deletarProfissional(UUID idProfissional) throws ValidacaoException;
+    List<PesquisaProfissionalDTO> pesquisarTodosProfissionais();
 
-    public List<PesquisaProfissionalDTO> pesquisarTodosProfissionais();
+    void deletarProfissional(UUID idProfissional) throws ValidacaoException;
 }

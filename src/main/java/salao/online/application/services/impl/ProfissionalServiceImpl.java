@@ -56,26 +56,39 @@ public class ProfissionalServiceImpl implements ProfissionalService {
 
     @Override
     @Transactional
-    public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO) {
+    public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO) throws ValidacaoException {
         try {
+            if (profissionalRepository.find("email", profissionalDTO.getEmail()).firstResultOptional().isPresent()) {
+                throw new ValidacaoException(MensagemErroValidacaoEnum.EMAIL_JA_CADASTRADO.getMensagemErro() + " " + profissionalDTO.getEmail());
+            }
+    
+            if (profissionalRepository.find("documento", profissionalDTO.getDocumento()).firstResultOptional().isPresent()) {
+                throw new ValidacaoException(MensagemErroValidacaoEnum.DOCUMENTO_JA_CADASTRADO.getMensagemErro() + " " + profissionalDTO.getDocumento());
+            }
+    
             Profissional profissional = profissionalMapper.fromCriarDtoToEntity(profissionalDTO);
+    
             String[] sobrenomes = profissionalDTO.getSobrenome().split(" ");
             String ultimoSobrenome = sobrenomes[sobrenomes.length - 1];
-
-            // Remover acentos e definir o nome de usuário
+    
             String usuario = removeAcentos(profissionalDTO.getNome().toLowerCase()) + "." +
                     removeAcentos(ultimoSobrenome.toLowerCase());
             profissional.setUsuario(usuario);
-
+    
             logger.info("Salvando o profissional no banco de dados");
             profissionalRepository.persistAndFlush(profissional);
-
+    
             return profissionalMapper.fromEntityToCriarDto(profissional);
-
+    
+        } catch (ValidacaoException e) {
+            logger.warn("Erro de validação ao cadastrar profissional: " + e.getMessage());
+            throw e; // Lança a exceção personalizada para ser tratada no front-end
         } catch (Exception e) {
+            logger.error("Erro ao cadastrar profissional", e);
             throw new RuntimeException("Erro ao cadastrar profissional.", e);
         }
     }
+    
 
     @Override
     public AtualizarProfissionalDTO atualizarProfissional(AtualizarProfissionalDTO profissionalDTO) throws ValidacaoException {

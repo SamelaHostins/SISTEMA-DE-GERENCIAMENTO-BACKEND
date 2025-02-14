@@ -9,22 +9,20 @@ VALUES
   ('Rua dos Pinheiros', 'Zona Sul', 'Rio de Janeiro', 50, '22222-222'), -- Endereço Ana
   ('Avenida Paulista', 'Centro', 'São Paulo', 800, '01311-000'); -- Endereço Bruno
 
--- 🔹 Inserir dados na tabela Cliente (com CPF/CNPJ e Endereço)
-INSERT INTO salao.cliente (nome, sobrenome, data_nascimento, email, telefone, usuario, senha, documento, id_endereco) 
+-- 🔹 Inserir dados na tabela Cliente (com CPF/CNPJ)
+INSERT INTO salao.cliente (id_cliente, nome, sobrenome, data_nascimento, email, telefone, usuario, senha, documento) 
 VALUES 
-  ('Ana', 'Silva', '1996-04-15', 'ana.silva@example.com', '12345678901', 'ana.silva', 'Senha123', '123.456.789-01',
-   (SELECT id_endereco FROM salao.endereco WHERE rua = 'Rua dos Pinheiros' LIMIT 1)),
+  (gen_random_uuid(), 'Ana', 'Silva', '1996-04-15', 'ana.silva@example.com', '12345678901', 'ana.silva', 'Senha123', '123.456.789-01'),
 
-  ('Bruno', 'Oliveira', '1990-09-10', 'bruno.oliveira@example.com', '23456789012', 'bruno.oliveira', 'Bruno567', '12.345.678/0001-95',
-   (SELECT id_endereco FROM salao.endereco WHERE rua = 'Avenida Paulista' LIMIT 1));
+  (gen_random_uuid(), 'Bruno', 'Oliveira', '1990-09-10', 'bruno.oliveira@example.com', '23456789012', 'bruno.oliveira', 'Bruno567', '12.345.678/0001-95');
 
 -- 🔹 Inserir dados na tabela Profissional (com CPF/CNPJ e Endereço)
-INSERT INTO salao.profissional (profissao, nome, sobrenome, data_nascimento, email, telefone, usuario, senha, documento, id_endereco) 
+INSERT INTO salao.profissional (id_profissional, profissao, nome, sobrenome, data_nascimento, email, telefone, usuario, senha, documento, id_endereco) 
 VALUES 
-  ('Cabeleireiro', 'Ricardo', 'Santos Oliveira', '1984-07-22', 'ricardo.oliveira@example.com', '47987654321', 'ricardoOliveira', 'Senha123', '987.654.321-00',
+  (gen_random_uuid(), 'Cabeleireiro', 'Ricardo', 'Santos Oliveira', '1984-07-22', 'ricardo.oliveira@example.com', '47987654321', 'ricardoOliveira', 'Senha123', '987.654.321-00',
    (SELECT id_endereco FROM salao.endereco WHERE rua = 'Rua das Acácias' LIMIT 1)),
 
-  ('Maquiadora', 'Fernanda', 'Lima Souza', '1992-03-18', 'fernanda.lima@example.com', '31999987654', 'fernandaLima', 'Senha568', '98.765.432/0001-22',
+  (gen_random_uuid(), 'Maquiadora', 'Fernanda', 'Lima Souza', '1992-03-18', 'fernanda.lima@example.com', '31999987654', 'fernandaLima', 'Senha568', '98.765.432/0001-22',
    (SELECT id_endereco FROM salao.endereco WHERE rua = 'Rua das Palmeiras' LIMIT 1));
 
 -- 🔹 Inserir dados na tabela Metodo Pagamento

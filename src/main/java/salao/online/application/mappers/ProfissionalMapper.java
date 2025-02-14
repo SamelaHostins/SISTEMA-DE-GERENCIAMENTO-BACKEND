@@ -11,16 +11,19 @@ import salao.online.application.dtos.dtosParaPesquisar.PesquisaProfissionalDTO;
 import salao.online.domain.entities.Profissional;
 
 @Mapper(componentModel = "cdi", uses = { EstoqueMapper.class, ServicoMapper.class, ImagemMapper.class,
-        AgendamentoMapper.class, AvaliacaoMapper.class })
+        AgendamentoMapper.class, AvaliacaoMapper.class, EnderecoMapper.class })
 public interface ProfissionalMapper {
 
     CriarProfissionalDTO fromEntityToCriarDto(Profissional entity);
 
+    @Mapping(target = "idProfissional", ignore = true)
+    @Mapping(target = "dataNascimento", source = "dto.dataNascimento")
+    @Mapping(target = "endereco", source = "dto.endereco")
     Profissional fromCriarDtoToEntity(CriarProfissionalDTO dto);
 
     BuscarProfissionalDTO fromEntityToBuscarDto(Profissional entity);
 
-    @Mapping(target = "idProfissional", source = "idProfissional")
+    @Mapping(target = "idProfissional", ignore = true)
     @Mapping(target = "usuario", source = "usuario")
     @Mapping(target = "email", source = "email")
     @Mapping(target = "telefone", source = "telefone")
@@ -33,7 +36,6 @@ public interface ProfissionalMapper {
         return profissional.getNome() + " " + profissional.getSobrenome();
     }
 
-    @Mapping(source = "idProfissional", target = "idProfissional")
     @Mapping(source = "usuario", target = "usuario")
     @Mapping(source = ".", target = "nome", qualifiedByName = "mapNomeCompleto") 
     PesquisaProfissionalDTO fromEntityToPesquisaDto(Profissional entity);

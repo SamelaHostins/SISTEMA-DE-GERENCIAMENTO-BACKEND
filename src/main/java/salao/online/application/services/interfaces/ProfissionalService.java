@@ -12,7 +12,7 @@ import salao.online.domain.exceptions.ValidacaoException;
 
 public interface ProfissionalService {
 
-    public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO);
+    public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO) throws ValidacaoException;
 
     public AtualizarProfissionalDTO atualizarProfissional(AtualizarProfissionalDTO profissionalDTO) throws ValidacaoException;
 

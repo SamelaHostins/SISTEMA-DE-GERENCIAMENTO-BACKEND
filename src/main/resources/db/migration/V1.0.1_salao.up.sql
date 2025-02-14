@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS salao.endereco (
     bairro VARCHAR(50) NOT NULL,
     cidade VARCHAR(50) NOT NULL,
     numero INT NOT NULL CHECK (numero >= 0),
-    cep VARCHAR(10) NOT NULL CHECK (cep ~ '^\d{5}-\d{3}$') -- Validação do formato do CEP
+    cep VARCHAR(10) NOT NULL CHECK (cep ~ '^\d{5}-\d{3}$')
 );
 
 -- Tabela profissional

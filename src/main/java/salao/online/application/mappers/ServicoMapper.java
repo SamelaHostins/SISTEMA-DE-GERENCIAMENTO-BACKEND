@@ -11,7 +11,6 @@ import org.mapstruct.Named;
 import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
-import salao.online.application.dtos.dtosParaPesquisar.PesquisaLocalDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaServicoDTO;
 import salao.online.domain.entities.Servico;
 

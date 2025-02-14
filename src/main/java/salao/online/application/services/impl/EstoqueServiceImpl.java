@@ -80,7 +80,7 @@ public class EstoqueServiceImpl implements EstoqueService {
 
     private EstoqueDTO getEstoqueDTO(Estoque estoque) {
         EstoqueDTO estoqueDTO = estoqueMapper.fromEntityToDto(estoque);
-        estoqueDTO.setIdProfissional(profissionalMapper.fromEntityToDto(estoque.getProfissional()).getIdProfissional());
+        estoqueDTO.setIdProfissional(profissionalMapper.fromEntityToBuscarDto(estoque.getProfissional()).getIdProfissional());
         estoqueDTO.setProdutos(produtoMapper.fromEntityListToDtoList(estoque.getProdutos()));
         return estoqueDTO;
     }

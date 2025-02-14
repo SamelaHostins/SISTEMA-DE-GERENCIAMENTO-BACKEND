@@ -43,7 +43,7 @@ public class ClienteRepositoryImpl implements ClienteRepository {
     }
 
     @Override
-    public List<Cliente> buscarClientesPorNome() {
+    public List<Cliente> buscarClientes() {
         List<Cliente> clientes = listAll();
         clientes.sort(Comparator.comparing(Cliente::getNome));
         return clientes;

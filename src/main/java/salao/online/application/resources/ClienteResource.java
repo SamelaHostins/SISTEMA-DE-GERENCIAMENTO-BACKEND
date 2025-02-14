@@ -80,7 +80,7 @@ public class ClienteResource {
     public Response buscarClientes() {
         try {
             LOG.info("Requisição recebida - Buscar o Cliente");
-            List<BuscarClienteDTO> clienteDTO = clienteService.buscarClientesPorNome();
+            List<BuscarClienteDTO> clienteDTO = clienteService.buscarClientes();
             return Response.status(200).entity(clienteDTO).build();
         } catch (Exception ex) {
             return Response.status(500).entity("Ocorreu um erro na requisição.").build();
@@ -117,23 +117,6 @@ public class ClienteResource {
         try {
             LOG.info("Requisição recebida - Atualizar o cadastro do Cliente");
             AtualizarClienteDTO clienteAtualizado = clienteService.atualizarCliente(clienteDTO);
-            return Response.status(200).entity(clienteAtualizado).build();
-        } catch (ValidacaoException ex) {
-            return Response.status(404).entity(ex.getMessage()).build();
-        } catch (Exception ex) {
-            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
-        }
-    }
-
-    @Operation(summary = "Buscando as faixas etarias das clientes cadastradas")
-    @APIResponse(responseCode = "200", description = "Busca realizada com sucesso!")
-    @APIResponse(responseCode = "404", description = "O cliente não foi encontrado")
-    @PUT
-    @Path("/especial/{id_cliente}")
-    public Response atualizarClienteEspecial(@PathParam("id_cliente") UUID idCliente) throws ValidacaoException {
-        try {
-            LOG.info("Requisição recebida - Atualizar o cliente para especial");
-            boolean clienteAtualizado = clienteService.atualizarClienteEspecial(idCliente);
             return Response.status(200).entity(clienteAtualizado).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();

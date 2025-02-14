@@ -3,6 +3,11 @@ package salao.online.application.resources;
 import java.util.List;
 import java.util.UUID;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -16,16 +21,10 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-
+import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
-import salao.online.application.dtos.dtosDoProfissional.ProfissionalDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaProfissionalDTO;
 import salao.online.application.services.interfaces.ProfissionalService;
 import salao.online.domain.exceptions.ValidacaoException;
@@ -152,11 +151,11 @@ public class ProfissionalResource {
     @PUT
     @Transactional
     @Path("/atualizar/{id_profissional}")
-    public Response atualizarProfissional(@RequestBody ProfissionalDTO profissionalDTO)
+    public Response atualizarProfissional(@RequestBody AtualizarProfissionalDTO profissionalDTO)
             throws ValidacaoException {
         try {
             LOG.info("Requisição recebida - Atualizar o cadastro do Profissional");
-            ProfissionalDTO profissional = profissionalService.atualizarProfissional(profissionalDTO);
+            AtualizarProfissionalDTO profissional = profissionalService.atualizarProfissional(profissionalDTO);
             return Response.status(200).entity(profissional).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();

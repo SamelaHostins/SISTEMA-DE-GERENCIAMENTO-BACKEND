@@ -1,20 +1,31 @@
 -- 🔹 Extensão necessária para geração automática de UUIDs
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
--- 🔹 Inserir dados na tabela Cliente
-INSERT INTO salao.cliente (especial, nome, sobrenome, idade, email, telefone, usuario, senha) 
+-- 🔹 Inserir dados na tabela Endereco
+INSERT INTO salao.endereco (rua, bairro, cidade, numero, cep) 
 VALUES 
-  (false, 'Ana', 'Silva', 28, 'ana.silva@example.com', '12345678901', 'ana.silva', 'Senha123'),
-  (true, 'Bruno', 'Oliveira',  34, 'bruno.oliveira@example.com', '23456789012', 'bruno.oliveira', 'Bruno567'),
-  (false, 'Carla', 'Souza',  25, 'carla.souza@example.com', '34567890123', 'carla.souza', 'Carla789'),
-  (true, 'Diego', 'Pereira', 30, 'diego.pereira@example.com', '45678901234', 'diego.pereira', 'Diego456'),
-  (false, 'Elisa', 'Lima',  22, 'elisa.lima@example.com', '56789012345', 'elisa.lima', 'Elisa123');
+  ('Rua das Acácias', 'Centro', 'Florianópolis', 200, '88000-001'), -- Endereço Ricardo
+  ('Rua das Palmeiras', 'Centro', 'São Paulo', 110, '04567-890'), -- Endereço Fernanda
+  ('Rua dos Pinheiros', 'Zona Sul', 'Rio de Janeiro', 50, '22222-222'), -- Endereço Ana
+  ('Avenida Paulista', 'Centro', 'São Paulo', 800, '01311-000'); -- Endereço Bruno
 
--- 🔹 Inserir dados na tabela Profissional
-INSERT INTO salao.profissional (profissao, nome, sobrenome, idade, email, telefone, usuario, senha, rua, bairro, cidade, numero, cep) 
+-- 🔹 Inserir dados na tabela Cliente (com CPF/CNPJ e Endereço)
+INSERT INTO salao.cliente (nome, sobrenome, data_nascimento, email, telefone, usuario, senha, documento, id_endereco) 
 VALUES 
-  ('Cabeleireiro', 'Ricardo', 'Santos Oliveira', 40, 'ricardo.oliveira@example.com', '47987654321', 'ricardoOliveira', 'Senha123', 'Rua das Acácias', 'Centro', 'Florianópolis', 200, '88000-001'),
-  ('Maquiadora', 'Fernanda', 'Lima Souza', 32, 'fernanda.lima@example.com', '31999987654', 'fernandaLima', 'Senha568', 'Rua das Palmeiras', 'Centro', 'São Paulo', 110, '04567-890');
+  ('Ana', 'Silva', '1996-04-15', 'ana.silva@example.com', '12345678901', 'ana.silva', 'Senha123', '123.456.789-01',
+   (SELECT id_endereco FROM salao.endereco WHERE rua = 'Rua dos Pinheiros' LIMIT 1)),
+
+  ('Bruno', 'Oliveira', '1990-09-10', 'bruno.oliveira@example.com', '23456789012', 'bruno.oliveira', 'Bruno567', '12.345.678/0001-95',
+   (SELECT id_endereco FROM salao.endereco WHERE rua = 'Avenida Paulista' LIMIT 1));
+
+-- 🔹 Inserir dados na tabela Profissional (com CPF/CNPJ e Endereço)
+INSERT INTO salao.profissional (profissao, nome, sobrenome, data_nascimento, email, telefone, usuario, senha, documento, id_endereco) 
+VALUES 
+  ('Cabeleireiro', 'Ricardo', 'Santos Oliveira', '1984-07-22', 'ricardo.oliveira@example.com', '47987654321', 'ricardoOliveira', 'Senha123', '987.654.321-00',
+   (SELECT id_endereco FROM salao.endereco WHERE rua = 'Rua das Acácias' LIMIT 1)),
+
+  ('Maquiadora', 'Fernanda', 'Lima Souza', '1992-03-18', 'fernanda.lima@example.com', '31999987654', 'fernandaLima', 'Senha568', '98.765.432/0001-22',
+   (SELECT id_endereco FROM salao.endereco WHERE rua = 'Rua das Palmeiras' LIMIT 1));
 
 -- 🔹 Inserir dados na tabela Metodo Pagamento
 INSERT INTO salao.metodo_pagamento (nome) 
@@ -28,6 +39,7 @@ INSERT INTO salao.profissional_metodo_pagamento (id_profissional, id_metodo_paga
 VALUES 
   ((SELECT id_profissional FROM salao.profissional WHERE nome = 'Ricardo' LIMIT 1), 
    (SELECT id_metodo_pagamento FROM salao.metodo_pagamento WHERE nome = 'Cartão de Crédito')),
+
   ((SELECT id_profissional FROM salao.profissional WHERE nome = 'Fernanda' LIMIT 1), 
    (SELECT id_metodo_pagamento FROM salao.metodo_pagamento WHERE nome = 'PIX'));
 
@@ -46,14 +58,24 @@ VALUES
 -- 🔹 Inserir dados na tabela Servico
 INSERT INTO salao.servico (tipo_servico, nome, especificacao, termos_e_condicoes, tempo, valor, id_profissional) 
 VALUES 
-  (0, 'Corte Masculino', 'Corte de cabelo profissional', 'Termos padrão', '00:30', 80.00, (SELECT id_profissional FROM salao.profissional WHERE nome = 'Ricardo' LIMIT 1)),
-  (1, 'Maquiagem Completa', 'Maquiagem para eventos e festas', 'Termos padrão', '01:00', 150.00, (SELECT id_profissional FROM salao.profissional WHERE nome = 'Fernanda' LIMIT 1));
+  (0, 'Corte Masculino', 'Corte de cabelo profissional', 'Termos padrão', '00:30', 80.00, 
+   (SELECT id_profissional FROM salao.profissional WHERE nome = 'Ricardo' LIMIT 1)),
+
+  (0, 'Corte Feminino', 'Corte de cabelo para mulheres', 'Termos padrão', '00:45', 100.00, 
+   (SELECT id_profissional FROM salao.profissional WHERE nome = 'Ricardo' LIMIT 1)),
+
+  (1, 'Maquiagem Completa', 'Maquiagem para eventos e festas', 'Termos padrão', '01:00', 150.00, 
+   (SELECT id_profissional FROM salao.profissional WHERE nome = 'Fernanda' LIMIT 1)),
+
+  (1, 'Maquiagem Noiva', 'Maquiagem especial para noivas', 'Termos padrão', '01:30', 250.00, 
+   (SELECT id_profissional FROM salao.profissional WHERE nome = 'Fernanda' LIMIT 1));
 
 -- 🔹 Inserir dados na tabela Avaliacao
 INSERT INTO salao.avaliacao (nota, dt_avaliacao, id_cliente, id_servico) 
 VALUES 
   (5, CURRENT_DATE, (SELECT id_cliente FROM salao.cliente WHERE nome = 'Ana' LIMIT 1), 
    (SELECT id_servico FROM salao.servico WHERE nome = 'Corte Masculino' LIMIT 1)),
+
   (4, CURRENT_DATE, (SELECT id_cliente FROM salao.cliente WHERE nome = 'Bruno' LIMIT 1), 
    (SELECT id_servico FROM salao.servico WHERE nome = 'Maquiagem Completa' LIMIT 1));
 
@@ -63,7 +85,7 @@ VALUES
   (CURRENT_DATE + INTERVAL '7 days', '14:00', 1, 
    (SELECT id_cliente FROM salao.cliente WHERE nome = 'Ana' LIMIT 1), 
    (SELECT id_servico FROM salao.servico WHERE nome = 'Corte Masculino' LIMIT 1)),
+
   (CURRENT_DATE + INTERVAL '7 days', '15:00', 1, 
    (SELECT id_cliente FROM salao.cliente WHERE nome = 'Bruno' LIMIT 1), 
    (SELECT id_servico FROM salao.servico WHERE nome = 'Maquiagem Completa' LIMIT 1));
-

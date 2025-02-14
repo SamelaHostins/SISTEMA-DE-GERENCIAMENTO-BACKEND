@@ -1,22 +1,13 @@
 package salao.online.domain.entities;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import io.smallrye.common.constraint.NotNull;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(schema = "salao", name = "cliente")
@@ -31,8 +22,6 @@ public class Cliente extends Informacao {
     @NotNull
     private @Getter UUID idCliente;
 
-    private @Getter @Setter Boolean especial;
-
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente")
     private @Getter List<Avaliacao> avaliacoes;
@@ -45,29 +34,25 @@ public class Cliente extends Informacao {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente")
     private @Getter List<Imagem> imagens;
 
-    public Cliente(String nome, String sobrenome, short idade, String email, String telefone,
-            String usuario, String senha, Boolean especial, List<Avaliacao> avaliacoes,
+    public Cliente(String nome, String sobrenome, LocalDate dataNascimento, String email, String telefone,
+            String usuario, String senha, String documento, Boolean especial, List<Avaliacao> avaliacoes,
             List<Agendamento> agendamentos, List<Imagem> imagens) {
-        super(nome, sobrenome, idade, email, telefone, usuario, senha);
-        this.especial = false;
+        super(nome, sobrenome, dataNascimento, email, telefone, usuario, senha, documento);
         this.avaliacoes = avaliacoes;
         this.agendamentos = agendamentos;
         this.imagens = imagens;
     }
 
     public Cliente atualizarCliente(String novoNome, String novoSobrenome,
-            short novaIdade, String novoEmail, String novoTelefone, String novaSenha) {
+            LocalDate novaDataNascimento, String novoEmail, String novoTelefone, String novaSenha,
+            String novoDocumento) {
         setNome(novoNome);
         setSobrenome(novoSobrenome);
-        setIdade(novaIdade);
+        setDataNascimento(novaDataNascimento);
         setEmail(novoEmail);
         setTelefone(novoTelefone);
         setSenha(novaSenha);
+        setDocumento(novoDocumento);
         return this;
     }
-
-    public void atualizarClienteEspecial() {
-        this.especial = true;
-    }
-
 }

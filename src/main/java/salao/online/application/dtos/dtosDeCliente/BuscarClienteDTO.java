@@ -1,5 +1,6 @@
 package salao.online.application.dtos.dtosDeCliente;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,9 +23,10 @@ public class BuscarClienteDTO {
     private String nome;
     private String sobrenome;
     private String usuario;
-    private short idade;
+    private LocalDate dataNascimento; 
     private String email;
     private String telefone;
+    private String documento; 
     private List<AvaliacaoDTO> avaliacoes;
     private List<AgendamentoDTO> agendamentos;
     private List<ImagensDoClienteDTO> imagens;

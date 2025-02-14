@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import salao.online.application.dtos.EnderecoDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,18 +14,14 @@ import lombok.Setter;
 @Setter
 public class AtualizarProfissionalDTO {
 
-    private UUID idCliente;
+    private UUID idProfissional; 
     private String instagram;
     private String profissao;
     private String nome;
     private String sobrenome;
-    private short idade;
     private String email;
     private String telefone;
     private String senha;
-    private String rua;
-    private String bairro;
-    private String cidade;
-    private int numero;
-    private String cep;
+    private String documento;
+    private EnderecoDTO endereco; 
 }

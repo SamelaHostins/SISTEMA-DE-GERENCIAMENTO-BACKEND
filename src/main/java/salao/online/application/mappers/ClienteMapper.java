@@ -4,16 +4,11 @@ import org.mapstruct.Mapper;
 
 import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
-import salao.online.application.dtos.dtosDeCliente.ClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
 import salao.online.domain.entities.Cliente;
 
 @Mapper(componentModel = "cdi", uses = { AvaliacaoMapper.class, AgendamentoMapper.class, ImagemMapper.class })
 public interface ClienteMapper {
-
-    Cliente fromDtoToEntity(ClienteDTO dto);
-
-    ClienteDTO fromEntityToDto(Cliente entity);
 
     Cliente fromCriarDtoToEntity(CriarClienteDTO dto);
 

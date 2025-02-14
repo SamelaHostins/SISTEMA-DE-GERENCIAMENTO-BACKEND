@@ -1,9 +1,14 @@
 package salao.online.domain.entities;
 
 import io.smallrye.common.constraint.NotNull;
+import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.Past;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
+import java.time.Period;
 
 @MappedSuperclass
 public abstract class Informacao {
@@ -18,29 +23,42 @@ public abstract class Informacao {
     private @Getter @Setter String sobrenome;
 
     @NotNull
-    private @Getter @Setter short idade;
+    @Past(message = "A data de nascimento deve ser no passado")
+    @Column(name = "data_nascimento", nullable = false)
+    private @Getter @Setter LocalDate dataNascimento;
 
-    @NotNull
-    private @Getter @Setter String email;
-
-    @NotNull
-    private @Getter @Setter String telefone;
-
+    @Column(unique = true, nullable = false)
     @NotNull
     private @Getter @Setter String usuario;
 
     @NotNull
     private @Getter @Setter String senha;
 
-    public Informacao(String nome, String sobrenome, short idade, String email, String telefone,
-            String usuario,
-            String senha) {
+    @Column(unique = true, nullable = false)
+    @NotNull
+    private @Getter @Setter String telefone;
+
+    @Column(unique = true, nullable = false)
+    @NotNull
+    private @Getter @Setter String email;
+
+    @Column(unique = true, nullable = false)
+    private @Getter @Setter String documento;
+
+    public Informacao(String nome, String sobrenome, LocalDate dataNascimento, String email, String telefone, 
+            String usuario, String senha, String documento) {
         this.nome = nome;
         this.sobrenome = sobrenome;
-        this.idade = idade;
+        this.dataNascimento = dataNascimento;
         this.email = email;
         this.telefone = telefone;
         this.usuario = usuario;
         this.senha = senha;
+        this.documento = documento;
+    }
+
+    // Calcula a idade
+    public int getIdade() {
+        return Period.between(this.dataNascimento, LocalDate.now()).getYears();
     }
 }

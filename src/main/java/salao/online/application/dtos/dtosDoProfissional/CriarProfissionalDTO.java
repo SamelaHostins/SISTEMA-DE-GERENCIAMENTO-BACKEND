@@ -1,27 +1,27 @@
 package salao.online.application.dtos.dtosDoProfissional;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import salao.online.application.dtos.EnderecoDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class CriarProfissionalDTO{
+public class CriarProfissionalDTO {
 
     private String nome;
+    private String sobrenome;
     private String instagram;
     private String profissao;
-    private String sobrenome;
-    private short idade;
+    private LocalDate dataNascimento; 
     private String email;
     private String telefone;
-    private String rua;
-    private String bairro;
-    private String cidade;
-    private int numero;
-    private String cep;
     private String senha;
+    private String documento;
+    private EnderecoDTO endereco; 
 }

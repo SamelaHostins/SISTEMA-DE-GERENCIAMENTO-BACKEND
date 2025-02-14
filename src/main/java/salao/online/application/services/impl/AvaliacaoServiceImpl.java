@@ -120,7 +120,7 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         private AvaliacaoDTO getAvaliacaoDto(Avaliacao avaliacao) {
                 AvaliacaoDTO avaliacaoDTO = avaliacaoMapper.fromEntityToDto(avaliacao);
                 avaliacaoDTO.setIdServico(servicoMapper.fromEntityToDto(avaliacao.getServico()).getIdServico());
-                avaliacaoDTO.setIdCliente(clienteMapper.fromEntityToDto(avaliacao.getCliente()).getIdCliente());
+                avaliacaoDTO.setIdCliente(clienteMapper.fromEntityToBuscarDto(avaliacao.getCliente()).getIdCliente());
                 return avaliacaoDTO;
         }
 

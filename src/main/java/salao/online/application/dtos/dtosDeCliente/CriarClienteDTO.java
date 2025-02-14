@@ -1,5 +1,7 @@
 package salao.online.application.dtos.dtosDeCliente;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +15,10 @@ public class CriarClienteDTO {
 
     private String nome;
     private String sobrenome;
-    private short idade;
+    private LocalDate dataNascimento; 
     private String email;
     private String telefone;
+    private String usuario;
     private String senha;
+    private String documento; 
 }

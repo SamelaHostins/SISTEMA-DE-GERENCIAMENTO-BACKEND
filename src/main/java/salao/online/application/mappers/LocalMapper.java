@@ -21,9 +21,6 @@ public interface LocalMapper {
     }
 
     @Mapping(source = "profissional.idProfissional", target = "idProfissional")
-    @Mapping(source = "profissional.cidade", target = "cidade")
-    @Mapping(source = "profissional.bairro", target = "bairro")
-    @Mapping(source = "profissional.profissao", target = "profissao")
     @Mapping(source = "profissional", target = "nomeProfissional", qualifiedByName = "mapProfissionalNome")
     PesquisaLocalDTO fromEntityToPesquisaLocalDto(Servico entity);
 

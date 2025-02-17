@@ -1,5 +1,6 @@
 package salao.online.application.dtos.dtosDoProfissional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,13 +21,14 @@ import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 public class BuscarProfissionalDTO {
     
     private UUID idProfissional;
-    private String instagram;
-    private String profissao;
     private String nome;
     private String sobrenome;
+    private LocalDate dataNascimento;
     private String email;
     private String telefone;
+    private String profissao;
     private String usuario;
+    private String instagram;
     private String senha;
     private String documento; 
     private EnderecoDTO endereco; 

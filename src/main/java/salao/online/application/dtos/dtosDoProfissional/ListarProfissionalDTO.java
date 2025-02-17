@@ -19,6 +19,7 @@ import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 public class ListarProfissionalDTO {
 
     private UUID idProfissional;
+    private UUID nome;
     private String instagram;
     private String profissao;
     private String usuario;

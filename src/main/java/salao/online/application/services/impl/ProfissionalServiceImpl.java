@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import io.vertx.core.impl.logging.Logger;
+import io.vertx.core.impl.logging.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -27,7 +28,7 @@ import salao.online.infra.repositories.EnderecoRepository;
 import salao.online.infra.repositories.ProfissionalRepository;
 
 @ApplicationScoped
-public class ProfissionalServiceImpl implements ProfissionalService{
+public class ProfissionalServiceImpl implements ProfissionalService {
 
     @Inject
     ProfissionalRepository profissionalRepository;
@@ -47,10 +48,8 @@ public class ProfissionalServiceImpl implements ProfissionalService{
     @Inject
     ImagemMapper imagemMapper;
 
-    @Inject
-    Logger logger;
+    private static Logger logger = LoggerFactory.getLogger(LoggerFactory.class);
 
-    
     private String removeAcentos(String texto) {
         if (texto == null) {
             return null;
@@ -63,7 +62,6 @@ public class ProfissionalServiceImpl implements ProfissionalService{
     @Transactional
     public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO) throws ValidacaoException {
         try {
-            // 🔹 Verifica se já existe um profissional com o mesmo e-mail
             if (profissionalRepository.find("email", profissionalDTO.getEmail()).firstResultOptional().isPresent()) {
                 throw new ValidacaoException(MensagemErroValidacaoEnum.EMAIL_JA_CADASTRADO.getMensagemErro() + " "
                         + profissionalDTO.getEmail());
@@ -105,7 +103,6 @@ public class ProfissionalServiceImpl implements ProfissionalService{
             throw new RuntimeException("Erro ao cadastrar profissional.", e);
         }
     }
-
 
     @Override
     public AtualizarProfissionalDTO atualizarProfissional(AtualizarProfissionalDTO profissionalDTO)

@@ -25,15 +25,15 @@ CREATE TABLE IF NOT EXISTS salao.profissional (
     telefone VARCHAR(12) NOT NULL UNIQUE CHECK (telefone ~ '^[0-9]+$'),
     usuario VARCHAR(25) NOT NULL UNIQUE,
     senha VARCHAR(8) NOT NULL CHECK (senha ~ '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8}$'),
-    documento VARCHAR(18) NOT NULL UNIQUE CHECK (
-        documento ~ '^\d{3}\.\d{3}\.\d{3}-\d{2}$' OR -- Validação CPF (000.000.000-00)
-        documento ~ '^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$' -- Validação CNPJ (00.000.000/0000-00)
-    ),
+    documento VARCHAR(14) NOT NULL UNIQUE CHECK (
+    documento ~ '^\d{11}$' OR 
+    documento ~ '^\d{14}$' 
+),
     id_endereco UUID UNIQUE, -- Relacionamento OneToOne
     FOREIGN KEY (id_endereco) REFERENCES salao.endereco(id_endereco) ON DELETE SET NULL
 );
 
--- Tabela cliente (agora com CPF/CNPJ)
+-- Tabela cliente 
 CREATE TABLE IF NOT EXISTS salao.cliente (
     id_cliente UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     nome VARCHAR(25) NOT NULL,
@@ -43,9 +43,9 @@ CREATE TABLE IF NOT EXISTS salao.cliente (
     telefone VARCHAR(12) NOT NULL UNIQUE CHECK (telefone ~ '^[0-9]+$'),
     usuario VARCHAR(25) NOT NULL UNIQUE,
     senha VARCHAR(8) NOT NULL CHECK (senha ~ '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8}$'),
-    documento VARCHAR(18) NOT NULL UNIQUE CHECK (
-        documento ~ '^\d{3}\.\d{3}\.\d{3}-\d{2}$' OR -- Validação CPF (000.000.000-00)
-        documento ~ '^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$' -- Validação CNPJ (00.000.000/0000-00)
+    documento VARCHAR(14) NOT NULL UNIQUE CHECK (
+    documento ~ '^\d{11}$' OR 
+    documento ~ '^\d{14}$' 
     ),
     id_endereco UUID UNIQUE, -- Relacionamento OneToOne com endereço
     FOREIGN KEY (id_endereco) REFERENCES salao.endereco(id_endereco) ON DELETE SET NULL

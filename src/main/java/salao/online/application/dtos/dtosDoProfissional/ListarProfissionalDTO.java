@@ -20,6 +20,7 @@ public class ListarProfissionalDTO {
 
     private UUID idProfissional;
     private String nome;
+    private String sobrenome;
     private String instagram;
     private String profissao;
     private String usuario;

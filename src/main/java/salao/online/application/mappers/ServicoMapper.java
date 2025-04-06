@@ -1,5 +1,6 @@
 package salao.online.application.mappers;
 
+import java.time.Duration;
 import java.util.List;
 
 import org.mapstruct.InheritInverseConfiguration;
@@ -17,31 +18,44 @@ import salao.online.domain.entities.Servico;
 @Mapper(componentModel = "cdi", uses = { AvaliacaoMapper.class, AgendamentoMapper.class })
 public interface ServicoMapper {
 
+    // ---------------- DTO PRINCIPAL ----------------
     @Mapping(source = "profissional.idProfissional", target = "idProfissional")
     @Mapping(source = "idServico", target = "idServico")
     @Mapping(source = "agendamentos", target = "agendamentos")
     @Mapping(source = "avaliacoes", target = "avaliacoes")
+    @Mapping(source = "tempo", target = "tempo", qualifiedByName = "durationToString")
     @Named("fromEntityToDto")
     ServicoDTO fromEntityToDto(Servico entity);
 
     @InheritInverseConfiguration
+    @Mapping(target = "tempo", source = "tempo", qualifiedByName = "stringToDuration")
     Servico fromDtoToEntity(ServicoDTO dto);
 
+    // ---------------- DTO DE CRIAÇÃO ----------------
     @Mapping(source = "profissional.idProfissional", target = "idProfissional")
+    @Mapping(source = "tempo", target = "tempo", qualifiedByName = "durationToString")
     CriarServicoDTO fromEntityToCriarDto(Servico entity);
 
     @InheritInverseConfiguration
+    @Mapping(target = "tempo", source = "tempo", qualifiedByName = "stringToDuration")
     @Mapping(target = "agendamentos", ignore = true)
     @Mapping(target = "avaliacoes", ignore = true)
     Servico fromCriarDtoToEntity(CriarServicoDTO dto);
 
+    // ---------------- DTO DE ATUALIZAÇÃO ----------------
     @Mapping(source = "profissional.idProfissional", target = "idProfissional")
+    @Mapping(source = "tempo", target = "tempo", qualifiedByName = "durationToString")
     AtualizarServicoDTO fromEntityToAtualizarDto(Servico entity);
 
+    @Mapping(source = "tempo", target = "tempo", qualifiedByName = "stringToDuration")
+    Servico fromAtualizarDtoToEntity(AtualizarServicoDTO dto);
+
+    // ---------------- LISTA ----------------
     @IterableMapping(qualifiedByName = "fromEntityToDto")
     @Named("fromEntityListToDtoList")
     List<ServicoDTO> fromEntityListToDtoList(List<Servico> servicos);
 
+    // ---------------- PESQUISA ----------------
     @Named("mapProfissionalNome")
     default String mapProfissionalNome(salao.online.domain.entities.Profissional profissional) {
         String[] partes = profissional.getSobrenome().trim().split("\\s+");
@@ -49,12 +63,31 @@ public interface ServicoMapper {
         return profissional.getNome() + " " + ultimoSobrenome;
     }
 
-    @Mapping(source = "idServico", target = "idServico") 
-    @Mapping(source = "profissional.idProfissional", target = "idProfissional") 
-    @Mapping(source = "nome", target = "nomeServico") 
-    @Mapping(source = "profissional", target = "nomeProfissional", qualifiedByName = "mapProfissionalNome") 
+    @Mapping(source = "idServico", target = "idServico")
+    @Mapping(source = "profissional.idProfissional", target = "idProfissional")
+    @Mapping(source = "nome", target = "nomeServico")
+    @Mapping(source = "profissional", target = "nomeProfissional", qualifiedByName = "mapProfissionalNome")
     PesquisaServicoDTO fromEntityToPesquisaDto(Servico entity);
 
     List<PesquisaServicoDTO> fromEntityListToPesquisaDtoList(List<Servico> servicos);
 
+    // ---------------- CONVERSORES DE TEMPO ----------------
+    @Named("durationToString")
+    default String durationToString(Duration duration) {
+        if (duration == null)
+            return null;
+        long hours = duration.toHours();
+        long minutes = duration.minusHours(hours).toMinutes();
+        return String.format("%02d:%02d", hours, minutes);
+    }
+
+    @Named("stringToDuration")
+    default Duration stringToDuration(String tempo) {
+        if (tempo == null || !tempo.matches("\\d{2}:\\d{2}"))
+            return null;
+        String[] parts = tempo.split(":");
+        int hours = Integer.parseInt(parts[0]);
+        int minutes = Integer.parseInt(parts[1]);
+        return Duration.ofHours(hours).plusMinutes(minutes);
+    }
 }

@@ -1,6 +1,7 @@
 package salao.online.infra.repositoriesImpl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,30 +18,47 @@ public class AgendamentoRepositoryImpl implements AgendamentoRepository {
     public List<Agendamento> buscarAgendamentosDoProfissional(UUID idProfissional, LocalDate data,
             StatusAgendamentoEnum status, FormaPagamentoEnum formaPagamento) {
 
-        return find("servico.profissional.idProfissional = ?1"
-                + (data != null ? " and dataAgendamento = ?2" : "")
-                + (status != null ? " and statusAgendamento = ?3" : "")
-                + (formaPagamento != null ? " and formaPagamento = ?4" : ""),
-                buildParams(idProfissional, data, status, formaPagamento)).list();
+        StringBuilder query = new StringBuilder("servico.profissional.idProfissional = ?1");
+        List<Object> params = new ArrayList<>();
+        params.add(idProfissional);
+
+        if (data != null) {
+            query.append(" and dataAgendamento = ?" + (params.size() + 1));
+            params.add(data);
+        }
+        if (status != null) {
+            query.append(" and statusAgendamento = ?" + (params.size() + 1));
+            params.add(status);
+        }
+        if (formaPagamento != null) {
+            query.append(" and formaPagamento = ?" + (params.size() + 1));
+            params.add(formaPagamento);
+        }
+
+        return find(query.toString(), params.toArray()).list();
     }
 
     @Override
     public List<Agendamento> buscarAgendamentosDoCliente(UUID idCliente, LocalDate data,
             StatusAgendamentoEnum status, FormaPagamentoEnum formaPagamento) {
 
-        return find("cliente.idCliente = ?1"
-                + (data != null ? " and dataAgendamento = ?2" : "")
-                + (status != null ? " and statusAgendamento = ?3" : "")
-                + (formaPagamento != null ? " and formaPagamento = ?4" : ""),
-                buildParams(idCliente, data, status, formaPagamento)).list();
-    }
+        StringBuilder query = new StringBuilder("cliente.idCliente = ?1");
+        List<Object> params = new ArrayList<>();
+        params.add(idCliente);
 
-    private Object[] buildParams(UUID id, LocalDate data, StatusAgendamentoEnum status, FormaPagamentoEnum pagamento) {
-        return new Object[] {
-                id,
-                data != null ? data : null,
-                status != null ? status : null,
-                pagamento != null ? pagamento : null
-        };
+        if (data != null) {
+            query.append(" and dataAgendamento = ?" + (params.size() + 1));
+            params.add(data);
+        }
+        if (status != null) {
+            query.append(" and statusAgendamento = ?" + (params.size() + 1));
+            params.add(status);
+        }
+        if (formaPagamento != null) {
+            query.append(" and formaPagamento = ?" + (params.size() + 1));
+            params.add(formaPagamento);
+        }
+
+        return find(query.toString(), params.toArray()).list();
     }
 }

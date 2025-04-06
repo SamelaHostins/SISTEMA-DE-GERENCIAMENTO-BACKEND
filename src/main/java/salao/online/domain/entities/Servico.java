@@ -1,7 +1,11 @@
 package salao.online.domain.entities;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -50,7 +54,9 @@ public class Servico {
     @Column(name = "termos_e_condicoes")
     private @Getter @Setter String termosECondicoes;
 
-    private @Getter @Setter String tempo;
+    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
+    @Column(name = "tempo")
+    private @Getter @Setter Duration tempo;
 
     @DecimalMin(value = "0.01", message = "O valor deve ser no mínimo 0.01")
     private @Getter @Setter double valor;
@@ -70,7 +76,7 @@ public class Servico {
     private @Getter List<Agendamento> agendamentos;
 
     public Servico(TipoServicoEnum tipoServico, String nome, String especificacao, String termosECondicoes,
-            String tempo, double valor,
+            Duration tempo, double valor,
             Profissional profissional, List<Avaliacao> avaliacoes, List<Agendamento> agendamentos) {
         this.tipoServico = tipoServico;
         this.nome = nome;
@@ -84,7 +90,7 @@ public class Servico {
     }
 
     public Servico atualizarCadastroServico(TipoServicoEnum novoTipoServico, String novoNome, String novaEspecificacao,
-            String novosTermosECondicoes, String novoTempo, double novoValor) {
+            String novosTermosECondicoes, Duration novoTempo, double novoValor) {
         setTipoServico(novoTipoServico);
         setNome(novoNome);
         setEspecificacao(novaEspecificacao);

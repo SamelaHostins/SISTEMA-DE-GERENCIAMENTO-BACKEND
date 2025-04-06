@@ -47,8 +47,6 @@ CREATE TABLE IF NOT EXISTS salao.cliente (
     documento ~ '^\d{11}$' OR 
     documento ~ '^\d{14}$' 
     ),
-    id_endereco UUID UNIQUE, -- Relacionamento OneToOne com endereço
-    FOREIGN KEY (id_endereco) REFERENCES salao.endereco(id_endereco) ON DELETE SET NULL
 );
 
 -- Tabela servico
@@ -58,7 +56,7 @@ CREATE TABLE IF NOT EXISTS salao.servico (
     nome VARCHAR(55) NOT NULL CHECK (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55),
     especificacao VARCHAR(500),
     termos_e_condicoes VARCHAR(1000),
-    tempo VARCHAR(10),
+    tempo INTERVAL,
     valor DECIMAL(5, 2),
     id_profissional UUID NOT NULL,
     FOREIGN KEY (id_profissional) REFERENCES salao.profissional(id_profissional)

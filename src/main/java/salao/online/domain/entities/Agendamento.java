@@ -17,7 +17,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.FutureOrPresent;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,8 +24,7 @@ import salao.online.domain.enums.FormaPagamentoEnum;
 import salao.online.domain.enums.StatusAgendamentoEnum;
 
 @Entity
-@Table(schema = "salao", name = "agendamento", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "id_cliente", "id_servico" }) })
+@Table(schema = "salao", name = "agendamento")
 public class Agendamento {
 
     protected Agendamento() {

@@ -1,5 +1,7 @@
 package salao.online.application.services.impl;
 
+import java.time.Duration;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -75,11 +77,18 @@ public class ServicoServiceImpl implements ServicoService {
 
         TipoServicoEnum tipoServico = TipoServicoEnum.valueOf(servicoDTO.getTipoServico().name());
 
+        Duration tempoDuration;
+        try {
+            tempoDuration = Duration.parse("PT" + servicoDTO.getTempo().replace(":", "H") + "M");
+        } catch (DateTimeParseException e) {
+            throw new ValidacaoException("Formato de tempo inválido. Use o formato hh:mm");
+        }
+
         servico.atualizarCadastroServico(tipoServico,
                 servicoDTO.getNome(),
                 servicoDTO.getEspecificacao(),
                 servicoDTO.getTermosECondicoes(),
-                servicoDTO.getTempo(),
+                tempoDuration,
                 servicoDTO.getValor());
 
         logger.info("Salvando registro atualizado");
@@ -149,7 +158,7 @@ public class ServicoServiceImpl implements ServicoService {
 
         return servicos.stream()
                 .map(localMapper::fromEntityToPesquisaLocalDto)
-                .filter(dto -> idsUnicos.remove(dto.getIdProfissional().toString())) 
+                .filter(dto -> idsUnicos.remove(dto.getIdProfissional().toString()))
                 .collect(Collectors.toList());
     }
 

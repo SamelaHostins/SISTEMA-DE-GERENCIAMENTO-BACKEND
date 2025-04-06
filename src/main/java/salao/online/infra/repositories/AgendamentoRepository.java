@@ -11,10 +11,10 @@ import salao.online.domain.enums.StatusAgendamentoEnum;
 
 public interface AgendamentoRepository extends PanacheRepositoryBase<Agendamento, UUID> {
 
-    List<Agendamento> buscarAgendamentosDoProfissional(UUID idProfissional, LocalDate data,
-            StatusAgendamentoEnum status, FormaPagamentoEnum formaPagamento);
+        List<Agendamento> buscarAgendamentosDoProfissional(UUID idProfissional, LocalDate data,
+                        StatusAgendamentoEnum status, FormaPagamentoEnum formaPagamento);
 
-    List<Agendamento> buscarAgendamentosDoCliente(UUID idCliente, LocalDate data,
-            StatusAgendamentoEnum status, FormaPagamentoEnum formaPagamento);
+        List<Agendamento> buscarAgendamentosDoCliente(UUID idCliente, LocalDate data,
+                        StatusAgendamentoEnum status, FormaPagamentoEnum formaPagamento);
 
 }

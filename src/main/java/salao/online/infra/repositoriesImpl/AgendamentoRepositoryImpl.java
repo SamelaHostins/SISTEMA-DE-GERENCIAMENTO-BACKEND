@@ -18,9 +18,9 @@ public class AgendamentoRepositoryImpl implements AgendamentoRepository {
             StatusAgendamentoEnum status, FormaPagamentoEnum formaPagamento) {
 
         return find("servico.profissional.idProfissional = ?1"
-                        + (data != null ? " and dataAgendamento = ?2" : "")
-                        + (status != null ? " and statusAgendamento = ?3" : "")
-                        + (formaPagamento != null ? " and formaPagamento = ?4" : ""),
+                + (data != null ? " and dataAgendamento = ?2" : "")
+                + (status != null ? " and statusAgendamento = ?3" : "")
+                + (formaPagamento != null ? " and formaPagamento = ?4" : ""),
                 buildParams(idProfissional, data, status, formaPagamento)).list();
     }
 
@@ -29,9 +29,9 @@ public class AgendamentoRepositoryImpl implements AgendamentoRepository {
             StatusAgendamentoEnum status, FormaPagamentoEnum formaPagamento) {
 
         return find("cliente.idCliente = ?1"
-                        + (data != null ? " and dataAgendamento = ?2" : "")
-                        + (status != null ? " and statusAgendamento = ?3" : "")
-                        + (formaPagamento != null ? " and formaPagamento = ?4" : ""),
+                + (data != null ? " and dataAgendamento = ?2" : "")
+                + (status != null ? " and statusAgendamento = ?3" : "")
+                + (formaPagamento != null ? " and formaPagamento = ?4" : ""),
                 buildParams(idCliente, data, status, formaPagamento)).list();
     }
 
@@ -43,4 +43,4 @@ public class AgendamentoRepositoryImpl implements AgendamentoRepository {
                 pagamento != null ? pagamento : null
         };
     }
-}    
+}

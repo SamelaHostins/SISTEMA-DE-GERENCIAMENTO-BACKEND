@@ -1,15 +1,13 @@
 package salao.online.application.dtos.dtosDoAgendamento;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import salao.online.domain.enums.FormaPagamentoEnum;
-import salao.online.domain.enums.StatusAgendamentoEnum;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor

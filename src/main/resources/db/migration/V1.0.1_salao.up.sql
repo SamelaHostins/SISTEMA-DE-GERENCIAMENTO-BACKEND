@@ -51,12 +51,6 @@ CREATE TABLE IF NOT EXISTS salao.cliente (
     FOREIGN KEY (id_endereco) REFERENCES salao.endereco(id_endereco) ON DELETE SET NULL
 );
 
--- Tabela metodoPagamento
-CREATE TABLE IF NOT EXISTS salao.metodo_pagamento (
-    id_metodo_pagamento UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    nome VARCHAR(20) NOT NULL UNIQUE CHECK (LENGTH(nome) >= 3 AND LENGTH(nome) <= 20)
-);
-
 -- Tabela servico
 CREATE TABLE IF NOT EXISTS salao.servico (
     id_servico UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -75,20 +69,12 @@ CREATE TABLE IF NOT EXISTS salao.agendamento (
     id_agendamento UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     dt_agendamento DATE NOT NULL CHECK (dt_agendamento >= CURRENT_DATE),
     hora_agendamento TIME NOT NULL,
-    status_agendamento INT4,
+    status_agendamento INT4 NOT NULL,
+    forma_pagamento INT4 NOT NULL,
     id_cliente UUID NOT NULL,
     id_servico UUID NOT NULL,
     FOREIGN KEY (id_cliente) REFERENCES salao.cliente(id_cliente),
     FOREIGN KEY (id_servico) REFERENCES salao.servico(id_servico)
-);
-
--- Tabela profissionalMetodoPagamento (para relacionamento muitos-para-muitos)
-CREATE TABLE IF NOT EXISTS salao.profissional_metodo_pagamento (
-    id_profissional UUID NOT NULL,
-    id_metodo_pagamento UUID NOT NULL,
-    PRIMARY KEY (id_profissional, id_metodo_pagamento),
-    FOREIGN KEY (id_profissional) REFERENCES salao.profissional(id_profissional),
-    FOREIGN KEY (id_metodo_pagamento) REFERENCES salao.metodo_pagamento(id_metodo_pagamento)
 );
 
 -- Tabela estoque

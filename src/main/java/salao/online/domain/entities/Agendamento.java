@@ -20,6 +20,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.FutureOrPresent;
 import lombok.Getter;
+import lombok.Setter;
+import salao.online.domain.enums.FormaPagamentoEnum;
 import salao.online.domain.enums.StatusAgendamentoEnum;
 
 @Entity
@@ -43,31 +45,39 @@ public class Agendamento {
 
     @NotNull
     @Column(name = "hora_agendamento")
-    private @Getter LocalTime  horaAgendamento;
+    private @Getter LocalTime horaAgendamento;
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @Column(name = "status_agendamento")
-    private @Getter StatusAgendamentoEnum statusAgendamento;
+    private @Getter @Setter StatusAgendamentoEnum statusAgendamento;
+
+    @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    @Column(name = "forma_pagamento")
+    private @Getter @Setter FormaPagamentoEnum formaPagamento;
 
     @NotNull
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente")
-    private @Getter Cliente cliente;
+    private @Getter @Setter Cliente cliente;
 
     @NotNull
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_servico")
-    private @Getter Servico servico;
+    private @Getter @Setter Servico servico;
 
     public Agendamento(LocalDate dataAgendamento, LocalTime horaAgendamento,
-            StatusAgendamentoEnum statusAgendamento, Cliente cliente, Servico servico) {
+            StatusAgendamentoEnum statusAgendamento, FormaPagamentoEnum formaPagamento,
+            Cliente cliente, Servico servico) {
         this.dataAgendamento = dataAgendamento;
         this.horaAgendamento = horaAgendamento;
         this.statusAgendamento = statusAgendamento;
+        this.formaPagamento = formaPagamento;
         this.cliente = cliente;
         this.servico = servico;
     }
+
 }

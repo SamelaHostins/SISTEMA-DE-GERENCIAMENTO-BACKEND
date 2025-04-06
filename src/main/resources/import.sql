@@ -1,4 +1,3 @@
--- 🔹 Extensão necessária para geração automática de UUIDs
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- 🔹 Inserir dados na tabela Endereco
@@ -25,21 +24,6 @@ VALUES
   (gen_random_uuid(), 'Maquiadora', 'Fernanda', 'Lima Souza', '1992-03-18', 'fernanda.lima@example.com', '31999987654', 'fernandaLima', 'Senha568', '98.765.432/0001-22',
    (SELECT id_endereco FROM salao.endereco WHERE rua = 'Rua das Palmeiras' LIMIT 1));
 
--- 🔹 Inserir dados na tabela Metodo Pagamento
-INSERT INTO salao.metodo_pagamento (nome) 
-VALUES 
-  ('Cartão de Crédito'), 
-  ('Dinheiro'), 
-  ('PIX');
-
--- 🔹 Inserir relação entre Profissional e Método de Pagamento
-INSERT INTO salao.profissional_metodo_pagamento (id_profissional, id_metodo_pagamento) 
-VALUES 
-  ((SELECT id_profissional FROM salao.profissional WHERE nome = 'Ricardo' LIMIT 1), 
-   (SELECT id_metodo_pagamento FROM salao.metodo_pagamento WHERE nome = 'Cartão de Crédito')),
-
-  ((SELECT id_profissional FROM salao.profissional WHERE nome = 'Fernanda' LIMIT 1), 
-   (SELECT id_metodo_pagamento FROM salao.metodo_pagamento WHERE nome = 'PIX'));
 
 -- 🔹 Inserir dados na tabela Estoque
 INSERT INTO salao.estoque (nome, qtd_de_produtos, id_profissional) 
@@ -77,13 +61,33 @@ VALUES
   (4, CURRENT_DATE, (SELECT id_cliente FROM salao.cliente WHERE nome = 'Bruno' LIMIT 1), 
    (SELECT id_servico FROM salao.servico WHERE nome = 'Maquiagem Completa' LIMIT 1));
 
--- 🔹 Inserir dados na tabela Agendamento
-INSERT INTO salao.agendamento (dt_agendamento, hora_agendamento, status_agendamento, id_cliente, id_servico) 
+-- 🔹 Inserir dados na tabela Agendamento (com forma_pagamento e status variados)
+INSERT INTO salao.agendamento (
+    dt_agendamento, 
+    hora_agendamento, 
+    status_agendamento, 
+    forma_pagamento,
+    id_cliente, 
+    id_servico
+) 
 VALUES 
-  (CURRENT_DATE + INTERVAL '7 days', '14:00', 1, 
+  -- AGENDADO com Cartão de Crédito
+  (CURRENT_DATE + INTERVAL '2 days', '09:00', 1, 1,
    (SELECT id_cliente FROM salao.cliente WHERE nome = 'Ana' LIMIT 1), 
    (SELECT id_servico FROM salao.servico WHERE nome = 'Corte Masculino' LIMIT 1)),
 
-  (CURRENT_DATE + INTERVAL '7 days', '15:00', 1, 
+  -- AGUARDANDO_ENTRADA com PIX
+  (CURRENT_DATE + INTERVAL '3 days', '10:00', 0, 3,
    (SELECT id_cliente FROM salao.cliente WHERE nome = 'Bruno' LIMIT 1), 
-   (SELECT id_servico FROM salao.servico WHERE nome = 'Maquiagem Completa' LIMIT 1));
+   (SELECT id_servico FROM salao.servico WHERE nome = 'Maquiagem Completa' LIMIT 1)),
+
+  -- CANCELADO com Dinheiro
+  (CURRENT_DATE + INTERVAL '4 days', '11:00', 2, 2,
+   (SELECT id_cliente FROM salao.cliente WHERE nome = 'Ana' LIMIT 1), 
+   (SELECT id_servico FROM salao.servico WHERE nome = 'Corte Feminino' LIMIT 1)),
+
+  -- AGENDADO com Cartão de Débito
+  (CURRENT_DATE + INTERVAL '5 days', '14:30', 1, 0,
+   (SELECT id_cliente FROM salao.cliente WHERE nome = 'Bruno' LIMIT 1), 
+   (SELECT id_servico FROM salao.servico WHERE nome = 'Maquiagem Noiva' LIMIT 1));
+

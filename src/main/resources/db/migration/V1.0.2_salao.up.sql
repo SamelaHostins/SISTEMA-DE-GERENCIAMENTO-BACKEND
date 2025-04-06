@@ -19,9 +19,6 @@ ALTER COLUMN id_estoque SET DEFAULT gen_random_uuid();
 ALTER TABLE salao.imagem 
 ALTER COLUMN id_imagem SET DEFAULT gen_random_uuid();
 
-ALTER TABLE salao.metodo_pagamento 
-ALTER COLUMN id_metodo_pagamento SET DEFAULT gen_random_uuid();
-
 ALTER TABLE salao.produto 
 ALTER COLUMN id_produto SET DEFAULT gen_random_uuid();
 

@@ -2,6 +2,9 @@ package salao.online.application.dtos.dtosDoAgendamento;
 
 import lombok.Getter;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 public enum FormaPagamentoEnumDTO {
     CARTAO_DEBITO(0),
     CARTAO_CREDITO(1),

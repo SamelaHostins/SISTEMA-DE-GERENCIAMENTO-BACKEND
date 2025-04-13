@@ -4,6 +4,9 @@ import java.util.Arrays;
 
 import lombok.Getter;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 public enum StatusAgendamentoEnumDTO {
 
     AGUARDANDO_ENTRADA(0),

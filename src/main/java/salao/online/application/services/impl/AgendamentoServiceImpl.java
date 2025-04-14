@@ -7,8 +7,6 @@ import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import salao.online.application.dtos.dtosDoAgendamento.AgendamentoDTO;
-import salao.online.application.dtos.dtosDoAgendamento.FormaPagamentoEnumDTO;
-import salao.online.application.dtos.dtosDoAgendamento.StatusAgendamentoEnumDTO;
 import salao.online.application.mappers.AgendamentoMapper;
 import salao.online.application.services.interfaces.AgendamentoService;
 import salao.online.domain.entities.Agendamento;
@@ -28,22 +26,18 @@ public class AgendamentoServiceImpl implements AgendamentoService {
         @Override
         public List<AgendamentoDTO> buscarAgendamentosDoProfissional(
                         UUID idProfissional,
-                        LocalDate data,
-                        StatusAgendamentoEnumDTO statusDTO,
-                        FormaPagamentoEnumDTO formaPagamentoDTO) {
+                        LocalDate dataInicio,
+                        LocalDate dataFim,
+                        Integer statusValor,
+                        Integer formaPagamentoValor) {
 
-                StatusAgendamentoEnum status = null;
-                if (statusDTO != null) {
-                        status = StatusAgendamentoEnum.fromStatusAgendamento(statusDTO.getStatusAgendamento());
-                }
-
-                FormaPagamentoEnum formaPagamento = null;
-                if (formaPagamentoDTO != null) {
-                        formaPagamento = FormaPagamentoEnum.fromFormaPagamento(formaPagamentoDTO.getFormaPagamento());
-                }
+                StatusAgendamentoEnum status = statusValor != null ? StatusAgendamentoEnum.values()[statusValor] : null;
+                FormaPagamentoEnum formaPagamento = formaPagamentoValor != null
+                                ? FormaPagamentoEnum.values()[formaPagamentoValor]
+                                : null;
 
                 List<Agendamento> agendamentos = agendamentoRepository.buscarAgendamentosDoProfissional(
-                                idProfissional, data, status, formaPagamento);
+                                idProfissional, dataInicio, dataFim, status, formaPagamento);
 
                 return agendamentoMapper.fromEntityListToDtoList(agendamentos);
         }
@@ -51,24 +45,19 @@ public class AgendamentoServiceImpl implements AgendamentoService {
         @Override
         public List<AgendamentoDTO> buscarAgendamentosDoCliente(
                         UUID idCliente,
-                        LocalDate data,
-                        StatusAgendamentoEnumDTO statusDTO,
-                        FormaPagamentoEnumDTO formaPagamentoDTO) {
+                        LocalDate dataInicio,
+                        LocalDate dataFim,
+                        Integer statusValor,
+                        Integer formaPagamentoValor) {
 
-                StatusAgendamentoEnum status = null;
-                if (statusDTO != null) {
-                        status = StatusAgendamentoEnum.fromStatusAgendamento(statusDTO.getStatusAgendamento());
-                }
-
-                FormaPagamentoEnum formaPagamento = null;
-                if (formaPagamentoDTO != null) {
-                        formaPagamento = FormaPagamentoEnum.fromFormaPagamento(formaPagamentoDTO.getFormaPagamento());
-                }
+                StatusAgendamentoEnum status = statusValor != null ? StatusAgendamentoEnum.values()[statusValor] : null;
+                FormaPagamentoEnum formaPagamento = formaPagamentoValor != null
+                                ? FormaPagamentoEnum.values()[formaPagamentoValor]
+                                : null;
 
                 List<Agendamento> agendamentos = agendamentoRepository.buscarAgendamentosDoCliente(
-                                idCliente, data, status, formaPagamento);
+                                idCliente, dataInicio, dataFim, status, formaPagamento);
 
                 return agendamentoMapper.fromEntityListToDtoList(agendamentos);
         }
-
 }

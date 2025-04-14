@@ -9,8 +9,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import salao.online.application.dtos.dtosDoAgendamento.AgendamentoDTO;
-import salao.online.application.dtos.dtosDoAgendamento.FormaPagamentoEnumDTO;
-import salao.online.application.dtos.dtosDoAgendamento.StatusAgendamentoEnumDTO;
 import salao.online.domain.entities.Agendamento;
 import salao.online.domain.enums.FormaPagamentoEnum;
 import salao.online.domain.enums.StatusAgendamentoEnum;
@@ -18,8 +16,8 @@ import salao.online.domain.enums.StatusAgendamentoEnum;
 @Mapper(componentModel = "cdi")
 public interface AgendamentoMapper {
 
-    @Mapping(source = "statusAgendamento", target = "status", qualifiedByName = "mapStatusEnumToDTO")
-    @Mapping(source = "formaPagamento", target = "formaPagamento", qualifiedByName = "mapFormaPagamentoToDTO")
+    @Mapping(source = "statusAgendamento", target = "status", qualifiedByName = "mapStatusEnumToInt")
+    @Mapping(source = "formaPagamento", target = "formaPagamento", qualifiedByName = "mapFormaPagamentoToInt")
     @Mapping(source = "cliente.nome", target = "nomeCliente")
     @Mapping(source = "servico.profissional.nome", target = "nomeProfissional")
     @Mapping(source = "servico.nome", target = "nomeServico")
@@ -28,72 +26,63 @@ public interface AgendamentoMapper {
     AgendamentoDTO fromEntityToDto(Agendamento entity);
 
     @InheritInverseConfiguration
-    @Mapping(target = "statusAgendamento", source = "status", qualifiedByName = "mapStatusEnumFromDTO")
-    @Mapping(target = "formaPagamento", source = "formaPagamento", qualifiedByName = "mapFormaPagamentoFromDTO")
+    @Mapping(target = "statusAgendamento", source = "status", qualifiedByName = "mapIntToStatusEnum")
+    @Mapping(target = "formaPagamento", source = "formaPagamento", qualifiedByName = "mapIntToFormaPagamentoEnum")
     @Mapping(target = "servico.tempo", source = "tempoServico", qualifiedByName = "mapStringToDuration")
     Agendamento fromDtoToEntity(AgendamentoDTO dto);
 
     List<AgendamentoDTO> fromEntityListToDtoList(List<Agendamento> agendamentos);
 
-     // ---------- Enum (entidade → DTO) ----------
-     @Named("mapStatusEnumToDTO")
-     default StatusAgendamentoEnumDTO mapStatusEnumToDTO(StatusAgendamentoEnum status) {
-         if (status == null) return null;
-         return StatusAgendamentoEnumDTO.fromStatusAgendamento(status.ordinal());
-     }
- 
-     @Named("mapFormaPagamentoToDTO")
-     default FormaPagamentoEnumDTO mapFormaPagamentoToDTO(FormaPagamentoEnum forma) {
-         if (forma == null) return null;
-         return FormaPagamentoEnumDTO.fromFormaPagamento(forma.ordinal());
-     }
- 
-     // ---------- Enum (DTO → entidade) ----------
-     @Named("mapStatusEnumFromDTO")
-     default StatusAgendamentoEnum mapStatusEnumFromDTO(StatusAgendamentoEnumDTO statusDTO) {
-         if (statusDTO == null) return null;
-         return StatusAgendamentoEnum.fromStatusAgendamento(statusDTO.getStatusAgendamento());
-     }
- 
-     @Named("mapFormaPagamentoFromDTO")
-     default FormaPagamentoEnum mapFormaPagamentoFromDTO(FormaPagamentoEnumDTO formaDTO) {
-         if (formaDTO == null) return null;
-         return FormaPagamentoEnum.fromFormaPagamento(formaDTO.getFormaPagamento());
-     }
- 
-     // ---------- Tempo ----------
-     @Named("mapDurationToString")
-     default String mapDurationToString(Duration duration) {
-         if (duration == null)
-             return null;
- 
-         long hours = duration.toHours();
-         long minutes = duration.toMinutes() % 60;
- 
-         if (hours > 0) {
-             return String.format("%dh%02d", hours, minutes);
-         } else {
-             return String.format("%dmin", minutes);
-         }
-     }
- 
-     @Named("mapStringToDuration")
-     default Duration mapStringToDuration(String tempoStr) {
-         if (tempoStr == null || tempoStr.isBlank())
-             return null;
- 
-         tempoStr = tempoStr.toLowerCase().replace(" ", "");
- 
-         if (tempoStr.contains("h")) {
-             String[] partes = tempoStr.split("h");
-             long horas = Long.parseLong(partes[0]);
-             long minutos = partes.length > 1 ? Long.parseLong(partes[1].replace("min", "")) : 0;
-             return Duration.ofHours(horas).plusMinutes(minutos);
-         } else if (tempoStr.contains("min")) {
-             long minutos = Long.parseLong(tempoStr.replace("min", ""));
-             return Duration.ofMinutes(minutos);
-         }
- 
-         return Duration.ZERO;
-     }
- }
+    // Enums: entidade -> Integer
+    @Named("mapStatusEnumToInt")
+    default Integer mapStatusEnumToInt(StatusAgendamentoEnum status) {
+        return status != null ? status.ordinal() : null;
+    }
+
+    @Named("mapFormaPagamentoToInt")
+    default Integer mapFormaPagamentoToInt(FormaPagamentoEnum forma) {
+        return forma != null ? forma.ordinal() : null;
+    }
+
+    // Enums: Integer -> entidade
+    @Named("mapIntToStatusEnum")
+    default StatusAgendamentoEnum mapIntToStatusEnum(Integer valor) {
+        return valor != null ? StatusAgendamentoEnum.values()[valor] : null;
+    }
+
+    @Named("mapIntToFormaPagamentoEnum")
+    default FormaPagamentoEnum mapIntToFormaPagamentoEnum(Integer valor) {
+        return valor != null ? FormaPagamentoEnum.values()[valor] : null;
+    }
+
+    // Tempo
+    @Named("mapDurationToString")
+    default String mapDurationToString(Duration duration) {
+        if (duration == null) return null;
+
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes() % 60;
+
+        return (hours > 0)
+            ? String.format("%dh%02d", hours, minutes)
+            : String.format("%dmin", minutes);
+    }
+
+    @Named("mapStringToDuration")
+    default Duration mapStringToDuration(String tempoStr) {
+        if (tempoStr == null || tempoStr.isBlank()) return null;
+
+        tempoStr = tempoStr.toLowerCase().replace(" ", "");
+
+        if (tempoStr.contains("h")) {
+            String[] partes = tempoStr.split("h");
+            long horas = Long.parseLong(partes[0]);
+            long minutos = partes.length > 1 ? Long.parseLong(partes[1].replace("min", "")) : 0;
+            return Duration.ofHours(horas).plusMinutes(minutos);
+        } else if (tempoStr.contains("min")) {
+            return Duration.ofMinutes(Long.parseLong(tempoStr.replace("min", "")));
+        }
+
+        return Duration.ZERO;
+    }
+}

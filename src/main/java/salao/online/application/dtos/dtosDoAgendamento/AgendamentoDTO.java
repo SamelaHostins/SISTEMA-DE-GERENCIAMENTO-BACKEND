@@ -18,8 +18,8 @@ public class AgendamentoDTO {
     private UUID idAgendamento;
     private LocalDate dataAgendamento;
     private LocalTime horaAgendamento;
-    private StatusAgendamentoEnumDTO status;
-    private FormaPagamentoEnumDTO formaPagamento;
+    private Integer status;
+    private Integer formaPagamento;
     private String nomeCliente;
     private String nomeProfissional;
     private String nomeServico;

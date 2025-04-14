@@ -12,8 +12,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import salao.online.application.dtos.dtosDoAgendamento.AgendamentoDTO;
-import salao.online.application.dtos.dtosDoAgendamento.FormaPagamentoEnumDTO;
-import salao.online.application.dtos.dtosDoAgendamento.StatusAgendamentoEnumDTO;
 import salao.online.application.services.interfaces.AgendamentoService;
 
 @Path("/agendamentos")
@@ -26,22 +24,23 @@ public class AgendamentoResource {
     @GET
     @Path("/profissional/{idProfissional}")
     public List<AgendamentoDTO> buscarAgendamentosDoProfissional(
-        @PathParam("idProfissional") UUID idProfissional,
-        @QueryParam("data") LocalDate data,
-        @QueryParam("status") StatusAgendamentoEnumDTO status,
-        @QueryParam("formaPagamento") FormaPagamentoEnumDTO formaPagamento
-    ) {
-        return agendamentoService.buscarAgendamentosDoProfissional(idProfissional, data, status, formaPagamento);
+            @PathParam("idProfissional") UUID idProfissional,
+            @QueryParam("dataInicio") LocalDate dataInicio,
+            @QueryParam("dataFim") LocalDate dataFim,
+            @QueryParam("status") Integer status,
+            @QueryParam("formaPagamento") Integer formaPagamento) {
+        return agendamentoService.buscarAgendamentosDoProfissional(idProfissional, dataInicio, dataFim, status,
+                formaPagamento);
     }
 
     @GET
     @Path("/cliente/{idCliente}")
     public List<AgendamentoDTO> buscarAgendamentosDoCliente(
-        @PathParam("idCliente") UUID idCliente,
-        @QueryParam("data") LocalDate data,
-        @QueryParam("status") StatusAgendamentoEnumDTO status,
-        @QueryParam("formaPagamento") FormaPagamentoEnumDTO formaPagamento
-    ) {
-        return agendamentoService.buscarAgendamentosDoCliente(idCliente, data, status, formaPagamento);
+            @PathParam("idCliente") UUID idCliente,
+            @QueryParam("dataInicio") LocalDate dataInicio,
+            @QueryParam("dataFim") LocalDate dataFim,
+            @QueryParam("status") Integer status,
+            @QueryParam("formaPagamento") Integer formaPagamento) {
+        return agendamentoService.buscarAgendamentosDoCliente(idCliente, dataInicio, dataFim, status, formaPagamento);
     }
 }

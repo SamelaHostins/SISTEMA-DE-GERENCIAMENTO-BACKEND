@@ -26,7 +26,7 @@ public class ListarProfissionalDTO {
     private String usuario;
     private String email;
     private String telefone;
-     private EnderecoDTO endereco;
+    private EnderecoDTO endereco;
     private List<ServicoDTO> servicos;
     private List<ImagensDoProfissionalDTO> imagens; 
     

@@ -6,6 +6,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 -- Tabela endereco
 CREATE TABLE IF NOT EXISTS salao.endereco (
     id_endereco UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    nome VARCHAR (20) NOT NULL,
     rua VARCHAR(50) NOT NULL,
     bairro VARCHAR(50) NOT NULL,
     cidade VARCHAR(50) NOT NULL,

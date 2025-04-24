@@ -26,6 +26,9 @@ public class Endereco {
     @NotNull
     private @Getter UUID idEndereco;
 
+    @NotNull
+    private @Getter String nome;
+
     @NotEmpty
     private @Getter String rua;
 
@@ -41,7 +44,8 @@ public class Endereco {
     @NotNull
     private @Getter String cep;
 
-    public Endereco(String rua, String bairro, String cidade, int numero, String cep) {
+    public Endereco(String nome, String rua, String bairro, String cidade, int numero, String cep) {
+        this.nome = nome;
         this.rua = rua;
         this.bairro = bairro;
         this.cidade = cidade;

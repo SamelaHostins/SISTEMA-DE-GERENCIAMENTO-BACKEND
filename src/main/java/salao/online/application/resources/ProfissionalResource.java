@@ -22,6 +22,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.BuscarEnderecoDoProfissional;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
@@ -122,6 +123,21 @@ public class ProfissionalResource {
         } catch (Exception ex) {
             LOG.error("Erro ao pesquisar profissionais: {}", ex.getMessage(), ex);
             return Response.status(500).entity("Ocorreu um erro ao pesquisar profissionais.").build();
+        }
+    }
+
+    @GET
+    @Path("endereco/{id}")
+    @Operation(summary = "Buscar endereço do profissional por ID")
+    @APIResponse(responseCode = "200", description = "Endereço retornado com sucesso")
+    public Response buscarEndereco(@PathParam("id") UUID idProfissional) throws ValidacaoException {
+        try {
+            LOG.info("Requisição recebida - Buscar Endereço do Profissional");
+            BuscarEnderecoDoProfissional endereco = profissionalService.buscarEnderecoDoProfissional(idProfissional);
+            return Response.ok(endereco).build();
+        } catch (Exception ex) {
+            LOG.error("Erro ao buscar o endereço", ex.getMessage(), ex);
+            return Response.status(500).entity("Ocorreu um erro ao buscar o endereço do profissional.").build();
         }
     }
 

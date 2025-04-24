@@ -11,6 +11,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.BuscarEnderecoDoProfissional;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
@@ -142,6 +143,14 @@ public class ProfissionalServiceImpl implements ProfissionalService {
         return profissionais.stream()
                 .map(profissionalMapper::fromEntityToPesquisaDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public BuscarEnderecoDoProfissional buscarEnderecoDoProfissional(UUID idProfissional) throws ValidacaoException {
+        Profissional profissional = profissionalRepository.findByIdOptional(idProfissional)
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
+        return profissionalMapper.fromEntityToBuscarEnderecoDto(profissional);
     }
 
     @Override

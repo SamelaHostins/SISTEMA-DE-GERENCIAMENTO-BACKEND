@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import salao.online.application.dtos.dtosDoProfissional.BuscarEnderecoDoProfissional;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
@@ -31,12 +32,16 @@ public interface ProfissionalMapper {
     @Mapping(source = "imagens", target = "imagens")
     ListarProfissionalDTO fromEntityToListarDto(Profissional entity);
 
-    @Named("mapNomeCompleto") 
+    @Named("mapNomeCompleto")
     default String mapNomeCompleto(Profissional profissional) {
         return profissional.getNome() + " " + profissional.getSobrenome();
     }
 
     @Mapping(source = "usuario", target = "usuario")
-    @Mapping(source = ".", target = "nome", qualifiedByName = "mapNomeCompleto") 
+    @Mapping(source = ".", target = "nome", qualifiedByName = "mapNomeCompleto")
     PesquisaProfissionalDTO fromEntityToPesquisaDto(Profissional entity);
+
+    @Mapping(source = "idProfissional", target = "idProfissional")
+    @Mapping(source = "endereco", target = "endereco")
+    BuscarEnderecoDoProfissional fromEntityToBuscarEnderecoDto(Profissional entity);
 }

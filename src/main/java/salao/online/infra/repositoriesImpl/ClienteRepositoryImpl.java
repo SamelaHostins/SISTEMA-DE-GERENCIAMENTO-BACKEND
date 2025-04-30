@@ -21,8 +21,8 @@ public class ClienteRepositoryImpl implements ClienteRepository {
         Cliente cliente = findByIdOptional(idCliente).orElse(null);
         if (cliente != null) {
             return cliente.getAvaliacoes().stream()
-            .sorted(Comparator.comparing(Avaliacao::getDataAvaliacao).reversed())
-            .collect(Collectors.toList());
+                    .sorted(Comparator.comparing(Avaliacao::getDataAvaliacao).reversed())
+                    .collect(Collectors.toList());
         } else {
             return Collections.emptyList();
         }
@@ -47,6 +47,11 @@ public class ClienteRepositoryImpl implements ClienteRepository {
         List<Cliente> clientes = listAll();
         clientes.sort(Comparator.comparing(Cliente::getNome));
         return clientes;
+    }
+
+    @Override
+    public Optional<Cliente> buscarPeloUsuario(String usuario) {
+        return find("usuario", usuario).firstResultOptional();
     }
 
 }

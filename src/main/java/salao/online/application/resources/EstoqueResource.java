@@ -8,6 +8,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -41,6 +42,7 @@ public class EstoqueResource {
     @POST
     @Transactional
     @Path("/cadastrar")
+    @RolesAllowed("PROFISSIONAL")
     public Response cadastrarEstoque(@Valid @RequestBody CriarEstoqueDTO dto) {
         try {
             LOG.info("Requisição recebida - Cadastrar Profissional");
@@ -55,6 +57,7 @@ public class EstoqueResource {
     @APIResponse(responseCode = "200", description = "Busca realizada com sucesso!")
     @APIResponse(responseCode = "404", description = "O estoque não foi encontrado")
     @GET
+    @RolesAllowed("PROFISSIONAL")
     @Path("/buscar/{id_estoque}")
     public Response buscarEstoquePorId(@PathParam("id_estoque") UUID idEstoque)
             throws ValidacaoException {

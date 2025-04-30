@@ -9,7 +9,7 @@ import salao.online.domain.entities.Cliente;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 
 public interface ClienteRepository extends PanacheRepositoryBase<Cliente, UUID> {
-    
+
     public List<Avaliacao> buscarTodasAvaliacoesDoCliente(UUID idCliente);
 
     public Optional<Cliente> deletarCadastroDeCliente(UUID idCliente);
@@ -17,4 +17,6 @@ public interface ClienteRepository extends PanacheRepositoryBase<Cliente, UUID> 
     public List<Cliente> buscarClientes();
 
     public Optional<Cliente> buscarClientePorId(UUID idCliente);
+
+    public Optional<Cliente> buscarPeloUsuario(String usuario);
 }

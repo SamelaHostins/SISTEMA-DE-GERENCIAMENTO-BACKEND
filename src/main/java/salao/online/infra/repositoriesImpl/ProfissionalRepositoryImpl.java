@@ -47,12 +47,16 @@ public class ProfissionalRepositoryImpl implements ProfissionalRepository {
         return profissional.getServicos().stream().collect(Collectors.toList());
     }
 
-    
     @Override
     public List<Estoque> buscarEstoquesDoProfissional(UUID idProfissional) throws ValidacaoException {
         Profissional profissional = findByIdOptional(idProfissional)
                 .orElseThrow(() -> new ValidacaoException(
                         MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
         return profissional.getEstoques().stream().collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Profissional> buscarPeloUsuario(String usuario) {
+        return find("usuario", usuario).firstResultOptional();
     }
 }

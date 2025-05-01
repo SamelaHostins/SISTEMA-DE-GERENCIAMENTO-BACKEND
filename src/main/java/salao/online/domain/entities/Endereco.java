@@ -44,12 +44,15 @@ public class Endereco {
     @NotNull
     private @Getter String cep;
 
-    public Endereco(String nome, String rua, String bairro, String cidade, int numero, String cep) {
+    private @Getter String complemento;
+
+    public Endereco(String nome, String rua, String bairro, String cidade, int numero, String cep, String complemento) {
         this.nome = nome;
         this.rua = rua;
         this.bairro = bairro;
         this.cidade = cidade;
         this.numero = numero;
         this.cep = cep;
+        this.complemento = complemento;
     }
 }

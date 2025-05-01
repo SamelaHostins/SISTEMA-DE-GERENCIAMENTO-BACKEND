@@ -50,8 +50,10 @@ public class ClienteRepositoryImpl implements ClienteRepository {
     }
 
     @Override
-    public Optional<Cliente> buscarPeloUsuario(String usuario) {
-        return find("usuario", usuario).firstResultOptional();
+    public Optional<Cliente> buscarPeloEmail(String email) {
+        // evita que letras maiusculas ou minusculas atrapalhem na busca e trata espaços extras
+        return find("LOWER(email)", email.trim().toLowerCase()).firstResultOptional();
+
     }
 
 }

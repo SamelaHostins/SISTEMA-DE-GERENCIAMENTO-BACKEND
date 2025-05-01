@@ -56,7 +56,8 @@ public class ProfissionalRepositoryImpl implements ProfissionalRepository {
     }
 
     @Override
-    public Optional<Profissional> buscarPeloUsuario(String usuario) {
-        return find("usuario", usuario).firstResultOptional();
+    public Optional<Profissional> buscarPeloEmail(String email) {
+        // evita que letras maiusculas ou minusculas atrapalhem na busca e trata espaços extras
+        return find("LOWER(email)", email.trim().toLowerCase()).firstResultOptional();
     }
 }

@@ -25,7 +25,7 @@ public class AuthResource {
     @POST
     @Path("/login")
     public Response login(LoginDTO dto) {
-        return authService.autenticar(dto.usuario, dto.senha)
+        return authService.autenticar(dto.email, dto.senha)
                 .map(auth -> {
                     TokenDTO tokenDTO = authMapper.mapToken(auth.token, auth.tipoUsuario);
                     return Response.ok(tokenDTO).build();

@@ -22,23 +22,23 @@ public class AuthServiceImpl implements AuthService{
     @Inject
     ProfissionalRepository profissionalRepository;
 
-    public Optional<ResultadoLogin> autenticar(String usuario, String senha) {
-        Optional<Cliente> cliente = clienteRepository.buscarPeloUsuario(usuario);
+    public Optional<ResultadoLogin> autenticar(String email, String senha) {
+        Optional<Cliente> cliente = clienteRepository.buscarPeloEmail(email);
         if (cliente.isPresent() && cliente.get().getSenha().equals(senha)) {
-            return Optional.of(new ResultadoLogin(gerarToken(usuario, TipoUsuarioEnum.CLIENTE), TipoUsuarioEnum.CLIENTE));
+            return Optional.of(new ResultadoLogin(gerarToken(email, TipoUsuarioEnum.CLIENTE), TipoUsuarioEnum.CLIENTE));
         }
 
-        Optional<Profissional> profissional = profissionalRepository.buscarPeloUsuario(usuario);
+        Optional<Profissional> profissional = profissionalRepository.buscarPeloEmail(email);
         if (profissional.isPresent() && profissional.get().getSenha().equals(senha)) {
-            return Optional.of(new ResultadoLogin(gerarToken(usuario, TipoUsuarioEnum.PROFISSIONAL), TipoUsuarioEnum.PROFISSIONAL));
+            return Optional.of(new ResultadoLogin(gerarToken(email, TipoUsuarioEnum.PROFISSIONAL), TipoUsuarioEnum.PROFISSIONAL));
         }
 
         return Optional.empty();
     }
 
-    private String gerarToken(String usuario, TipoUsuarioEnum tipoUsuario) {
+    private String gerarToken(String email, TipoUsuarioEnum tipoUsuario) {
         return Jwt.issuer("salao.online")
-                .subject(usuario)
+                .subject(email)
                 .claim("tipoUsuario", tipoUsuario.name())
                 .expiresIn(Duration.ofHours(3))
                 .sign();

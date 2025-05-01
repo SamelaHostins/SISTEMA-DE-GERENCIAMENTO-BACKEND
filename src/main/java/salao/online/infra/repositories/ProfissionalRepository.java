@@ -22,5 +22,5 @@ public interface ProfissionalRepository extends PanacheRepositoryBase<Profission
 
     public List<Estoque> buscarEstoquesDoProfissional(UUID idProfissional) throws ValidacaoException;
 
-    public Optional<Profissional> buscarPeloUsuario(String usuario);
+    public Optional<Profissional> buscarPeloEmail(String email);
 }

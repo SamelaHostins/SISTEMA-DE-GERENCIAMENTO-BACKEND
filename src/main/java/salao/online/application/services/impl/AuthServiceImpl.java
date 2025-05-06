@@ -2,6 +2,7 @@ package salao.online.application.services.impl;
 
 import java.time.Duration;
 import java.util.Optional;
+import java.util.Set;
 
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -40,7 +41,8 @@ public class AuthServiceImpl implements AuthService{
         return Jwt.issuer("salao.online")
                 .subject(email)
                 .claim("tipoUsuario", tipoUsuario.name())
-                .expiresIn(Duration.ofHours(3))
+                .groups(Set.of(tipoUsuario.name()))
+                .expiresIn(Duration.ofHours(2))
                 .sign();
     }
 

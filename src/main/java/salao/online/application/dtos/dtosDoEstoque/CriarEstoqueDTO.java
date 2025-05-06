@@ -14,6 +14,5 @@ import lombok.Setter;
 public class CriarEstoqueDTO {
     
     private String nome;
-    private int qtdDeProdutos;
     private UUID idProfissional;
 }

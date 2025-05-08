@@ -9,6 +9,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.reactive.RestForm;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -95,7 +96,7 @@ public class ImagemResource {
 
     @GET
     @Path("/perfil")
-    @RolesAllowed({ "CLIENTE", "PROFISSIONAL" })
+    @PermitAll
     public Response buscarImagemDePerfil(@Context SecurityContext securityContext) {
         UUID idUsuario = UUID.fromString(securityContext.getUserPrincipal().getName());
         ImagemDTO imagem = imagemService.buscarImagemDePerfil(idUsuario);
@@ -109,7 +110,7 @@ public class ImagemResource {
 
     @GET
     @Path("/portfolio")
-    @RolesAllowed("PROFISSIONAL")
+    @PermitAll
     public Response buscarFotosDoPortfolio(@Context SecurityContext securityContext) {
         UUID idUsuario = UUID.fromString(securityContext.getUserPrincipal().getName());
         List<ImagemDTO> imagens = imagemService.buscarFotosDoPortfolio(idUsuario);

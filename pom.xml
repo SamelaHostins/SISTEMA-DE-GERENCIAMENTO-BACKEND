@@ -227,10 +227,11 @@
             <resource>
               <directory>src/main/resources</directory>
               <includes>
-                <include>**/*.pem</include>
+                <include>**/*.properties</include>
+                <include>**/*.pem</include> 
               </includes>
             </resource>
-          </resources>          
+          </resources> 
     </build>
 
     <profiles>

@@ -109,7 +109,7 @@ public class ProfissionalResource {
     }
 
     @GET
-    @Path("/listar")
+    @Path("/listar-dados")
     @RolesAllowed("PROFISSIONAL")
     @Operation(summary = "Listar dados do profissional logado")
     public Response listarProfissionalPorId() {

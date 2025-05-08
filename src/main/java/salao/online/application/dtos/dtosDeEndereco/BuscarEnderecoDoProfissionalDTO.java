@@ -1,4 +1,4 @@
-package salao.online.application.dtos.dtosDoProfissional;
+package salao.online.application.dtos.dtosDeEndereco;
 
 import java.util.UUID;
 
@@ -6,13 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import salao.online.application.dtos.dtosDeEndereco.EnderecoDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class BuscarEnderecoDoProfissional {
+public class BuscarEnderecoDoProfissionalDTO {
 
     private UUID idProfissional;
     private EnderecoDTO endereco;

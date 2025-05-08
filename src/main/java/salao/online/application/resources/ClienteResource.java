@@ -134,7 +134,7 @@ public class ClienteResource {
             LOG.info("Requisição recebida - Atualizar o cadastro do Cliente logado");
 
             UUID idCliente = UUID.fromString(jwt.getSubject());
-            clienteDTO.setIdCliente(idCliente); 
+            clienteDTO.setIdCliente(idCliente);
 
             AtualizarClienteDTO clienteAtualizado = clienteService.atualizarCliente(clienteDTO);
             return Response.status(200).entity(clienteAtualizado).build();

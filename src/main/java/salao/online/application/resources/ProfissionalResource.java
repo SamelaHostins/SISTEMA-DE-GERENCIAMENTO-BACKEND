@@ -24,8 +24,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import salao.online.application.dtos.dtosDeEndereco.AtualizarEnderecoDTO;
+import salao.online.application.dtos.dtosDeEndereco.BuscarEnderecoDoProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
-import salao.online.application.dtos.dtosDoProfissional.BuscarEnderecoDoProfissional;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
@@ -128,10 +128,10 @@ public class ProfissionalResource {
     @Path("/endereco")
     @RolesAllowed("PROFISSIONAL")
     @Operation(summary = "Buscar endereço do profissional logado")
-    public Response buscarEndereco() {
+    public Response BuscarEnderecoDoProfissionalDTO() {
         try {
             UUID idProfissional = UUID.fromString(jwt.getSubject());
-            BuscarEnderecoDoProfissional dto = profissionalService.buscarEnderecoDoProfissional(idProfissional);
+            BuscarEnderecoDoProfissionalDTO dto = profissionalService.BuscarEnderecoDoProfissionalDTO(idProfissional);
             return Response.ok(dto).build();
         } catch (Exception ex) {
             return Response.status(500).entity("Erro ao buscar endereço.").build();

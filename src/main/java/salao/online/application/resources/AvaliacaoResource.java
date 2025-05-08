@@ -16,6 +16,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -61,7 +62,7 @@ public class AvaliacaoResource {
     @APIResponse(responseCode = "200", description = "Avaliação atualizada com sucesso!")
     @APIResponse(responseCode = "400", description = "Ocorreu um erro ao atualizar a avaliação")
     @APIResponse(responseCode = "500", description = "Erro no servidor")
-    @POST
+    @PUT
     @Path("/atualizar")
     @RolesAllowed("CLIENTE")
     public Response atualizarAvaliacao(@RequestBody AvaliacaoDTO dto) {

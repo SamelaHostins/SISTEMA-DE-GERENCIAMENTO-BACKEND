@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import salao.online.application.dtos.dtosDeEndereco.AtualizarEnderecoDTO;
+import salao.online.application.dtos.dtosDeEndereco.BuscarEnderecoDoProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
-import salao.online.application.dtos.dtosDoProfissional.BuscarEnderecoDoProfissional;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
@@ -28,7 +28,7 @@ public interface ProfissionalService {
 
     void atualizarEndereco(UUID idProfissional, AtualizarEnderecoDTO dto) throws ValidacaoException;
 
-    BuscarEnderecoDoProfissional buscarEnderecoDoProfissional(UUID idProfissional) throws ValidacaoException;
+    BuscarEnderecoDoProfissionalDTO BuscarEnderecoDoProfissionalDTO(UUID idProfissional) throws ValidacaoException;
 
     void deletarProfissional(UUID idProfissional) throws ValidacaoException;
 }

@@ -21,11 +21,13 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import salao.online.application.dtos.dtosDeEndereco.AtualizarEnderecoDTO;
 import salao.online.application.dtos.dtosDeEndereco.BuscarEnderecoDoProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalAutenticadoDTO;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
@@ -187,6 +189,22 @@ public class ProfissionalResource {
             return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {
             return Response.status(500).entity("Erro ao atualizar endereço.").build();
+        }
+    }
+
+    @GET
+    @Path("/autenticado")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("PROFISSIONAL")
+    public Response buscarAutenticado(@Context JsonWebToken jwt) throws ValidacaoException {
+        String email = jwt.getSubject();
+        try {
+            BuscarProfissionalAutenticadoDTO dto = profissionalService.buscarProfissionalAutenticado(email);
+            return Response.ok(dto).build();
+        } catch (ValidacaoException ex) {
+            return Response.status(404).entity(ex.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(500).entity("Erro ao buscar profissional.").build();
         }
     }
 }

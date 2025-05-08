@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import salao.online.application.dtos.dtosDeEndereco.AtualizarEnderecoDTO;
 import salao.online.application.dtos.dtosDeEndereco.BuscarEnderecoDoProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalAutenticadoDTO;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
@@ -183,7 +184,8 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     }
 
     @Override
-    public BuscarEnderecoDoProfissionalDTO BuscarEnderecoDoProfissionalDTO(UUID idProfissional) throws ValidacaoException {
+    public BuscarEnderecoDoProfissionalDTO BuscarEnderecoDoProfissionalDTO(UUID idProfissional)
+            throws ValidacaoException {
         Profissional profissional = profissionalRepository.findByIdOptional(idProfissional)
                 .orElseThrow(() -> new ValidacaoException(
                         MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
@@ -195,6 +197,14 @@ public class ProfissionalServiceImpl implements ProfissionalService {
         logger.info("Validando se o Cliente existe");
         buscarProfissionalPorId(idProfissional);
         profissionalRepository.deletarProfissional(idProfissional);
+    }
+
+    @Override
+    public BuscarProfissionalAutenticadoDTO buscarProfissionalAutenticado(String email) throws ValidacaoException {
+        Profissional entity = profissionalRepository
+                .buscarPeloEmail(email)
+                .orElseThrow(() -> new ValidacaoException("Profissional não encontrado para o e-mail informado."));
+        return profissionalMapper.toAutenticadoDto(entity);
     }
 
     private BuscarProfissionalDTO getBuscarProfissionalDTO(Profissional profissional) {

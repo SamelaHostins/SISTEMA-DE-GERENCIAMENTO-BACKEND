@@ -6,6 +6,7 @@ import java.util.UUID;
 import salao.online.application.dtos.dtosDeEndereco.AtualizarEnderecoDTO;
 import salao.online.application.dtos.dtosDeEndereco.BuscarEnderecoDoProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalAutenticadoDTO;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
@@ -31,4 +32,6 @@ public interface ProfissionalService {
     BuscarEnderecoDoProfissionalDTO BuscarEnderecoDoProfissionalDTO(UUID idProfissional) throws ValidacaoException;
 
     void deletarProfissional(UUID idProfissional) throws ValidacaoException;
+
+    BuscarProfissionalAutenticadoDTO buscarProfissionalAutenticado(String email) throws ValidacaoException;
 }

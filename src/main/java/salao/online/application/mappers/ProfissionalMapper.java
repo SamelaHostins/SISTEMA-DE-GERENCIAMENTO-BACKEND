@@ -6,6 +6,7 @@ import org.mapstruct.Named;
 
 import salao.online.application.dtos.dtosDeEndereco.BuscarEnderecoDoProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalAutenticadoDTO;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
@@ -54,4 +55,9 @@ public interface ProfissionalMapper {
     @Mapping(source = "idProfissional", target = "idProfissional")
     @Mapping(source = "endereco", target = "endereco")
     BuscarEnderecoDoProfissionalDTO fromEntityToBuscarEnderecoDto(Profissional entity);
+
+    @Mapping(source = "idProfissional", target = "idProfissional")
+    @Mapping(source = "email", target = "email")
+    BuscarProfissionalAutenticadoDTO toAutenticadoDto(Profissional entity);
+
 }

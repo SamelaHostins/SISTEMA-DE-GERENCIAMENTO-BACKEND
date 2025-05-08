@@ -95,24 +95,24 @@ public class ImagemResource {
     }
 
     @GET
-    @Path("/perfil")
+    @Path("/perfil/{idUsuario}")
+    @Produces(MediaType.APPLICATION_JSON)
     @PermitAll
-    public Response buscarImagemDePerfil(@Context SecurityContext securityContext) {
-        UUID idUsuario = UUID.fromString(securityContext.getUserPrincipal().getName());
+    public Response buscarImagemDePerfil(@PathParam("idUsuario") UUID idUsuario) {
         ImagemDTO imagem = imagemService.buscarImagemDePerfil(idUsuario);
 
         if (imagem == null) {
-            return Response.status(Response.Status.NO_CONTENT).build();
+            return Response.status(Response.Status.NO_CONTENT).build(); 
         }
 
         return Response.ok(imagem).build();
     }
 
     @GET
-    @Path("/portfolio")
+    @Path("/portfolio/{idUsuario}")
+    @Produces(MediaType.APPLICATION_JSON)
     @PermitAll
-    public Response buscarFotosDoPortfolio(@Context SecurityContext securityContext) {
-        UUID idUsuario = UUID.fromString(securityContext.getUserPrincipal().getName());
+    public Response buscarFotosDoPortfolio(@PathParam("idUsuario") UUID idUsuario) {
         List<ImagemDTO> imagens = imagemService.buscarFotosDoPortfolio(idUsuario);
         return Response.ok(imagens).build();
     }

@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import io.smallrye.common.constraint.NotNull;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(schema = "salao", name = "endereco")
@@ -24,27 +25,30 @@ public class Endereco {
     @GeneratedValue(generator = "UUID", strategy = GenerationType.AUTO)
     @Column(name = "id_endereco")
     @NotNull
-    private @Getter UUID idEndereco;
+    private @Setter @Getter UUID idEndereco;
 
     @NotNull
-    private @Getter String nome;
+    private @Setter @Getter String nome;
 
     @NotEmpty
-    private @Getter String rua;
+    private @Setter @Getter String rua;
 
     @NotEmpty
-    private @Getter String bairro;
+    private @Setter @Getter String bairro;
 
     @NotEmpty
-    private @Getter String cidade;
+    private @Setter @Getter String cidade;
 
     @NotEmpty
-    private @Getter int numero;
+    private @Setter @Getter String estado;
+
+    @NotEmpty
+    private @Setter @Getter int numero;
 
     @NotNull
-    private @Getter String cep;
+    private @Setter @Getter String cep;
 
-    private @Getter String complemento;
+    private @Setter @Getter String complemento;
 
     public Endereco(String nome, String rua, String bairro, String cidade, int numero, String cep, String complemento) {
         this.nome = nome;

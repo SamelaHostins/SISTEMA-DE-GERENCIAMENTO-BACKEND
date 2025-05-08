@@ -46,7 +46,7 @@ public class Profissional extends Informacao {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
     private @Getter List<Estoque> estoques = new ArrayList<>();
 
-    public Profissional(String nome, String sobrenome, LocalDate dataNascimento, String email, String telefone, 
+    public Profissional(String nome, String sobrenome, LocalDate dataNascimento, String email, String telefone,
             String usuario, String senha, String documento, String instagram, String profissao, Endereco endereco,
             List<Imagem> imagens, List<Servico> servicos, List<Estoque> estoques) {
         super(nome, sobrenome, dataNascimento, email, telefone, usuario, senha, documento);
@@ -58,19 +58,30 @@ public class Profissional extends Informacao {
         this.estoques = estoques;
     }
 
-    public Profissional atualizarProfissional(String novoInstagram, String novaProfissao, String novoNome, 
-            String novoSobrenome, LocalDate novaDataNascimento, String novoEmail, String novoTelefone, 
-            String novaSenha, String novoDocumento, Endereco novoEndereco) {
+    public Profissional atualizarProfissional(String novoInstagram, String novaProfissao, String novoNome,
+            String novoSobrenome, String novoEmail, String novoTelefone,
+            String novaSenha) {
         setInstagram(novoInstagram);
         setProfissao(novaProfissao);
         setNome(novoNome);
         setSobrenome(novoSobrenome);
-        setDataNascimento(novaDataNascimento);
         setEmail(novoEmail);
         setTelefone(novoTelefone);
         setSenha(novaSenha);
-        setDocumento(novoDocumento);
-        setEndereco(novoEndereco);
         return this;
     }
+
+    public void atualizarEndereco(String rua, int numero, String bairro, String cidade, String estado, String cep, String complemento) {
+        if (this.endereco == null) {
+            this.endereco = new Endereco();
+        }
+        this.endereco.setRua(rua);
+        this.endereco.setNumero(numero);
+        this.endereco.setBairro(bairro);
+        this.endereco.setCidade(cidade);
+        this.endereco.setEstado(estado);
+        this.endereco.setCep(cep);
+        this.endereco.setComplemento(complemento);
+    }
+
 }

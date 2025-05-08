@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.BuscarEnderecoDoProfissional;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
@@ -24,11 +25,20 @@ public interface ProfissionalMapper {
 
     BuscarProfissionalDTO fromEntityToBuscarDto(Profissional entity);
 
+    @Mapping(source = "idProfissional", target = "idProfissional")
+    @Mapping(source = "nome", target = "nome")
+    @Mapping(source = "sobrenome", target = "sobrenome")
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "telefone", target = "telefone")
+    @Mapping(source = "senha", target = "senha")
+    @Mapping(source = "instagram", target = "instagram")
+    @Mapping(source = "profissao", target = "profissao")
+    AtualizarProfissionalDTO fromEntityToAtualizarDto(Profissional entity);
+
     @Mapping(target = "idProfissional", ignore = true)
     @Mapping(target = "usuario", source = "usuario")
     @Mapping(target = "email", source = "email")
     @Mapping(target = "telefone", source = "telefone")
-    @Mapping(source = "servicos", target = "servicos")
     @Mapping(source = "imagens", target = "imagens")
     ListarProfissionalDTO fromEntityToListarDto(Profissional entity);
 

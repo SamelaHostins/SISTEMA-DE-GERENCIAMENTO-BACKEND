@@ -3,7 +3,7 @@ package salao.online.application.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import salao.online.application.dtos.EnderecoDTO;
+import salao.online.application.dtos.dtosDeEndereco.EnderecoDTO;
 import salao.online.domain.entities.Endereco;
 
 @Mapper(componentModel = "cdi")  

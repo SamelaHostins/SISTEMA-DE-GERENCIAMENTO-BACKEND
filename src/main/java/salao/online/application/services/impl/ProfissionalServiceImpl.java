@@ -10,6 +10,7 @@ import io.vertx.core.impl.logging.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import salao.online.application.dtos.dtosDeEndereco.AtualizarEnderecoDTO;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.BuscarEnderecoDoProfissional;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
@@ -106,9 +107,45 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     }
 
     @Override
-    public AtualizarProfissionalDTO atualizarProfissional(AtualizarProfissionalDTO profissionalDTO)
-            throws ValidacaoException {
-        throw new UnsupportedOperationException("Unimplemented method 'atualizarProfissional'");
+    @Transactional
+    public AtualizarProfissionalDTO atualizarProfissional(AtualizarProfissionalDTO dto) throws ValidacaoException {
+        Profissional profissional = profissionalRepository.findByIdOptional(dto.getIdProfissional())
+                .orElseThrow(() -> new ValidacaoException("Profissional não encontrado."));
+
+        profissional.atualizarProfissional(
+                dto.getInstagram(),
+                dto.getProfissao(),
+                dto.getNome(),
+                dto.getSobrenome(),
+                dto.getEmail(),
+                dto.getTelefone(),
+                dto.getSenha());
+
+        logger.info("Salvando profissional atualizado");
+        profissionalRepository.persistAndFlush(profissional);
+
+        return profissionalMapper.fromEntityToAtualizarDto(profissional);
+    }
+
+    @Override
+    @Transactional
+    public void atualizarEndereco(UUID idProfissional, AtualizarEnderecoDTO dto) throws ValidacaoException {
+        logger.info("Validando se o Profissional existe para atualizar endereco");
+        Profissional profissional = profissionalRepository.findByIdOptional(idProfissional)
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
+
+        profissional.atualizarEndereco(
+                dto.getRua(),
+                dto.getNumero(),
+                dto.getBairro(),
+                dto.getCidade(),
+                dto.getEstado(),
+                dto.getCep(),
+                dto.getComplemento());
+
+        logger.info("Atualizando endereço no banco de dados");
+        profissionalRepository.persistAndFlush(profissional);
     }
 
     @Override
@@ -163,14 +200,12 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     private BuscarProfissionalDTO getBuscarProfissionalDTO(Profissional profissional) {
         BuscarProfissionalDTO profissionalDTO = profissionalMapper.fromEntityToBuscarDto(profissional);
         profissionalDTO.setServicos(servicoMapper.fromEntityListToDtoList(profissional.getServicos()));
-        profissionalDTO.setEstoques(estoqueMapper.fromEntityListToDtoList(profissional.getEstoques()));
         profissionalDTO.setImagens(imagemMapper.fromEntityListToProfissionalDtoList(profissional.getImagens()));
         return profissionalDTO;
     }
 
     private ListarProfissionalDTO getListarProfissionalDTO(Profissional profissional) {
         ListarProfissionalDTO profissionalDTO = profissionalMapper.fromEntityToListarDto(profissional);
-        profissionalDTO.setServicos(servicoMapper.fromEntityListToDtoList(profissional.getServicos()));
         return profissionalDTO;
     }
 

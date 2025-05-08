@@ -8,6 +8,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -42,6 +43,7 @@ public class ProdutoResource {
     @POST
     @Transactional
     @Path("/cadastrar")
+    @RolesAllowed("PROFISSIONAL")
     public Response cadastrarProduto(@Valid @RequestBody CriarProdutoDTO dto) {
         try {
             LOG.info("Requisição recebida - Cadastrar Profissional");
@@ -57,6 +59,7 @@ public class ProdutoResource {
     @APIResponse(responseCode = "404", description = "O produto não foi encontrado")
     @GET
     @Path("/buscar/{id_produto}")
+    @RolesAllowed("PROFISSIONAL")
     public Response buscarProdutoPorId(@PathParam("id_produto") UUID idProduto)
             throws ValidacaoException {
         try {
@@ -76,6 +79,7 @@ public class ProdutoResource {
     @DELETE
     @Transactional
     @Path("/deletar/{id_produto}")
+    @RolesAllowed("PROFISSIONAL")
     public Response deletarProduto(@PathParam("id_produto") UUID idProduto)
             throws ValidacaoException {
         try {
@@ -94,6 +98,7 @@ public class ProdutoResource {
     @APIResponse(responseCode = "500", description = "Erro no servidor")
     @GET
     @Path("/listar-produtos/{id_estoque}")
+    @RolesAllowed("PROFISSIONAL")
     public Response listarProdutosDoEstoque(@PathParam("id_estoque") UUID idEstoque) {
         try {
             LOG.info("Requisição recebida - listar os produtos de um estoque");

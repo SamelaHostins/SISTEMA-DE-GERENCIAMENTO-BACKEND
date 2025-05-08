@@ -7,9 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import salao.online.application.dtos.EnderecoDTO;
 import salao.online.application.dtos.dtosDeImagem.ImagensDoProfissionalDTO;
-import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,8 +24,8 @@ public class ListarProfissionalDTO {
     private String usuario;
     private String email;
     private String telefone;
-    private EnderecoDTO endereco;
-    private List<ServicoDTO> servicos;
+    private String documento;
+    private String senha;
     private List<ImagensDoProfissionalDTO> imagens; 
     
 }

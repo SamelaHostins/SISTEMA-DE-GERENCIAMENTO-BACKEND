@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.reactive.RestForm;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
@@ -19,8 +19,10 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import salao.online.application.dtos.dtosDeImagem.ImagemDTO;
 import salao.online.application.services.interfaces.ImagemService;
 
@@ -33,86 +35,84 @@ public class ImagemResource {
     @Inject
     ImagemService imagemService;
 
+    @Inject
+    JsonWebToken jwt;
+
     private static final org.jboss.logging.Logger LOG = org.jboss.logging.Logger.getLogger(ImagemResource.class);
 
     @POST
     @Transactional
-    @Path("/upload/{tipoImagem}/{idUsuario}/{ehProfissional}")
+    @Path("/upload/{tipoImagem}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @RolesAllowed({ "CLIENTE", "PROFISSIONAL" })
     public Response uploadImagem(
             @RestForm("imageBytes") InputStream imageBytes,
             @PathParam("tipoImagem") int tipoImagem,
-            @PathParam("idUsuario") UUID idUsuario,
-            @PathParam("ehProfissional") boolean ehProfissional) {
+            @Context SecurityContext securityContext) {
+
         try {
             if (imageBytes == null) {
                 return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("Parâmetro inválido: certifique-se de fornecer a imagem.")
+                        .entity("Parâmetro inválido: forneça a imagem.")
                         .build();
             }
 
-            // Chama o serviço para fazer o upload da imagem
+            UUID idUsuario = UUID.fromString(securityContext.getUserPrincipal().getName());
+            boolean ehProfissional = jwt.getGroups().contains("PROFISSIONAL");
+
             String url = imagemService.uploadImagem(imageBytes, tipoImagem, idUsuario, ehProfissional);
 
             if (url != null) {
-                LOG.info("Upload realizado com sucesso. URL: {}" + url);
+                LOG.info("Upload realizado com sucesso. URL: " + url);
                 return Response.ok(Map.of("url", url)).build();
             } else {
-                LOG.error("Falha ao realizar o upload da imagem.");
-                return Response.status(Response.Status.BAD_REQUEST).entity("Falha ao realizar o upload da imagem.")
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("Falha ao realizar o upload da imagem.")
                         .build();
             }
-        } catch (IllegalArgumentException e) {
-            LOG.error("Erro de validação: ", e);
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (Exception e) {
-            LOG.error("Erro ao fazer upload da imagem: ", e);
+            LOG.error("Erro ao fazer upload da imagem", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Erro ao realizar o upload da imagem.")
                     .build();
         }
     }
 
-    @Operation(summary = "Excluir imagem", description = "Exclui uma imagem do Cloudinary e do banco de dados.")
-    @APIResponse(responseCode = "200", description = "Imagem excluída com sucesso.")
-    @APIResponse(responseCode = "404", description = "Imagem não encontrada.")
-    @APIResponse(responseCode = "500", description = "Erro ao processar a requisição.")
     @DELETE
     @Transactional
     @Path("/excluir/{idImagem}")
+    @RolesAllowed({ "CLIENTE", "PROFISSIONAL" })
     public Response excluirImagem(@PathParam("idImagem") UUID idImagem) {
         try {
-            LOG.info("Requisição recebida - Excluir imagem com ID: {}" + idImagem);
             imagemService.excluirImagem(idImagem);
-            return Response.status(200).entity("Imagem excluída com sucesso.").build();
+            return Response.ok("Imagem excluída com sucesso.").build();
         } catch (IllegalArgumentException e) {
-            LOG.error("Erro ao excluir imagem: {}" + e.getMessage());
             return Response.status(404).entity(e.getMessage()).build();
         } catch (Exception ex) {
-            LOG.error("Erro inesperado ao excluir imagem: {}", ex.getMessage(), ex);
             return Response.status(500).entity("Erro ao excluir imagem.").build();
         }
     }
 
     @GET
-    @Path("/perfil/{idUsuario}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response buscarImagemDePerfil(@PathParam("idUsuario") UUID idUsuario) {
+    @Path("/perfil")
+    @RolesAllowed({ "CLIENTE", "PROFISSIONAL" })
+    public Response buscarImagemDePerfil(@Context SecurityContext securityContext) {
+        UUID idUsuario = UUID.fromString(securityContext.getUserPrincipal().getName());
         ImagemDTO imagem = imagemService.buscarImagemDePerfil(idUsuario);
 
         if (imagem == null) {
-            return Response.status(Response.Status.NO_CONTENT).build(); // Retorna 204 se não houver imagem
+            return Response.status(Response.Status.NO_CONTENT).build();
         }
 
         return Response.ok(imagem).build();
     }
 
     @GET
-    @Path("/portfolio/{idUsuario}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response buscarFotosDoPortfolio(@PathParam("idUsuario") UUID idUsuario) {
+    @Path("/portfolio")
+    @RolesAllowed("PROFISSIONAL")
+    public Response buscarFotosDoPortfolio(@Context SecurityContext securityContext) {
+        UUID idUsuario = UUID.fromString(securityContext.getUserPrincipal().getName());
         List<ImagemDTO> imagens = imagemService.buscarFotosDoPortfolio(idUsuario);
         return Response.ok(imagens).build();
     }
-
 }

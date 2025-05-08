@@ -1,4 +1,4 @@
-package salao.online.application.dtos;
+package salao.online.application.dtos.dtosDeEndereco;
 
 import java.util.UUID;
 

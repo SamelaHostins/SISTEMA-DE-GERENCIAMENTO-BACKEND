@@ -3,11 +3,13 @@ package salao.online.application.resources;
 import java.util.List;
 import java.util.UUID;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -21,6 +23,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import salao.online.application.dtos.dtosDeEndereco.AtualizarEnderecoDTO;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.BuscarEnderecoDoProfissional;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
@@ -39,145 +42,151 @@ public class ProfissionalResource {
     @Inject
     ProfissionalService profissionalService;
 
+    @Inject
+    JsonWebToken jwt;
+
     private static final org.jboss.logging.Logger LOG = org.jboss.logging.Logger.getLogger(ProfissionalResource.class);
 
-    @Operation(summary = "Cadastrando um Profissional")
-    @APIResponse(responseCode = "200", description = "Profissional criado com sucesso!")
-    @APIResponse(responseCode = "500", description = "Ocorreu um erro na requisição.")
     @POST
     @Transactional
     @Path("/cadastrar")
+    @PermitAll
+    @Operation(summary = "Cadastrar Profissional")
     public Response cadastrarProfissional(@Valid @RequestBody CriarProfissionalDTO dto) {
         try {
             LOG.info("Requisição recebida - Cadastrar Profissional");
             CriarProfissionalDTO profissionalDTO = profissionalService.cadastrarProfissional(dto);
-            return Response.status(200).entity(profissionalDTO).build();
+            return Response.ok(profissionalDTO).build();
         } catch (Exception ex) {
             LOG.error("Erro ao cadastrar profissional: {}", ex.getMessage(), ex);
             return Response.status(500).entity("Erro ao cadastrar profissional: " + ex.getMessage()).build();
         }
     }
 
-    @Operation(summary = "Buscando um todos os dados de um Profissional")
-    @APIResponse(responseCode = "200", description = "Busca realizada com sucesso!")
-    @APIResponse(responseCode = "404", description = "O Profissional não foi encontrado")
     @GET
     @Path("/buscar/{id_profissional}")
+    @PermitAll
+    @Operation(summary = "Buscar dados públicos de um Profissional")
     public Response buscarProfissionalPorId(@PathParam("id_profissional") UUID idProfissional)
             throws ValidacaoException {
         try {
-            LOG.info("Requisição recebida - Buscar o Profissional");
-            BuscarProfissionalDTO profissionalDTO = profissionalService.buscarProfissionalPorId(idProfissional);
-            return Response.status(200).entity(profissionalDTO).build();
+            LOG.info("Buscar Profissional por ID público");
+            BuscarProfissionalDTO dto = profissionalService.buscarProfissionalPorId(idProfissional);
+            return Response.ok(dto).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {
-            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+            return Response.status(500).entity("Erro interno ao buscar profissional.").build();
         }
     }
 
-    @Operation(summary = "Lista os dados básicos do Profissional")
-    @APIResponse(responseCode = "200", description = "Busca realizada com sucesso!")
-    @APIResponse(responseCode = "404", description = "O Profissional não foi encontrado")
-    @GET
-    @Path("/listar/{id_profissional}")
-    public Response listarProfissionalPorId(@PathParam("id_profissional") UUID idProfissional)
-            throws ValidacaoException {
-        try {
-            LOG.info("Requisição recebida - Listar o Profissional");
-            ListarProfissionalDTO profissionalDTO = profissionalService.listarProfissionalPorId(idProfissional);
-            return Response.status(200).entity(profissionalDTO).build();
-        } catch (ValidacaoException ex) {
-            return Response.status(404).entity(ex.getMessage()).build();
-        } catch (Exception ex) {
-            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
-        }
-    }
-
-    @Operation(summary = "Listar todos os profissionais", description = "Retorna uma lista de todos os profissionais cadastrados com seus serviços e imagens.")
-    @APIResponse(responseCode = "200", description = "Lista de profissionais retornada com sucesso.")
-    @APIResponse(responseCode = "500", description = "Erro ao processar a requisição.")
     @GET
     @Path("/listar")
+    @PermitAll
+    @Operation(summary = "Listar todos os profissionais")
     public Response listarProfissionais() {
         try {
-            LOG.info("Requisição recebida - Listar todos os profissionais");
-            List<ListarProfissionalDTO> profissionais = profissionalService.listarTodosProfissionais();
-            return Response.ok(profissionais).build();
+            LOG.info("Listando todos os profissionais");
+            List<ListarProfissionalDTO> lista = profissionalService.listarTodosProfissionais();
+            return Response.ok(lista).build();
         } catch (Exception ex) {
-            LOG.error("Erro ao listar profissionais: {}", ex.getMessage(), ex);
-            return Response.status(500).entity("Ocorreu um erro ao listar profissionais.").build();
+            return Response.status(500).entity("Erro ao listar profissionais.").build();
         }
     }
 
-    @Operation(summary = "Pesquisa todos os profissionais", description = "Retorna uma pesquisa de todos os profissionais cadastrados com seus serviços e imagens.")
-    @APIResponse(responseCode = "200", description = "Pesquisa de profissionais retornada com sucesso.")
-    @APIResponse(responseCode = "500", description = "Erro ao processar a requisição.")
     @GET
     @Path("/pesquisar")
-    public Response PesquisarProfissionais() {
+    @PermitAll
+    @Operation(summary = "Pesquisar profissionais")
+    public Response pesquisarProfissionais() {
         try {
-            LOG.info("Requisição recebida - Pesquisar todos os profissionais");
-            List<PesquisaProfissionalDTO> profissionais = profissionalService.pesquisarTodosProfissionais();
-            return Response.ok(profissionais).build();
+            LOG.info("Pesquisando profissionais");
+            List<PesquisaProfissionalDTO> lista = profissionalService.pesquisarTodosProfissionais();
+            return Response.ok(lista).build();
         } catch (Exception ex) {
-            LOG.error("Erro ao pesquisar profissionais: {}", ex.getMessage(), ex);
-            return Response.status(500).entity("Ocorreu um erro ao pesquisar profissionais.").build();
+            return Response.status(500).entity("Erro ao pesquisar profissionais.").build();
         }
     }
 
     @GET
-    @Path("endereco/{id}")
-    @Operation(summary = "Buscar endereço do profissional por ID")
-    @APIResponse(responseCode = "200", description = "Endereço retornado com sucesso")
-    public Response buscarEndereco(@PathParam("id") UUID idProfissional) throws ValidacaoException {
+    @Path("/listar")
+    @RolesAllowed("PROFISSIONAL")
+    @Operation(summary = "Listar dados do profissional logado")
+    public Response listarProfissionalPorId() {
         try {
-            LOG.info("Requisição recebida - Buscar Endereço do Profissional");
-            BuscarEnderecoDoProfissional endereco = profissionalService.buscarEnderecoDoProfissional(idProfissional);
-            return Response.ok(endereco).build();
+            UUID idProfissional = UUID.fromString(jwt.getSubject());
+            ListarProfissionalDTO dto = profissionalService.listarProfissionalPorId(idProfissional);
+            return Response.ok(dto).build();
+        } catch (ValidacaoException ex) {
+            return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {
-            LOG.error("Erro ao buscar o endereço", ex.getMessage(), ex);
-            return Response.status(500).entity("Ocorreu um erro ao buscar o endereço do profissional.").build();
+            return Response.status(500).entity("Erro ao listar profissional.").build();
         }
     }
 
-    @Operation(summary = "Deletando o cadastro de um Profissional")
-    @APIResponse(responseCode = "200", description = "Cadastro deletado com sucesso!")
-    @APIResponse(responseCode = "404", description = "O Profissional não foi encontrado")
+    @GET
+    @Path("/endereco")
+    @RolesAllowed("PROFISSIONAL")
+    @Operation(summary = "Buscar endereço do profissional logado")
+    public Response buscarEndereco() {
+        try {
+            UUID idProfissional = UUID.fromString(jwt.getSubject());
+            BuscarEnderecoDoProfissional dto = profissionalService.buscarEnderecoDoProfissional(idProfissional);
+            return Response.ok(dto).build();
+        } catch (Exception ex) {
+            return Response.status(500).entity("Erro ao buscar endereço.").build();
+        }
+    }
+
     @DELETE
+    @Path("/deletar")
+    @RolesAllowed("PROFISSIONAL")
     @Transactional
-    @Path("/deletar/{id_profissional}")
-    public Response deletarProfissional(@PathParam("id_profissional") UUID idProfissional)
-            throws ValidacaoException {
+    @Operation(summary = "Deletar cadastro do profissional logado")
+    public Response deletarProfissional() {
         try {
-            LOG.info("Requisição recebida - Deletar o cadastro do Profissional");
+            UUID idProfissional = UUID.fromString(jwt.getSubject());
             profissionalService.deletarProfissional(idProfissional);
-            return Response.status(200).build();
+            return Response.ok().build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {
-            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+            return Response.status(500).entity("Erro ao deletar profissional.").build();
         }
     }
 
-    // ainda não está pronto, mas pode add ele no front
-    @Operation(summary = "Atualizando o cadastro de um Profissional")
-    @APIResponse(responseCode = "200", description = "Cadastro atualizado com sucesso!")
-    @APIResponse(responseCode = "404", description = "O Profissional não foi encontrado")
     @PUT
+    @Path("/atualizar")
+    @RolesAllowed("PROFISSIONAL")
     @Transactional
-    @Path("/atualizar/{id_profissional}")
-    public Response atualizarProfissional(@RequestBody AtualizarProfissionalDTO profissionalDTO)
-            throws ValidacaoException {
+    @Operation(summary = "Atualizar cadastro do profissional logado")
+    public Response atualizarProfissional(@RequestBody AtualizarProfissionalDTO dto) {
         try {
-            LOG.info("Requisição recebida - Atualizar o cadastro do Profissional");
-            AtualizarProfissionalDTO profissional = profissionalService.atualizarProfissional(profissionalDTO);
-            return Response.status(200).entity(profissional).build();
+            UUID idProfissional = UUID.fromString(jwt.getSubject());
+            dto.setIdProfissional(idProfissional);
+            AtualizarProfissionalDTO atualizado = profissionalService.atualizarProfissional(dto);
+            return Response.ok(atualizado).build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {
-            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+            return Response.status(500).entity("Erro ao atualizar profissional.").build();
         }
     }
 
+    @PUT
+    @Path("/endereco/atualizar")
+    @RolesAllowed("PROFISSIONAL")
+    @Transactional
+    @Operation(summary = "Atualizar endereço do profissional logado")
+    public Response atualizarEnderecoProfissional(@RequestBody AtualizarEnderecoDTO dto) {
+        try {
+            UUID idProfissional = UUID.fromString(jwt.getSubject());
+            profissionalService.atualizarEndereco(idProfissional, dto);
+            return Response.ok("Endereço atualizado com sucesso.").build();
+        } catch (ValidacaoException ex) {
+            return Response.status(404).entity(ex.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(500).entity("Erro ao atualizar endereço.").build();
+        }
+    }
 }

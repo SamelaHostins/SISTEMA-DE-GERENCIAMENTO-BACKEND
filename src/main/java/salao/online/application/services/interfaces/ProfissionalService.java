@@ -3,6 +3,7 @@ package salao.online.application.services.interfaces;
 import java.util.List;
 import java.util.UUID;
 
+import salao.online.application.dtos.dtosDeEndereco.AtualizarEnderecoDTO;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.BuscarEnderecoDoProfissional;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
@@ -24,6 +25,8 @@ public interface ProfissionalService {
     List<ListarProfissionalDTO> listarTodosProfissionais();
 
     List<PesquisaProfissionalDTO> pesquisarTodosProfissionais();
+
+    void atualizarEndereco(UUID idProfissional, AtualizarEnderecoDTO dto) throws ValidacaoException;
 
     BuscarEnderecoDoProfissional buscarEnderecoDoProfissional(UUID idProfissional) throws ValidacaoException;
 

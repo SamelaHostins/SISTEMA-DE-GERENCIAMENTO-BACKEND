@@ -44,15 +44,13 @@ public class Cliente extends Informacao {
     }
 
     public Cliente atualizarCliente(String novoNome, String novoSobrenome,
-            LocalDate novaDataNascimento, String novoEmail, String novoTelefone, String novaSenha,
-            String novoDocumento) {
+            LocalDate novaDataNascimento, String novoEmail, String novoTelefone, String novaSenha) {
         setNome(novoNome);
         setSobrenome(novoSobrenome);
         setDataNascimento(novaDataNascimento);
         setEmail(novoEmail);
         setTelefone(novoTelefone);
         setSenha(novaSenha);
-        setDocumento(novoDocumento);
         return this;
     }
 }

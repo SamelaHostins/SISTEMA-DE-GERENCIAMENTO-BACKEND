@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import salao.online.application.dtos.EnderecoDTO;
+import salao.online.application.dtos.dtosDeEndereco.EnderecoDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor

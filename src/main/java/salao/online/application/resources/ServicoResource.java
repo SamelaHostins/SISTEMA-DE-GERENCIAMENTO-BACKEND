@@ -8,6 +8,8 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
@@ -45,6 +47,7 @@ public class ServicoResource {
     @POST
     @Transactional
     @Path("/cadastrar")
+    @RolesAllowed("PROFISSIONAL")
     public Response cadastrarServico(@RequestBody CriarServicoDTO dto) {
         try {
             LOG.info("Requisição recebida - Cadastrar Servico");
@@ -62,8 +65,7 @@ public class ServicoResource {
     @APIResponse(responseCode = "500", description = "Erro interno no servidor.")
     @PUT
     @Path("/servicos/{id_servico}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("PROFISSIONAL")
     public Response atualizarServico(
             @PathParam("id_servico") UUID idServico,
             AtualizarServicoDTO servicoDTO) {
@@ -94,6 +96,7 @@ public class ServicoResource {
     @DELETE
     @Transactional
     @Path("/deletar/{id_servico}")
+    @RolesAllowed("PROFISSIONAL")
     public Response deletarServico(@PathParam("id_servico") UUID idservico)
             throws ValidacaoException {
         try {
@@ -113,6 +116,7 @@ public class ServicoResource {
     @APIResponse(responseCode = "200", description = "Busca realizada com sucesso!")
     @APIResponse(responseCode = "500", description = "Erro no servidor")
     @GET
+    @PermitAll
     @Path("/listar-servicos/{id_profissional}/{tipo_servico}")
     public Response listarServicosDoProfissional(
             @PathParam("id_profissional") UUID idProfissional,
@@ -136,6 +140,7 @@ public class ServicoResource {
     @APIResponse(responseCode = "200", description = "Busca realizada com sucesso!")
     @APIResponse(responseCode = "500", description = "Erro no servidor")
     @GET
+    @PermitAll
     @Path("/todos-os-servicos/{id_profissional}")
     public Response listarTodosOsServicosDoProfissional(
             @PathParam("id_profissional") UUID idProfissional) {
@@ -154,6 +159,7 @@ public class ServicoResource {
     @APIResponse(responseCode = "500", description = "Erro no servidor")
     @GET
     @Path("/pesquisar")
+    @PermitAll
     public List<PesquisaServicoDTO> pesquisaTodosServicos() {
         return servicoService.pesquisarTodosServicos();
     }
@@ -163,6 +169,7 @@ public class ServicoResource {
     @APIResponse(responseCode = "500", description = "Erro no servidor")
     @GET
     @Path("/pesquisarLocal")
+    @PermitAll
     public List<PesquisaLocalDTO> pesquisarTodasAsCidadesComServicos() {
         return servicoService.pesquisarTodasAsCidadesComServicos();
     }

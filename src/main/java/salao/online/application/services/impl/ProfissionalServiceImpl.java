@@ -189,7 +189,8 @@ public class ProfissionalServiceImpl implements ProfissionalService {
 
     @Override
     public List<PesquisaProfissionalDTO> pesquisarTodosProfissionais() {
-        List<Profissional> profissionais = profissionalRepository.findAll().list();
+        // 1) busca só profissionais com imagem de perfil
+        List<Profissional> profissionais = profissionalRepository.pesquisarTodosComImagemDePerfil();
         return profissionais.stream()
                 .map(profissionalMapper::fromEntityToPesquisaDto)
                 .collect(Collectors.toList());
@@ -223,24 +224,28 @@ public class ProfissionalServiceImpl implements ProfissionalService {
 
     @Override
     public List<ListarProfissionalEmDestaqueDTO> listarProfissionaisEmDestaque() {
-        List<Profissional> profissionais = profissionalRepository.findAll().list();
+        // 1) Já retorna só os 9 primeiros com imagem de perfil
+        List<Profissional> profissionais = profissionalRepository.listarComImagemDePerfil(9);
 
+        // 2) Mapeia para DTO, priorizando portfólio → perfil
         return profissionais.stream()
-                .map(profissional -> {
-                    String urlImagem = null;
-                    List<ImagemDTO> imagens = imagemService.buscarFotosDoPortfolio(profissional.getIdProfissional());
+                .map(p -> {
+                    UUID id = p.getIdProfissional();
 
-                    if (imagens != null && !imagens.isEmpty()) {
-                        urlImagem = imagens.get(0).getUrlImagem();
+                    // usará a ft do portfolio
+                    List<ImagemDTO> imagensPortfolio = imagemService.buscarFotosDoPortfolio(id);
+                    String urlImagem;
+                    if (imagensPortfolio != null && !imagensPortfolio.isEmpty()) {
+                        urlImagem = imagensPortfolio.get(0).getUrlImagem();
                     } else {
-                        ImagemDTO imagemPerfil = imagemService.buscarImagemDePerfil(profissional.getIdProfissional());
-                        if (imagemPerfil != null) {
-                            urlImagem = imagemPerfil.getUrlImagem();
-                        }
+                        // se ele não tem, usará a de perfil
+                        ImagemDTO imgPerfil = imagemService.buscarImagemDePerfil(id);
+                        urlImagem = imgPerfil.getUrlImagem();
                     }
 
-                    ListarProfissionalEmDestaqueDTO dto = profissionalMapper.fromEntityToDestaqueDto(profissional);
-                    dto.setUrlImagem(urlImagem); // set manual da imagem
+                    // monta DTO via mapper e injeta a URL
+                    ListarProfissionalEmDestaqueDTO dto = profissionalMapper.fromEntityToDestaqueDto(p);
+                    dto.setUrlImagem(urlImagem);
                     return dto;
                 })
                 .collect(Collectors.toList());

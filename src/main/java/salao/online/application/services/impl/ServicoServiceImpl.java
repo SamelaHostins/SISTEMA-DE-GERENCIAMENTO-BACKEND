@@ -2,6 +2,7 @@ package salao.online.application.services.impl;
 
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -151,14 +152,26 @@ public class ServicoServiceImpl implements ServicoService {
 
     @Override
     public List<PesquisaLocalDTO> pesquisarTodasAsCidadesComServicos() {
+        // 1) pega todos os serviços
         List<Servico> servicos = servicoRepository.findAll().list();
-        Set<String> idsUnicos = servicos.stream()
-                .map(servico -> servico.getProfissional().getIdProfissional().toString())
+
+        // 2) pega o conjunto de IDs de profissionais que têm foto de perfil
+        Set<UUID> profComPerfil = profissionalRepository
+                .pesquisarTodosComImagemDePerfil()
+                .stream()
+                .map(Profissional::getIdProfissional)
                 .collect(Collectors.toSet());
 
+        // 3) Para cada serviço, filtra apenas os de profissionais com foto de perfil,
+        // converte para DTO e garante apenas uma entrada por profissional.
+        Set<UUID> vistos = new HashSet<>();
         return servicos.stream()
+                // filtra só serviços de profissionais com perfil
+                .filter(s -> profComPerfil.contains(s.getProfissional().getIdProfissional()))
+                // converte para o DTO de local
                 .map(localMapper::fromEntityToPesquisaLocalDto)
-                .filter(dto -> idsUnicos.remove(dto.getIdProfissional().toString()))
+                // filtra pra deixar apenas uma entrada por profissional
+                .filter(dto -> vistos.add(dto.getIdProfissional()))
                 .collect(Collectors.toList());
     }
 

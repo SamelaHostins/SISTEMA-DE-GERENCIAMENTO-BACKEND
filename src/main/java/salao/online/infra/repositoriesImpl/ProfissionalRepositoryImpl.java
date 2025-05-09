@@ -5,11 +5,15 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import salao.online.domain.entities.Estoque;
 import salao.online.domain.entities.Profissional;
 import salao.online.domain.entities.Servico;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
+import salao.online.domain.enums.TipoImagemEnum;
 import salao.online.domain.enums.TipoServicoEnum;
 import salao.online.domain.exceptions.ValidacaoException;
 import salao.online.infra.repositories.ProfissionalRepository;
@@ -57,7 +61,36 @@ public class ProfissionalRepositoryImpl implements ProfissionalRepository {
 
     @Override
     public Optional<Profissional> buscarPeloEmail(String email) {
-        // evita que letras maiusculas ou minusculas atrapalhem na busca e trata espaços extras
+        // evita que letras maiusculas ou minusculas atrapalhem na busca e trata espaços
+        // extras
         return find("LOWER(email)", email.trim().toLowerCase()).firstResultOptional();
+    }
+
+    /**
+     * Retorna até `limit` profissionais que tenham imagem de perfil (tipo PERFIL).
+     */
+    @Override
+    public List<Profissional> listarComImagemDePerfil(int limit) {
+        PanacheQuery<Profissional> query = find(
+                "select distinct p " +
+                        "from Profissional p " +
+                        "  join p.imagens img " +
+                        "where img.tipoImagem = :tipo",
+                Parameters.with("tipo", TipoImagemEnum.PERFIL));
+        // Página zero (primeira página) com tamanho = limit
+        return query.page(Page.of(0, limit)).list();
+    }
+
+    /**
+     * Retorna todos os profissionais que tenham imagem de perfil cadastrada.
+     */
+    @Override
+    public List<Profissional> pesquisarTodosComImagemDePerfil() {
+        return find(
+                "select distinct p " +
+                        "from Profissional p " +
+                        "  join p.imagens img " +
+                        "where img.tipoImagem = :tipo",
+                Parameters.with("tipo", TipoImagemEnum.PERFIL)).list();
     }
 }

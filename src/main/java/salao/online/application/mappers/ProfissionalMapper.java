@@ -10,18 +10,42 @@ import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalAutent
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.ProfissaoEsteticaEnumDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaProfissionalDTO;
 import salao.online.domain.entities.Profissional;
+import salao.online.domain.enums.ProfissaoEsteticaEnum;
 
 @Mapper(componentModel = "cdi", uses = { EstoqueMapper.class, ServicoMapper.class, ImagemMapper.class,
         AgendamentoMapper.class, AvaliacaoMapper.class, EnderecoMapper.class })
 public interface ProfissionalMapper {
 
+    @Named("intToProfissaoEnum")
+    default salao.online.domain.enums.ProfissaoEsteticaEnum intToProfissaoEnum(int valor) {
+        return salao.online.domain.enums.ProfissaoEsteticaEnum.fromProfissao(valor);
+    }
+
+    @Named("profissaoEnumToInt")
+    default int profissaoEnumToInt(salao.online.domain.enums.ProfissaoEsteticaEnum profissao) {
+        return profissao.getProfissao();
+    }
+
+    @Named("dtoToEnum")
+    default ProfissaoEsteticaEnum dtoToEnum(ProfissaoEsteticaEnumDTO dto) {
+        return ProfissaoEsteticaEnum.fromProfissao(dto.getValor());
+    }
+
+    @Named("enumToDto")
+    default ProfissaoEsteticaEnumDTO enumToDto(ProfissaoEsteticaEnum entity) {
+        return ProfissaoEsteticaEnumDTO.fromValor(entity.getProfissao());
+    }
+
+    @Mapping(source = "profissao", target = "profissao", qualifiedByName = "enumToDto")
     CriarProfissionalDTO fromEntityToCriarDto(Profissional entity);
 
     @Mapping(target = "idProfissional", ignore = true)
     @Mapping(target = "dataNascimento", source = "dto.dataNascimento")
     @Mapping(target = "endereco", source = "dto.endereco")
+    @Mapping(source = "profissao", target = "profissao", qualifiedByName = "dtoToEnum")
     Profissional fromCriarDtoToEntity(CriarProfissionalDTO dto);
 
     BuscarProfissionalDTO fromEntityToBuscarDto(Profissional entity);
@@ -33,7 +57,7 @@ public interface ProfissionalMapper {
     @Mapping(source = "telefone", target = "telefone")
     @Mapping(source = "senha", target = "senha")
     @Mapping(source = "instagram", target = "instagram")
-    @Mapping(source = "profissao", target = "profissao")
+    @Mapping(source = "profissao", target = "profissao", qualifiedByName = "profissaoEnumToInt")
     AtualizarProfissionalDTO fromEntityToAtualizarDto(Profissional entity);
 
     @Mapping(target = "idProfissional", ignore = true)

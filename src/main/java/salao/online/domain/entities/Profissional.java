@@ -6,11 +6,24 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import io.smallrye.common.constraint.NotNull;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import salao.online.domain.enums.ProfissaoEsteticaEnum;
 
 @Entity
 @Table(schema = "salao", name = "profissional")
@@ -27,8 +40,10 @@ public class Profissional extends Informacao {
 
     private @Getter @Setter String instagram;
 
-    @NotEmpty
-    private @Getter @Setter String profissao;
+    @NotNull
+    @Enumerated(EnumType.ORDINAL) 
+    @Column(nullable = false)
+    private @Getter @Setter ProfissaoEsteticaEnum profissao;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_endereco", referencedColumnName = "id_endereco")
@@ -47,8 +62,8 @@ public class Profissional extends Informacao {
     private @Getter List<Estoque> estoques = new ArrayList<>();
 
     public Profissional(String nome, String sobrenome, LocalDate dataNascimento, String email, String telefone,
-            String usuario, String senha, String documento, String instagram, String profissao, Endereco endereco,
-            List<Imagem> imagens, List<Servico> servicos, List<Estoque> estoques) {
+            String usuario, String senha, String documento, String instagram, ProfissaoEsteticaEnum profissao,
+            Endereco endereco, List<Imagem> imagens, List<Servico> servicos, List<Estoque> estoques) {
         super(nome, sobrenome, dataNascimento, email, telefone, usuario, senha, documento);
         this.instagram = instagram;
         this.profissao = profissao;
@@ -58,12 +73,13 @@ public class Profissional extends Informacao {
         this.estoques = estoques;
     }
 
-    public Profissional atualizarProfissional(String novoInstagram, String novaProfissao, String novoNome,
-            String novoSobrenome, String novoEmail, String novoTelefone,
-            String novaSenha) {
+    public Profissional atualizarProfissional(String novoInstagram, ProfissaoEsteticaEnum novaProfissao,
+            String novoNome, String novoUsuario, String novoSobrenome,
+            String novoEmail, String novoTelefone, String novaSenha) {
         setInstagram(novoInstagram);
         setProfissao(novaProfissao);
         setNome(novoNome);
+        setUsuario(novoUsuario);
         setSobrenome(novoSobrenome);
         setEmail(novoEmail);
         setTelefone(novoTelefone);
@@ -71,7 +87,8 @@ public class Profissional extends Informacao {
         return this;
     }
 
-    public void atualizarEndereco(String rua, int numero, String bairro, String cidade, String estado, String cep, String complemento) {
+    public void atualizarEndereco(String rua, int numero, String bairro, String cidade, String estado, String cep,
+            String complemento) {
         if (this.endereco == null) {
             this.endereco = new Endereco();
         }

@@ -23,7 +23,7 @@ public class BuscarProfissionalDTO {
     private String sobrenome;
     private String email;
     private String telefone;
-    private String profissao;
+    private ProfissaoEsteticaEnumDTO profissao;
     private String usuario;
     private String instagram;
     private EnderecoDTO endereco; 

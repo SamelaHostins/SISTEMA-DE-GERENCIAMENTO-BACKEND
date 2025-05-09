@@ -15,10 +15,11 @@ public class AtualizarProfissionalDTO {
 
     private UUID idProfissional; 
     private String nome;
+    private String usuario;
     private String sobrenome;
     private String email;
     private String telefone;
-    private String profissao;
+    private int profissao;
     private String instagram;
     private String senha;
 }

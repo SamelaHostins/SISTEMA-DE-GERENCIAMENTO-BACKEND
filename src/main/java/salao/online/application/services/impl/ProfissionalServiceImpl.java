@@ -26,6 +26,7 @@ import salao.online.application.services.interfaces.ProfissionalService;
 import salao.online.domain.entities.Endereco;
 import salao.online.domain.entities.Profissional;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
+import salao.online.domain.enums.ProfissaoEsteticaEnum;
 import salao.online.domain.exceptions.ValidacaoException;
 import salao.online.infra.repositories.EnderecoRepository;
 import salao.online.infra.repositories.ProfissionalRepository;
@@ -113,10 +114,14 @@ public class ProfissionalServiceImpl implements ProfissionalService {
         Profissional profissional = profissionalRepository.findByIdOptional(dto.getIdProfissional())
                 .orElseThrow(() -> new ValidacaoException("Profissional não encontrado."));
 
+        // Converte o int para enum
+        ProfissaoEsteticaEnum profissaoEnum = ProfissaoEsteticaEnum.fromProfissao(dto.getProfissao());
+
         profissional.atualizarProfissional(
                 dto.getInstagram(),
-                dto.getProfissao(),
+                profissaoEnum,
                 dto.getNome(),
+                dto.getUsuario(),
                 dto.getSobrenome(),
                 dto.getEmail(),
                 dto.getTelefone(),

@@ -16,12 +16,12 @@ public class CriarProfissionalDTO {
 
     private String nome;
     private String sobrenome;
-    private LocalDate dataNascimento; 
+    private LocalDate dataNascimento;
     private String email;
     private String telefone;
     private String instagram;
-    private String profissao;
+    private ProfissaoEsteticaEnumDTO profissao;
     private String senha;
     private String documento;
-    private EnderecoDTO endereco; 
+    private EnderecoDTO endereco;
 }

@@ -13,19 +13,19 @@ import salao.online.application.dtos.dtosDeImagem.ImagensDoProfissionalDTO;
 @NoArgsConstructor
 @Getter
 @Setter
-//Classe para que o cliente possa ver o profissional e seus serviços
+// Classe para que o cliente possa ver o profissional e seus serviços
 public class ListarProfissionalDTO {
 
     private UUID idProfissional;
     private String nome;
     private String sobrenome;
     private String instagram;
-    private String profissao;
+    private ProfissaoEsteticaEnumDTO profissao;
     private String usuario;
     private String email;
     private String telefone;
     private String documento;
     private String senha;
-    private List<ImagensDoProfissionalDTO> imagens; 
-    
+    private List<ImagensDoProfissionalDTO> imagens;
+
 }

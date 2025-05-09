@@ -12,16 +12,20 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import salao.online.application.dtos.dtosDeEndereco.AtualizarEnderecoDTO;
 import salao.online.application.dtos.dtosDeEndereco.BuscarEnderecoDoProfissionalDTO;
+import salao.online.application.dtos.dtosDeImagem.ImagemDTO;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalAutenticadoDTO;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalEmDestaqueDTO;
+import salao.online.application.dtos.dtosDoProfissional.ProfissaoEsteticaEnumDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaProfissionalDTO;
 import salao.online.application.mappers.EstoqueMapper;
 import salao.online.application.mappers.ImagemMapper;
 import salao.online.application.mappers.ProfissionalMapper;
 import salao.online.application.mappers.ServicoMapper;
+import salao.online.application.services.interfaces.ImagemService;
 import salao.online.application.services.interfaces.ProfissionalService;
 import salao.online.domain.entities.Endereco;
 import salao.online.domain.entities.Profissional;
@@ -51,6 +55,9 @@ public class ProfissionalServiceImpl implements ProfissionalService {
 
     @Inject
     ImagemMapper imagemMapper;
+
+    @Inject
+    ImagemService imagemService;
 
     private static Logger logger = LoggerFactory.getLogger(LoggerFactory.class);
 
@@ -120,6 +127,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
         profissional.atualizarProfissional(
                 dto.getInstagram(),
                 profissaoEnum,
+                dto.getDescricaoDaProfissao(),
                 dto.getNome(),
                 dto.getUsuario(),
                 dto.getSobrenome(),
@@ -212,6 +220,33 @@ public class ProfissionalServiceImpl implements ProfissionalService {
                 .orElseThrow(() -> new ValidacaoException(
                         MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
         return profissionalMapper.toAutenticadoDto(entity);
+    }
+
+    public List<ListarProfissionalEmDestaqueDTO> listarProfissionaisEmDestaque() {
+        return profissionalRepository.findAll().stream()
+                .map(profissional -> {
+                    List<ImagemDTO> imagens = imagemService.buscarFotosDoPortfolio(profissional.getIdProfissional());
+                    String urlImagem = null;
+
+                    if (imagens != null && !imagens.isEmpty()) {
+                        urlImagem = imagens.get(0).getUrlImagem();
+                    } else {
+                        ImagemDTO imagemPerfil = imagemService.buscarImagemDePerfil(profissional.getIdProfissional());
+                        if (imagemPerfil != null) {
+                            urlImagem = imagemPerfil.getUrlImagem();
+                        }
+                    }
+
+                    return new ListarProfissionalEmDestaqueDTO(
+                            profissional.getNome(),
+                            ProfissaoEsteticaEnumDTO.fromValor(profissional.getProfissao().ordinal()).getDescricao(),
+                            profissional.getInstagram(),
+                            profissional.getEndereco() != null ? profissional.getEndereco().getCidade() : "",
+                            profissional.getEndereco() != null ? profissional.getEndereco().getEstado() : "",
+                            profissional.getDescricaoDaProfissao(),
+                            urlImagem);
+                })
+                .collect(Collectors.toList());
     }
 
     private BuscarProfissionalDTO getBuscarProfissionalDTO(Profissional profissional) {

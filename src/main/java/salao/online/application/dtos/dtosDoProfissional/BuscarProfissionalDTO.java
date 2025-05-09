@@ -24,6 +24,7 @@ public class BuscarProfissionalDTO {
     private String email;
     private String telefone;
     private ProfissaoEsteticaEnumDTO profissao;
+    private String descricaoDaProfissao;
     private String usuario;
     private String instagram;
     private EnderecoDTO endereco; 

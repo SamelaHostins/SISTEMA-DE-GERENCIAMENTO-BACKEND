@@ -41,9 +41,12 @@ public class Profissional extends Informacao {
     private @Getter @Setter String instagram;
 
     @NotNull
-    @Enumerated(EnumType.ORDINAL) 
+    @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private @Getter @Setter ProfissaoEsteticaEnum profissao;
+
+    @Column(name = "descricao_prof")
+    private @Getter @Setter String descricaoDaProfissao;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_endereco", referencedColumnName = "id_endereco")
@@ -63,10 +66,12 @@ public class Profissional extends Informacao {
 
     public Profissional(String nome, String sobrenome, LocalDate dataNascimento, String email, String telefone,
             String usuario, String senha, String documento, String instagram, ProfissaoEsteticaEnum profissao,
-            Endereco endereco, List<Imagem> imagens, List<Servico> servicos, List<Estoque> estoques) {
+            String descricaoDaProfissao, Endereco endereco, List<Imagem> imagens, List<Servico> servicos,
+            List<Estoque> estoques) {
         super(nome, sobrenome, dataNascimento, email, telefone, usuario, senha, documento);
         this.instagram = instagram;
         this.profissao = profissao;
+        this.descricaoDaProfissao = descricaoDaProfissao;
         this.endereco = endereco;
         this.imagens = imagens;
         this.servicos = servicos;
@@ -74,10 +79,11 @@ public class Profissional extends Informacao {
     }
 
     public Profissional atualizarProfissional(String novoInstagram, ProfissaoEsteticaEnum novaProfissao,
-            String novoNome, String novoUsuario, String novoSobrenome,
+            String novaDescricaoDaProfissao, String novoNome, String novoUsuario, String novoSobrenome,
             String novoEmail, String novoTelefone, String novaSenha) {
         setInstagram(novoInstagram);
         setProfissao(novaProfissao);
+        setDescricaoDaProfissao(novaDescricaoDaProfissao);
         setNome(novoNome);
         setUsuario(novoUsuario);
         setSobrenome(novoSobrenome);

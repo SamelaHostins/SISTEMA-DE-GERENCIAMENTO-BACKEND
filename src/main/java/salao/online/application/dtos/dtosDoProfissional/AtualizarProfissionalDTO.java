@@ -20,6 +20,7 @@ public class AtualizarProfissionalDTO {
     private String email;
     private String telefone;
     private int profissao;
+    private String descricaoDaProfissao;
     private String instagram;
     private String senha;
 }

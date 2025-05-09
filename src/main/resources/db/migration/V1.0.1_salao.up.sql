@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS salao.profissional (
     id_profissional UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     instagram VARCHAR(30),
     profissao INT4 NOT NULL,
+    descricao_prof VARCHAR(100),
     nome VARCHAR(25) NOT NULL,
     sobrenome VARCHAR(25) NOT NULL,
     data_nascimento DATE NOT NULL CHECK (data_nascimento <= CURRENT_DATE),

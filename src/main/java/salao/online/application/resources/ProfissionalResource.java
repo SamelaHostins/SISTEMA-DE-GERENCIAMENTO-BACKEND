@@ -31,6 +31,7 @@ import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalAutent
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalEmDestaqueDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaProfissionalDTO;
 import salao.online.application.services.interfaces.ProfissionalService;
 import salao.online.domain.exceptions.ValidacaoException;
@@ -210,7 +211,6 @@ public class ProfissionalResource {
                     .entity(ex.getMessage())
                     .build();
         } catch (IllegalArgumentException e) {
-            // caso o subject não seja um UUID válido
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity("Token inválido.")
                     .build();
@@ -219,6 +219,13 @@ public class ProfissionalResource {
                     .entity("Erro ao buscar profissional.")
                     .build();
         }
+    }
+
+    @GET
+    @PermitAll
+    public Response listarProfissionaisEmDestaque() {
+        List<ListarProfissionalEmDestaqueDTO> profissionais = profissionalService.listarProfissionaisEmDestaque();
+        return Response.ok(profissionais).build();
     }
 
 }

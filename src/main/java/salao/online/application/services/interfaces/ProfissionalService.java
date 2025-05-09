@@ -10,6 +10,7 @@ import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalAutent
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalEmDestaqueDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaProfissionalDTO;
 import salao.online.domain.exceptions.ValidacaoException;
 
@@ -34,4 +35,6 @@ public interface ProfissionalService {
     void deletarProfissional(UUID idProfissional) throws ValidacaoException;
 
     BuscarProfissionalAutenticadoDTO buscarProfissionalAutenticado(UUID idProfissional) throws ValidacaoException;
+
+    List<ListarProfissionalEmDestaqueDTO> listarProfissionaisEmDestaque();
 }

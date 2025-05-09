@@ -33,5 +33,5 @@ public interface ProfissionalService {
 
     void deletarProfissional(UUID idProfissional) throws ValidacaoException;
 
-    BuscarProfissionalAutenticadoDTO buscarProfissionalAutenticado(String email) throws ValidacaoException;
+    BuscarProfissionalAutenticadoDTO buscarProfissionalAutenticado(UUID idProfissional) throws ValidacaoException;
 }

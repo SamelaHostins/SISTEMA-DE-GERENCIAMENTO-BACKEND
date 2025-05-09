@@ -6,10 +6,10 @@ import java.time.Period;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import io.quarkus.logging.Log;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -118,26 +118,22 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public AtualizarClienteDTO atualizarCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException {
-        Optional<Cliente> clienteOptional = clienteRepository.findByIdOptional(clienteDTO.getIdCliente());
+        Cliente cliente = clienteRepository
+                .findByIdOptional(clienteDTO.getIdCliente())
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro()));
 
-        if (clienteOptional.isPresent()) {
-            Cliente cliente = clienteOptional.get();
+        cliente.atualizarCliente(
+                clienteDTO.getNome(),
+                clienteDTO.getUsuario(),
+                clienteDTO.getSobrenome(),
+                clienteDTO.getEmail(),
+                clienteDTO.getTelefone(),
+                clienteDTO.getSenha());
 
-            cliente.atualizarCliente(
-                    clienteDTO.getNome(),
-                    clienteDTO.getSobrenome(),
-                    clienteDTO.getDataNascimento(),
-                    clienteDTO.getEmail(),
-                    clienteDTO.getTelefone(),
-                    clienteDTO.getSenha());
-
-            logger.info("Salvando cliente atualizado");
-            clienteRepository.persistAndFlush(cliente);
-            return clienteMapper.fromEntityToAtualizarDto(cliente);
-
-        } else {
-            throw new ValidacaoException(MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro());
-        }
+        Log.infof("Salvando cliente %s atualizado", cliente.getIdCliente());
+        clienteRepository.persistAndFlush(cliente);
+        return clienteMapper.fromEntityToAtualizarDto(cliente);
     }
 
     @Override

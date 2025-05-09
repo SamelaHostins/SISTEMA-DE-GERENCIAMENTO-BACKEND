@@ -196,15 +196,29 @@ public class ProfissionalResource {
     @Path("/autenticado")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("PROFISSIONAL")
-    public Response buscarAutenticado(@Context JsonWebToken jwt) throws ValidacaoException {
-        String email = jwt.getSubject();
+    public Response buscarAutenticado(@Context JsonWebToken jwt) {
         try {
-            BuscarProfissionalAutenticadoDTO dto = profissionalService.buscarProfissionalAutenticado(email);
+            // extrai o UUID do profissional do subject do JWT
+            UUID idProfissional = UUID.fromString(jwt.getSubject());
+
+            // chama o serviço já adaptado para receber o UUID
+            BuscarProfissionalAutenticadoDTO dto = profissionalService.buscarProfissionalAutenticado(idProfissional);
+
             return Response.ok(dto).build();
         } catch (ValidacaoException ex) {
-            return Response.status(404).entity(ex.getMessage()).build();
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(ex.getMessage())
+                    .build();
+        } catch (IllegalArgumentException e) {
+            // caso o subject não seja um UUID válido
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("Token inválido.")
+                    .build();
         } catch (Exception ex) {
-            return Response.status(500).entity("Erro ao buscar profissional.").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao buscar profissional.")
+                    .build();
         }
     }
+
 }

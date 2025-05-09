@@ -200,10 +200,12 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     }
 
     @Override
-    public BuscarProfissionalAutenticadoDTO buscarProfissionalAutenticado(String email) throws ValidacaoException {
+    public BuscarProfissionalAutenticadoDTO buscarProfissionalAutenticado(UUID idProfissional)
+            throws ValidacaoException {
         Profissional entity = profissionalRepository
-                .buscarPeloEmail(email)
-                .orElseThrow(() -> new ValidacaoException("Profissional não encontrado para o e-mail informado."));
+                .findByIdOptional(idProfissional)
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
         return profissionalMapper.toAutenticadoDto(entity);
     }
 

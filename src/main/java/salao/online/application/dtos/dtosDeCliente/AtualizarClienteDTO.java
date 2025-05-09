@@ -1,6 +1,5 @@
 package salao.online.application.dtos.dtosDeCliente;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -16,10 +15,9 @@ public class AtualizarClienteDTO {
 
     private UUID idCliente;
     private String nome;
+    private String usuario;
     private String sobrenome;
-    private LocalDate dataNascimento; 
     private String email;
     private String telefone;
     private String senha;
-    private String documento; 
 }

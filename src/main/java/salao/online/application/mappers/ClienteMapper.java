@@ -3,6 +3,7 @@ package salao.online.application.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+
 import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
@@ -20,7 +21,6 @@ public interface ClienteMapper {
     @Mapping(target = "dataNascimento", source = "entity.dataNascimento")
     CriarClienteDTO fromEntityToCriarDto(Cliente entity);
 
-    @Mapping(target = "dataNascimento", source = "entity.dataNascimento")
     AtualizarClienteDTO fromEntityToAtualizarDto(Cliente entity);
 
     @Mapping(target = "dataNascimento", source = "entity.dataNascimento")

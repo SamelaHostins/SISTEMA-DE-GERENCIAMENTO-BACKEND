@@ -19,7 +19,6 @@ import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalEmDestaqueDTO;
-import salao.online.application.dtos.dtosDoProfissional.ProfissaoEsteticaEnumDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaProfissionalDTO;
 import salao.online.application.mappers.EstoqueMapper;
 import salao.online.application.mappers.ImagemMapper;
@@ -222,11 +221,14 @@ public class ProfissionalServiceImpl implements ProfissionalService {
         return profissionalMapper.toAutenticadoDto(entity);
     }
 
+    @Override
     public List<ListarProfissionalEmDestaqueDTO> listarProfissionaisEmDestaque() {
-        return profissionalRepository.findAll().stream()
+        List<Profissional> profissionais = profissionalRepository.findAll().list();
+
+        return profissionais.stream()
                 .map(profissional -> {
-                    List<ImagemDTO> imagens = imagemService.buscarFotosDoPortfolio(profissional.getIdProfissional());
                     String urlImagem = null;
+                    List<ImagemDTO> imagens = imagemService.buscarFotosDoPortfolio(profissional.getIdProfissional());
 
                     if (imagens != null && !imagens.isEmpty()) {
                         urlImagem = imagens.get(0).getUrlImagem();
@@ -237,14 +239,9 @@ public class ProfissionalServiceImpl implements ProfissionalService {
                         }
                     }
 
-                    return new ListarProfissionalEmDestaqueDTO(
-                            profissional.getNome(),
-                            ProfissaoEsteticaEnumDTO.fromValor(profissional.getProfissao().ordinal()).getDescricao(),
-                            profissional.getInstagram(),
-                            profissional.getEndereco() != null ? profissional.getEndereco().getCidade() : "",
-                            profissional.getEndereco() != null ? profissional.getEndereco().getEstado() : "",
-                            profissional.getDescricaoDaProfissao(),
-                            urlImagem);
+                    ListarProfissionalEmDestaqueDTO dto = profissionalMapper.fromEntityToDestaqueDto(profissional);
+                    dto.setUrlImagem(urlImagem); // set manual da imagem
+                    return dto;
                 })
                 .collect(Collectors.toList());
     }

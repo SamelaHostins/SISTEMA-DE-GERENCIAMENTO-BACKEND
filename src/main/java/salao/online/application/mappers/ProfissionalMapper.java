@@ -10,6 +10,7 @@ import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalAutent
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalEmDestaqueDTO;
 import salao.online.application.dtos.dtosDoProfissional.ProfissaoEsteticaEnumDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaProfissionalDTO;
 import salao.online.domain.entities.Profissional;
@@ -35,8 +36,8 @@ public interface ProfissionalMapper {
     }
 
     @Named("enumToDto")
-    default ProfissaoEsteticaEnumDTO enumToDto(ProfissaoEsteticaEnum entity) {
-        return ProfissaoEsteticaEnumDTO.fromValor(entity.getProfissao());
+    default String enumToDto(ProfissaoEsteticaEnum entity) {
+        return ProfissaoEsteticaEnumDTO.fromValor(entity.getProfissao()).getDescricao();
     }
 
     @Mapping(source = "profissao", target = "profissao", qualifiedByName = "enumToDto")
@@ -83,5 +84,13 @@ public interface ProfissionalMapper {
     @Mapping(source = "idProfissional", target = "idProfissional")
     @Mapping(source = "email", target = "email")
     BuscarProfissionalAutenticadoDTO toAutenticadoDto(Profissional entity);
+
+    @Mapping(source = "nome", target = "nome")
+    @Mapping(source = "profissao", target = "profissao", qualifiedByName = "enumToDto")
+    @Mapping(source = "endereco.cidade", target = "cidade")
+    @Mapping(source = "endereco.estado", target = "estado")
+    @Mapping(source = "instagram", target = "instagram")
+    @Mapping(source = "descricaoDaProfissao", target = "descricaoDaProfissao")
+    ListarProfissionalEmDestaqueDTO fromEntityToDestaqueDto(Profissional profissional);
 
 }

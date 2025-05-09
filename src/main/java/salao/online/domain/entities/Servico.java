@@ -56,6 +56,7 @@ public class Servico {
 
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
     @Column(name = "tempo")
+    @NotNull
     private @Getter @Setter Duration tempo;
 
     @DecimalMin(value = "0.01", message = "O valor deve ser no mínimo 0.01")

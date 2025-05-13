@@ -64,10 +64,14 @@ public class Profissional extends Informacao {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
     private @Getter List<Estoque> estoques = new ArrayList<>();
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "profissional", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private @Getter @Setter List<HorarioTrabalho> horariosTrabalho = new ArrayList<>();
+
     public Profissional(String nome, String sobrenome, LocalDate dataNascimento, String email, String telefone,
             String usuario, String senha, String documento, String instagram, ProfissaoEsteticaEnum profissao,
             String descricaoDaProfissao, Endereco endereco, List<Imagem> imagens, List<Servico> servicos,
-            List<Estoque> estoques) {
+            List<Estoque> estoques, List<HorarioTrabalho> horarioTrabalhos) {
         super(nome, sobrenome, dataNascimento, email, telefone, usuario, senha, documento);
         this.instagram = instagram;
         this.profissao = profissao;
@@ -76,6 +80,7 @@ public class Profissional extends Informacao {
         this.imagens = imagens;
         this.servicos = servicos;
         this.estoques = estoques;
+        this.horariosTrabalho = horarioTrabalhos;
     }
 
     public Profissional atualizarProfissional(String novoInstagram, ProfissaoEsteticaEnum novaProfissao,

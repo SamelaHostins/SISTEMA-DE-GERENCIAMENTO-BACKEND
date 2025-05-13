@@ -17,7 +17,7 @@ import salao.online.domain.entities.Profissional;
 import salao.online.domain.enums.ProfissaoEsteticaEnum;
 
 @Mapper(componentModel = "cdi", uses = { EstoqueMapper.class, ServicoMapper.class, ImagemMapper.class,
-        AgendamentoMapper.class, AvaliacaoMapper.class, EnderecoMapper.class })
+        AgendamentoMapper.class, AvaliacaoMapper.class, EnderecoMapper.class, HorarioTrabalhoMapper.class })
 public interface ProfissionalMapper {
 
     @Named("intToProfissaoEnum")
@@ -59,6 +59,7 @@ public interface ProfissionalMapper {
     @Mapping(source = "senha", target = "senha")
     @Mapping(source = "instagram", target = "instagram")
     @Mapping(source = "profissao", target = "profissao", qualifiedByName = "profissaoEnumToInt")
+    @Mapping(source = "horariosTrabalho", target = "horariosTrabalho")
     AtualizarProfissionalDTO fromEntityToAtualizarDto(Profissional entity);
 
     @Mapping(target = "idProfissional", ignore = true)

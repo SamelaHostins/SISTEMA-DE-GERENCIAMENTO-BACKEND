@@ -10,6 +10,7 @@ import lombok.Setter;
 import salao.online.application.dtos.dtosDeEndereco.EnderecoDTO;
 import salao.online.application.dtos.dtosDeImagem.ImagensDoProfissionalDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
+import salao.online.application.dtos.dtosHorario.HorarioTrabalhoDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,4 +31,5 @@ public class BuscarProfissionalDTO {
     private EnderecoDTO endereco; 
     private List<ServicoDTO> servicos;
     private List<ImagensDoProfissionalDTO> imagens; 
+    private List<HorarioTrabalhoDTO> horariosTrabalho;
 }

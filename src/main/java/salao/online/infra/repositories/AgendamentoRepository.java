@@ -29,4 +29,7 @@ public interface AgendamentoRepository extends PanacheRepositoryBase<Agendamento
 
         public List<Agendamento> listarPorProfissional(UUID profissionalId);
 
+        public List<Agendamento> buscarPorProfissionalEData(UUID idProfissional, LocalDate data);
+
+            
 }

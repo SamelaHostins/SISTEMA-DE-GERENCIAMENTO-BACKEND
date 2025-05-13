@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import salao.online.application.dtos.dtosDeImagem.ImagensDoProfissionalDTO;
+import salao.online.application.dtos.dtosHorario.HorarioTrabalhoDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,5 +29,6 @@ public class ListarProfissionalDTO {
     private String documento;
     private String senha;
     private List<ImagensDoProfissionalDTO> imagens;
+    private List<HorarioTrabalhoDTO> horariosTrabalho;
 
 }

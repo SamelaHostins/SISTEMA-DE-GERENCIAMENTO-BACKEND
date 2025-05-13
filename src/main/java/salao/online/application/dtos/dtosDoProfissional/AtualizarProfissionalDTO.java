@@ -1,11 +1,13 @@
 package salao.online.application.dtos.dtosDoProfissional;
 
+import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import salao.online.application.dtos.dtosHorario.HorarioTrabalhoDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,7 +15,7 @@ import lombok.Setter;
 @Setter
 public class AtualizarProfissionalDTO {
 
-    private UUID idProfissional; 
+    private UUID idProfissional;
     private String nome;
     private String usuario;
     private String sobrenome;
@@ -23,4 +25,6 @@ public class AtualizarProfissionalDTO {
     private String descricaoDaProfissao;
     private String instagram;
     private String senha;
+
+    private List<HorarioTrabalhoDTO> horariosTrabalho;
 }

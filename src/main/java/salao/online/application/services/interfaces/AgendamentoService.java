@@ -1,6 +1,7 @@
 package salao.online.application.services.interfaces;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,4 +29,6 @@ public interface AgendamentoService {
                         LocalDate dataFim,
                         Integer statusValor,
                         Integer formaPagamentoValor);
+
+        List<LocalTime> buscarHorariosDisponiveis(UUID idProfissional, LocalDate data);
 }

@@ -1,6 +1,7 @@
 package salao.online.application.resources;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,6 +9,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipal;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -126,6 +128,33 @@ public class AgendamentoResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Erro ao buscar agendamentos do profissional.")
                     .build();
+        }
+    }
+
+    @GET
+    @Path("/profissional/{id}/horarios-disponiveis")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PermitAll
+    @Operation(summary = "Buscar horários disponíveis para um profissional em uma data")
+    @APIResponse(responseCode = "200", description = "Lista de horários disponíveis retornada com sucesso")
+    @APIResponse(responseCode = "400", description = "Data não informada")
+    @APIResponse(responseCode = "500", description = "Erro interno ao buscar horários disponíveis")
+    public Response buscarHorariosDisponiveis(
+            @PathParam("id") UUID idProfissional,
+            @QueryParam("data") LocalDate data) {
+
+        if (data == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Parâmetro 'data' é obrigatório.")
+                    .build();
+        }
+
+        try {
+            List<LocalTime> horariosDisponiveis = agendamentoService.buscarHorariosDisponiveis(idProfissional, data);
+            return Response.ok(horariosDisponiveis).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao buscar horários disponíveis.").build();
         }
     }
 

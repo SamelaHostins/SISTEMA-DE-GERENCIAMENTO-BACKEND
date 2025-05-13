@@ -1,6 +1,8 @@
 package salao.online.application.services.impl;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,12 +16,16 @@ import salao.online.application.mappers.AgendamentoMapper;
 import salao.online.application.services.interfaces.AgendamentoService;
 import salao.online.domain.entities.Agendamento;
 import salao.online.domain.entities.Cliente;
+import salao.online.domain.entities.HorarioTrabalho;
+import salao.online.domain.entities.Profissional;
 import salao.online.domain.entities.Servico;
+import salao.online.domain.enums.DiaSemanaEnum;
 import salao.online.domain.enums.FormaPagamentoEnum;
 import salao.online.domain.enums.StatusAgendamentoEnum;
 import salao.online.domain.exceptions.ValidacaoException;
 import salao.online.infra.repositories.AgendamentoRepository;
 import salao.online.infra.repositories.ClienteRepository;
+import salao.online.infra.repositories.ProfissionalRepository;
 import salao.online.infra.repositories.ServicoRepository;
 
 @ApplicationScoped
@@ -36,6 +42,9 @@ public class AgendamentoServiceImpl implements AgendamentoService {
 
         @Inject
         ClienteRepository clienteRepository;
+
+        @Inject
+        ProfissionalRepository profissionalRepository;
 
         @Override
         public CriarAgendamentoPeloClienteDTO agendarPeloCliente(CriarAgendamentoPeloClienteDTO agendamentoDTO) {
@@ -105,7 +114,7 @@ public class AgendamentoServiceImpl implements AgendamentoService {
                 agendamento.setCliente(cliente);
                 agendamento.setServico(servico);
                 agendamento.setStatusAgendamento(StatusAgendamentoEnum.AGENDADO);
-                agendamento.setFormaPagamento(FormaPagamentoEnum.DINHEIRO); 
+                agendamento.setFormaPagamento(FormaPagamentoEnum.DINHEIRO);
 
                 agendamentoRepository.persistAndFlush(agendamento);
 
@@ -149,4 +158,53 @@ public class AgendamentoServiceImpl implements AgendamentoService {
 
                 return agendamentoMapper.fromEntityListToDtoList(agendamentos);
         }
+
+        @Override
+        public List<LocalTime> buscarHorariosDisponiveis(UUID idProfissional, LocalDate data) {
+                Profissional profissional = profissionalRepository.findById(idProfissional);
+                if (profissional == null) {
+                        throw new WebApplicationException("Profissional não encontrado", 404);
+                }
+
+                // Descobre o dia da semana (0 = DOMINGO, 1 = SEGUNDA...)
+                DiaSemanaEnum dia = DiaSemanaEnum.values()[data.getDayOfWeek().getValue() % 7];
+
+                // Filtra faixas cadastradas pro dia
+                List<HorarioTrabalho> faixas = profissional.getHorariosTrabalho().stream()
+                                .filter(h -> h.getDiaSemana() == dia)
+                                .toList();
+
+                if (faixas.isEmpty())
+                        return List.of(); // Sem expediente hoje? Então nem tenta.
+
+                // Puxa os agendamentos já existentes do dia
+                List<Agendamento> agendamentos = agendamentoRepository
+                                .buscarPorProfissionalEData(idProfissional, data);
+
+                List<LocalTime> horariosDisponiveis = new ArrayList<>();
+
+                for (HorarioTrabalho faixa : faixas) {
+                        LocalTime hora = faixa.getHoraInicio();
+
+                        while (!hora.plusMinutes(30).isAfter(faixa.getHoraFim())) {
+                                final LocalTime finalHora = hora; // Agora sim, sem treta com a lambda!
+
+                                boolean sobrepoe = agendamentos.stream().anyMatch(ag -> {
+                                        LocalTime inicioAg = ag.getHoraAgendamento();
+                                        LocalTime fimAg = inicioAg.plus(ag.getServico().getTempo());
+                                        return !(finalHora.plusMinutes(30).isBefore(inicioAg)
+                                                        || finalHora.isAfter(fimAg));
+                                });
+
+                                if (!sobrepoe) {
+                                        horariosDisponiveis.add(hora);
+                                }
+
+                                hora = hora.plusMinutes(30); // Bora pro próximo bloco
+                        }
+                }
+
+                return horariosDisponiveis;
+        }
+
 }

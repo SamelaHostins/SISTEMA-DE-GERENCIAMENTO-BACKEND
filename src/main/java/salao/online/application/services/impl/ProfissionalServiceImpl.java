@@ -19,6 +19,7 @@ import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalEmDestaqueDTO;
+import salao.online.application.dtos.dtosHorario.HorarioTrabalhoDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaProfissionalDTO;
 import salao.online.application.mappers.EstoqueMapper;
 import salao.online.application.mappers.ImagemMapper;
@@ -27,7 +28,9 @@ import salao.online.application.mappers.ServicoMapper;
 import salao.online.application.services.interfaces.ImagemService;
 import salao.online.application.services.interfaces.ProfissionalService;
 import salao.online.domain.entities.Endereco;
+import salao.online.domain.entities.HorarioTrabalho;
 import salao.online.domain.entities.Profissional;
+import salao.online.domain.enums.DiaSemanaEnum;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
 import salao.online.domain.enums.ProfissaoEsteticaEnum;
 import salao.online.domain.exceptions.ValidacaoException;
@@ -133,6 +136,21 @@ public class ProfissionalServiceImpl implements ProfissionalService {
                 dto.getEmail(),
                 dto.getTelefone(),
                 dto.getSenha());
+
+        // Atualiza horários de trabalho, precisa limpar pra nao duplicar
+        profissional.getHorariosTrabalho().clear();
+
+        List<HorarioTrabalho> novosHorarios = dto.getHorariosTrabalho().stream()
+                .map(h -> {
+                    HorarioTrabalho horario = new HorarioTrabalho();
+                    horario.setDiaSemana(DiaSemanaEnum.values()[h.getDiaSemana()]);
+                    horario.setHoraInicio(h.getHoraInicio());
+                    horario.setHoraFim(h.getHoraFim());
+                    horario.setProfissional(profissional);
+                    return horario;
+                }).toList();
+
+        profissional.getHorariosTrabalho().addAll(novosHorarios);
 
         logger.info("Salvando profissional atualizado");
         profissionalRepository.persistAndFlush(profissional);

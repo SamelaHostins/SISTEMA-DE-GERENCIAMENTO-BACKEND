@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.WebApplicationException;
 import salao.online.application.dtos.dtosDoAgendamento.AgendamentoDTO;
 import salao.online.application.dtos.dtosDoAgendamento.CriarAgendamentoPeloClienteDTO;
 import salao.online.application.dtos.dtosDoAgendamento.CriarAgendamentoPeloProfissionalDTO;
@@ -37,70 +38,78 @@ public class AgendamentoServiceImpl implements AgendamentoService {
         ClienteRepository clienteRepository;
 
         @Override
-        public Agendamento agendarComoCliente(UUID clienteId,
-                        CriarAgendamentoPeloClienteDTO dto)
-                        throws ValidacaoException {
-                Servico servico = servicoRepository.findById(dto.getIdServico());
+        public CriarAgendamentoPeloClienteDTO agendarPeloCliente(CriarAgendamentoPeloClienteDTO agendamentoDTO) {
+                Cliente cliente = clienteRepository.findById(agendamentoDTO.getIdCliente());
+                Servico servico = servicoRepository.findById(agendamentoDTO.getIdServico());
 
-                Cliente cliente = clienteRepository.findById(clienteId);
-
-                int codigo = dto.getFormaPagamento().getCodigo();
-                FormaPagamentoEnum forma = FormaPagamentoEnum.fromFormaPagamento(codigo);
-
-                if (agendamentoRepository.existeSobreposicao(
-                                servico.getProfissional().getIdProfissional(),
-                                dto.getDataAgendamento(),
-                                dto.getHoraAgendamento(),
-                                servico.getTempo())) {
-                        throw new ValidacaoException("Horário indisponível para este profissional");
+                if (cliente == null || servico == null) {
+                        throw new WebApplicationException("Cliente ou serviço não encontrado", 400);
                 }
 
-                Agendamento ag = new Agendamento(
-                                dto.getDataAgendamento(),
-                                dto.getHoraAgendamento(),
-                                StatusAgendamentoEnum.AGENDADO,
-                                forma,
-                                cliente,
-                                servico);
-                agendamentoRepository.persist(ag);
-                return ag;
+                Agendamento agendamento = agendamentoMapper.fromCriarToEntity(agendamentoDTO);
+
+                // Sobrescreve com entidades reais buscadas do banco
+                agendamento.setCliente(cliente);
+                agendamento.setServico(servico);
+
+                // Verifica sobreposição
+                boolean haSobreposicao = agendamentoRepository.existeSobreposicao(
+                                servico.getProfissional().getIdProfissional(),
+                                agendamento.getDataAgendamento(),
+                                agendamento.getHoraAgendamento(),
+                                servico.getTempo());
+
+                if (haSobreposicao) {
+                        throw new WebApplicationException(
+                                        "O horário selecionado está em conflito com outro agendamento.", 409);
+                }
+
+                agendamento.setStatusAgendamento(StatusAgendamentoEnum.AGENDADO); // Defina um status padrão, se
+                                                                                  // necessário
+
+                agendamentoRepository.persistAndFlush(agendamento);
+
+                return agendamentoMapper.fromEntityToCriarDto(agendamento);
         }
 
         @Override
-        public Agendamento agendarComoProfissional(UUID profissionalId,
+        public CriarAgendamentoPeloProfissionalDTO agendarComoProfissional(UUID profissionalId,
                         CriarAgendamentoPeloProfissionalDTO dto)
                         throws ValidacaoException {
                 Servico servico = servicoRepository.findById(dto.getIdServico());
 
-                if (!servico.getProfissional()
-                                .getIdProfissional()
-                                .equals(profissionalId)) {
-                        throw new ValidacaoException("Você não tem permissão para agendar esse serviço.");
+                if (servico == null) {
+                        throw new WebApplicationException("Serviço não encontrado", 400);
                 }
 
                 Cliente cliente = null;
                 if (dto.getIdCliente() != null) {
                         cliente = clienteRepository.findById(dto.getIdCliente());
+                        if (cliente == null) {
+                                throw new WebApplicationException("Cliente informado não existe", 400);
+                        }
                 }
 
-                if (agendamentoRepository.existeSobreposicao(
+                boolean haSobreposicao = agendamentoRepository.existeSobreposicao(
                                 profissionalId,
                                 dto.getDataAgendamento(),
                                 dto.getHoraAgendamento(),
-                                servico.getTempo())) {
+                                servico.getTempo());
+
+                if (haSobreposicao) {
                         throw new ValidacaoException("Horário indisponível para este profissional");
                 }
 
-                Agendamento ag = new Agendamento(
-                                dto.getDataAgendamento(),
-                                dto.getHoraAgendamento(),
-                                StatusAgendamentoEnum.AGENDADO,
-                                FormaPagamentoEnum.DINHEIRO, 
-                                cliente,
-                                servico);
+                // Usa o mapper para instanciar a entidade
+                Agendamento agendamento = agendamentoMapper.fromCriarProfissionalToEntity(dto);
+                agendamento.setCliente(cliente);
+                agendamento.setServico(servico);
+                agendamento.setStatusAgendamento(StatusAgendamentoEnum.AGENDADO);
+                agendamento.setFormaPagamento(FormaPagamentoEnum.DINHEIRO); 
 
-                agendamentoRepository.persist(ag);
-                return ag;
+                agendamentoRepository.persistAndFlush(agendamento);
+
+                return agendamentoMapper.fromEntityToCriarProfissional(agendamento);
         }
 
         @Override

@@ -21,6 +21,9 @@ public class CriarAgendamentoPeloClienteDTO {
     private UUID idServico;
 
     @NotNull
+    private UUID idCliente;
+
+    @NotNull
     @FutureOrPresent
     private LocalDate dataAgendamento;
 
@@ -28,6 +31,6 @@ public class CriarAgendamentoPeloClienteDTO {
     private LocalTime horaAgendamento;
 
     @NotNull
-    private FormaPagamentoEnumDTO formaPagamento;
+    private Integer formaPagamento;
 
 }

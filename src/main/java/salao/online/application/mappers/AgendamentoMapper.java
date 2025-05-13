@@ -2,6 +2,9 @@ package salao.online.application.mappers;
 
 import java.time.Duration;
 import java.util.List;
+import salao.online.application.dtos.dtosDoAgendamento.CriarAgendamentoPeloClienteDTO;
+import salao.online.application.dtos.dtosDoAgendamento.CriarAgendamentoPeloProfissionalDTO;
+import salao.online.application.dtos.dtosDoEstoque.CriarEstoqueDTO;
 
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -10,6 +13,7 @@ import org.mapstruct.Named;
 
 import salao.online.application.dtos.dtosDoAgendamento.AgendamentoDTO;
 import salao.online.domain.entities.Agendamento;
+import salao.online.domain.entities.Estoque;
 import salao.online.domain.enums.FormaPagamentoEnum;
 import salao.online.domain.enums.StatusAgendamentoEnum;
 
@@ -33,6 +37,27 @@ public interface AgendamentoMapper {
 
     List<AgendamentoDTO> fromEntityListToDtoList(List<Agendamento> agendamentos);
 
+    @Named("mapIntToFormaPagamentoEnum")
+    default FormaPagamentoEnum mapIntToFormaPagamentoEnum(Integer valor) {
+        if (valor == null)
+            return null;
+        return FormaPagamentoEnum.values()[valor];
+    }
+
+    @Mapping(target = "formaPagamento", source = "formaPagamento", qualifiedByName = "mapIntToFormaPagamentoEnum")
+    Agendamento fromCriarToEntity(CriarAgendamentoPeloClienteDTO dto);
+
+    @Mapping(source = "formaPagamento", target = "formaPagamento", qualifiedByName = "mapFormaPagamentoToInt")
+    @Mapping(source = "servico.idServico", target = "idServico")
+    @Mapping(source = "cliente.idCliente", target = "idCliente")
+    CriarAgendamentoPeloClienteDTO fromEntityToCriarDto(Agendamento entity);
+
+    Agendamento fromCriarProfissionalToEntity(CriarAgendamentoPeloProfissionalDTO dto);
+
+    @Mapping(source = "servico.idServico", target = "idServico")
+    @Mapping(source = "cliente.idCliente", target = "idCliente")
+    CriarAgendamentoPeloProfissionalDTO fromEntityToCriarProfissional(Agendamento entity);
+
     // Enums: entidade -> Integer
     @Named("mapStatusEnumToInt")
     default Integer mapStatusEnumToInt(StatusAgendamentoEnum status) {
@@ -50,27 +75,24 @@ public interface AgendamentoMapper {
         return valor != null ? StatusAgendamentoEnum.values()[valor] : null;
     }
 
-    @Named("mapIntToFormaPagamentoEnum")
-    default FormaPagamentoEnum mapIntToFormaPagamentoEnum(Integer valor) {
-        return valor != null ? FormaPagamentoEnum.values()[valor] : null;
-    }
-
     // Tempo
     @Named("mapDurationToString")
     default String mapDurationToString(Duration duration) {
-        if (duration == null) return null;
+        if (duration == null)
+            return null;
 
         long hours = duration.toHours();
         long minutes = duration.toMinutes() % 60;
 
         return (hours > 0)
-            ? String.format("%dh%02d", hours, minutes)
-            : String.format("%dmin", minutes);
+                ? String.format("%dh%02d", hours, minutes)
+                : String.format("%dmin", minutes);
     }
 
     @Named("mapStringToDuration")
     default Duration mapStringToDuration(String tempoStr) {
-        if (tempoStr == null || tempoStr.isBlank()) return null;
+        if (tempoStr == null || tempoStr.isBlank())
+            return null;
 
         tempoStr = tempoStr.toLowerCase().replace(" ", "");
 

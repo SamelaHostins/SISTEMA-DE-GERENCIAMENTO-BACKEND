@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
@@ -12,13 +11,14 @@ import io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipal;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -37,24 +37,26 @@ public class AgendamentoResource {
     @Inject
     AgendamentoService agendamentoService;
 
+    @POST
+    @Path("/cliente/agendar")
     @Operation(summary = "Criar agendamento para o cliente logado")
     @APIResponse(responseCode = "201", description = "Agendamento criado com sucesso")
     @APIResponse(responseCode = "400", description = "Dados inválidos ou conflito de horário")
-    @POST
     @Transactional
     @RolesAllowed("CLIENTE")
-    public Response criarAgendamentoPeloCliente(
-            @Valid CriarAgendamentoPeloClienteDTO dto,
-            @Context JsonWebToken jwt) {
-
+    public Response agendarPeloCliente(CriarAgendamentoPeloClienteDTO dto) {
         try {
-            UUID idCliente = UUID.fromString(jwt.getSubject());
-            var ag = agendamentoService.agendarComoCliente(idCliente, dto);
-            return Response.status(Response.Status.CREATED)
-                    .entity(ag).build();
-        } catch (ValidacaoException ex) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(ex.getMessage()).build();
+            CriarAgendamentoPeloClienteDTO criado = agendamentoService.agendarPeloCliente(dto);
+            return Response.status(Response.Status.CREATED).entity(criado).build();
+        } catch (IllegalArgumentException e) {
+            // Conflito por sobreposição
+            return Response.status(Response.Status.CONFLICT)
+                    .entity("Horário indisponível: " + e.getMessage())
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao processar o agendamento.")
+                    .build();
         }
     }
 
@@ -85,21 +87,22 @@ public class AgendamentoResource {
     @APIResponse(responseCode = "201", description = "Agendamento criado com sucesso")
     @APIResponse(responseCode = "400", description = "Dados inválidos ou conflito de horário")
     @POST
-    @Path("/profissional")
+    @Path("/profissional/agendar")
     @Transactional
     @RolesAllowed("PROFISSIONAL")
-    public Response criarAgendamentoPeloProfissional(
-            @Valid CriarAgendamentoPeloProfissionalDTO dto,
-            @Context JsonWebToken jwt) {
-
+    public Response criarAgendamentoPeloProfissional(@PathParam("idProfissional") UUID idProfissional,
+            CriarAgendamentoPeloProfissionalDTO dto) {
         try {
-            UUID idProfissional = UUID.fromString(jwt.getSubject());
-            var ag = agendamentoService.agendarComoProfissional(idProfissional, dto);
-            return Response.status(Response.Status.CREATED)
-                    .entity(ag).build();
-        } catch (ValidacaoException ex) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(ex.getMessage()).build();
+            CriarAgendamentoPeloProfissionalDTO criado = agendamentoService.agendarComoProfissional(idProfissional,
+                    dto);
+            return Response.status(Response.Status.CREATED).entity(criado).build();
+        } catch (ValidacaoException e) {
+            return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
+        } catch (WebApplicationException e) {
+            return Response.status(e.getResponse().getStatus()).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro interno ao criar o agendamento.").build();
         }
     }
 

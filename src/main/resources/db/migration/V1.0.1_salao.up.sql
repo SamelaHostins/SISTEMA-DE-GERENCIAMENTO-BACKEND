@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS salao.agendamento (
     hora_agendamento TIME NOT NULL,
     status_agendamento INT4 NOT NULL,
     forma_pagamento INT4 NOT NULL,
-    id_cliente UUID NOT NULL,
+    id_cliente UUID,
     id_servico UUID NOT NULL,
     FOREIGN KEY (id_cliente) REFERENCES salao.cliente(id_cliente),
     FOREIGN KEY (id_servico) REFERENCES salao.servico(id_servico)

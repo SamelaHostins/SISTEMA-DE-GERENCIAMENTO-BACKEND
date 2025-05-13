@@ -1,6 +1,8 @@
 package salao.online.infra.repositories;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,5 +18,15 @@ public interface AgendamentoRepository extends PanacheRepositoryBase<Agendamento
 
         List<Agendamento> buscarAgendamentosDoCliente(UUID idCliente, LocalDate dataInicio, LocalDate dataFim,
                         StatusAgendamentoEnum status, FormaPagamentoEnum formaPagamento);
+
+        public boolean existeSobreposicao(
+                        UUID profissionalId,
+                        LocalDate data,
+                        LocalTime inicioProposto,
+                        Duration duracaoProposta);
+
+        public List<Agendamento> listarPorCliente(UUID clienteId);
+
+        public List<Agendamento> listarPorProfissional(UUID profissionalId);
 
 }

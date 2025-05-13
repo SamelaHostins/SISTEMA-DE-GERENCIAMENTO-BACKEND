@@ -57,8 +57,8 @@ public class Agendamento {
 
     @NotNull
     @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cliente")
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)    
+    @JoinColumn(name = "id_cliente", nullable = true)     
     private @Getter @Setter Cliente cliente;
 
     @NotNull

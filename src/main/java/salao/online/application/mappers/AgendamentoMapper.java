@@ -2,9 +2,6 @@ package salao.online.application.mappers;
 
 import java.time.Duration;
 import java.util.List;
-import salao.online.application.dtos.dtosDoAgendamento.CriarAgendamentoPeloClienteDTO;
-import salao.online.application.dtos.dtosDoAgendamento.CriarAgendamentoPeloProfissionalDTO;
-import salao.online.application.dtos.dtosDoEstoque.CriarEstoqueDTO;
 
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -12,8 +9,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import salao.online.application.dtos.dtosDoAgendamento.AgendamentoDTO;
+import salao.online.application.dtos.dtosDoAgendamento.CriarAgendamentoPeloClienteDTO;
+import salao.online.application.dtos.dtosDoAgendamento.CriarAgendamentoPeloProfissionalDTO;
 import salao.online.domain.entities.Agendamento;
-import salao.online.domain.entities.Estoque;
 import salao.online.domain.enums.FormaPagamentoEnum;
 import salao.online.domain.enums.StatusAgendamentoEnum;
 

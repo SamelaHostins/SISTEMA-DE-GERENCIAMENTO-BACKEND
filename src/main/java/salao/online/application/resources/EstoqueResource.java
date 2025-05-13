@@ -13,6 +13,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -87,4 +88,19 @@ public class EstoqueResource {
             return Response.status(500).entity("Erro interno ao buscar estoques.").build();
         }
     }
+
+    @DELETE
+    @Path("/deletar/{id_estoque}")
+    @RolesAllowed("PROFISSIONAL")
+    @Transactional
+    @Operation(summary = "Deletar um estoque e seus produtos")
+    @APIResponse(responseCode = "204", description = "Estoque deletado com sucesso")
+    @APIResponse(responseCode = "403", description = "Acesso negado")
+    @APIResponse(responseCode = "404", description = "Estoque não encontrado")
+    public Response deletarEstoque(@PathParam("id_estoque") UUID idEstoque, @Context SecurityContext securityContext) {
+        UUID idProfissional = UUID.fromString(securityContext.getUserPrincipal().getName());
+        estoqueService.deletarEstoque(idEstoque, idProfissional);
+        return Response.noContent().build();
+    }
+
 }

@@ -37,4 +37,6 @@ public interface ProfissionalService {
     BuscarProfissionalAutenticadoDTO buscarProfissionalAutenticado(UUID idProfissional) throws ValidacaoException;
 
     List<ListarProfissionalEmDestaqueDTO> listarProfissionaisEmDestaque();
+
+    void deletarHorarioDeTrabalho(UUID idHorario, UUID idProfissional);
 }

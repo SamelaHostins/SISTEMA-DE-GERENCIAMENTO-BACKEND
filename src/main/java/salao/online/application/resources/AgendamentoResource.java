@@ -14,6 +14,7 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -156,6 +157,19 @@ public class AgendamentoResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Erro ao buscar horários disponíveis.").build();
         }
+    }
+
+    @DELETE
+    @Path("deletar/{id}")
+    @RolesAllowed({ "CLIENTE", "PROFISSIONAL" })
+    @Transactional
+    public Response cancelarAgendamento(@PathParam("id") UUID idAgendamento,
+            @Context SecurityContext securityContext) {
+        UUID idUsuario = UUID.fromString(((DefaultJWTCallerPrincipal) securityContext.getUserPrincipal()).getName());
+        boolean isProfissional = securityContext.isUserInRole("PROFISSIONAL");
+
+        agendamentoService.cancelarAgendamento(idAgendamento, idUsuario, isProfissional);
+        return Response.noContent().build(); // HTTP 204
     }
 
     private UUID resolveClienteId(SecurityContext securityContext) throws ValidacaoException {

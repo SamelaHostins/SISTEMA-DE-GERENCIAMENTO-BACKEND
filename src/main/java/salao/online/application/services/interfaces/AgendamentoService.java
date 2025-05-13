@@ -31,4 +31,6 @@ public interface AgendamentoService {
                         Integer formaPagamentoValor);
 
         List<LocalTime> buscarHorariosDisponiveis(UUID idProfissional, LocalDate data);
+
+        void cancelarAgendamento(UUID idAgendamento, UUID idUsuario, boolean isProfissional);
 }

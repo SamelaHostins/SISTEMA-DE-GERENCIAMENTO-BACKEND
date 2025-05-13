@@ -11,15 +11,15 @@ import salao.online.domain.exceptions.ValidacaoException;
 
 public interface ClienteService {
 
-    public CriarClienteDTO cadastrarCliente(CriarClienteDTO clienteDTO) throws ValidacaoException;
+    CriarClienteDTO cadastrarCliente(CriarClienteDTO clienteDTO) throws ValidacaoException;
 
-    public AtualizarClienteDTO atualizarCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException;
+    AtualizarClienteDTO atualizarCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException;
 
-    public BuscarClienteDTO buscarClientePorId(UUID idCliente) throws ValidacaoException;
+    BuscarClienteDTO buscarClientePorId(UUID idCliente) throws ValidacaoException;
 
-    public void deletarCliente(UUID idCliente) throws ValidacaoException;
+    void deletarCliente(UUID idCliente) throws ValidacaoException;
 
-    public List<BuscarClienteDTO> buscarClientes();
+    List<BuscarClienteDTO> buscarClientes();
 
-    public Map<String, Integer> obterFaixasEtariasDasClientes();
+    Map<String, Integer> obterFaixasEtariasDasClientes();
 }

@@ -8,6 +8,7 @@ import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.WebApplicationException;
 import salao.online.application.dtos.dtosDoEstoque.CriarEstoqueDTO;
 import salao.online.application.dtos.dtosDoEstoque.EstoqueDTO;
 import salao.online.application.mappers.EstoqueMapper;
@@ -78,9 +79,25 @@ public class EstoqueServiceImpl implements EstoqueService {
         }
     }
 
+    @Override
+    public void deletarEstoque(UUID idEstoque, UUID idProfissional) {
+        Estoque estoque = estoqueRepository.findById(idEstoque);
+
+        if (estoque == null) {
+            throw new WebApplicationException("Estoque não encontrado", 404);
+        }
+
+        if (!estoque.getProfissional().getIdProfissional().equals(idProfissional)) {
+            throw new WebApplicationException("Acesso negado: estoque não pertence ao profissional", 403);
+        }
+
+        estoqueRepository.delete(estoque); // Produtos serão apagados via cascade
+    }
+
     private EstoqueDTO getEstoqueDTO(Estoque estoque) {
         EstoqueDTO estoqueDTO = estoqueMapper.fromEntityToDto(estoque);
-        estoqueDTO.setIdProfissional(profissionalMapper.fromEntityToBuscarDto(estoque.getProfissional()).getIdProfissional());
+        estoqueDTO.setIdProfissional(
+                profissionalMapper.fromEntityToBuscarDto(estoque.getProfissional()).getIdProfissional());
         estoqueDTO.setProdutos(produtoMapper.fromEntityListToDtoList(estoque.getProdutos()));
         return estoqueDTO;
     }

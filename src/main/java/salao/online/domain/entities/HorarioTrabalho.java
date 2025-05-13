@@ -35,13 +35,16 @@ public class HorarioTrabalho {
     private UUID id;
 
     @NotNull
+    @Column(name = "dia_semana")
     @Enumerated(EnumType.ORDINAL)
     private DiaSemanaEnum diaSemana;
 
     @NotNull
+    @Column(name = "hora_inicio")
     private LocalTime horaInicio;
 
     @NotNull
+    @Column(name = "hora_fim")
     private LocalTime horaFim;
 
     @ManyToOne(fetch = FetchType.LAZY)

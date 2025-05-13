@@ -10,6 +10,7 @@ import io.vertx.core.impl.logging.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.WebApplicationException;
 import salao.online.application.dtos.dtosDeEndereco.AtualizarEnderecoDTO;
 import salao.online.application.dtos.dtosDeEndereco.BuscarEnderecoDoProfissionalDTO;
 import salao.online.application.dtos.dtosDeImagem.ImagemDTO;
@@ -19,7 +20,6 @@ import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.CriarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.ListarProfissionalEmDestaqueDTO;
-import salao.online.application.dtos.dtosHorario.HorarioTrabalhoDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaProfissionalDTO;
 import salao.online.application.mappers.EstoqueMapper;
 import salao.online.application.mappers.ImagemMapper;
@@ -35,6 +35,7 @@ import salao.online.domain.enums.MensagemErroValidacaoEnum;
 import salao.online.domain.enums.ProfissaoEsteticaEnum;
 import salao.online.domain.exceptions.ValidacaoException;
 import salao.online.infra.repositories.EnderecoRepository;
+import salao.online.infra.repositories.HorarioTrabalhoRepository;
 import salao.online.infra.repositories.ProfissionalRepository;
 
 @ApplicationScoped
@@ -60,6 +61,9 @@ public class ProfissionalServiceImpl implements ProfissionalService {
 
     @Inject
     ImagemService imagemService;
+
+    @Inject
+    HorarioTrabalhoRepository horarioTrabalhoRepository;
 
     private static Logger logger = LoggerFactory.getLogger(LoggerFactory.class);
 
@@ -267,6 +271,17 @@ public class ProfissionalServiceImpl implements ProfissionalService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deletarHorarioDeTrabalho(UUID idHorario, UUID idProfissional) {
+        HorarioTrabalho horario = horarioTrabalhoRepository.findById(idHorario);
+
+        if (horario == null || !horario.getProfissional().getIdProfissional().equals(idProfissional)) {
+            throw new WebApplicationException("Horário não encontrado ou não pertence ao profissional", 403);
+        }
+
+        horarioTrabalhoRepository.delete(horario);
     }
 
     private BuscarProfissionalDTO getBuscarProfissionalDTO(Profissional profissional) {

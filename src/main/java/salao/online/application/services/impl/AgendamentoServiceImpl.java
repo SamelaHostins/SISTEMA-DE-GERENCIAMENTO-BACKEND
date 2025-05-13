@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.WebApplicationException;
 import salao.online.application.dtos.dtosDoAgendamento.AgendamentoDTO;
 import salao.online.application.dtos.dtosDoAgendamento.CriarAgendamentoPeloClienteDTO;
@@ -205,6 +206,27 @@ public class AgendamentoServiceImpl implements AgendamentoService {
                 }
 
                 return horariosDisponiveis;
+        }
+
+        @Override
+        @Transactional
+        public void cancelarAgendamento(UUID idAgendamento, UUID idUsuario, boolean isProfissional) {
+                Agendamento agendamento = agendamentoRepository.findById(idAgendamento);
+
+                if (agendamento == null) {
+                        throw new WebApplicationException("Agendamento não encontrado", 404);
+                }
+
+                UUID dono = isProfissional
+                                ? agendamento.getServico().getProfissional().getIdProfissional()
+                                : agendamento.getCliente().getIdCliente();
+
+                if (!dono.equals(idUsuario)) {
+                        throw new WebApplicationException("Acesso negado", 403);
+                }
+
+                agendamento.setStatusAgendamento(StatusAgendamentoEnum.CANCELADO);
+                agendamentoRepository.persist(agendamento);
         }
 
 }

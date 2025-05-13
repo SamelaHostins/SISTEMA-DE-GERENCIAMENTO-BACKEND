@@ -9,12 +9,13 @@ import salao.online.domain.exceptions.ValidacaoException;
 
 public interface EstoqueService {
 
-    public CriarEstoqueDTO cadastrarEstoque(CriarEstoqueDTO servicoDTO);
+    CriarEstoqueDTO cadastrarEstoque(CriarEstoqueDTO servicoDTO);
 
-    public EstoqueDTO atualizarEstoque(EstoqueDTO servicoDTO) throws ValidacaoException;
+    EstoqueDTO atualizarEstoque(EstoqueDTO servicoDTO) throws ValidacaoException;
 
-    public EstoqueDTO buscarEstoquePorId(UUID idEstoque) throws ValidacaoException;
+    EstoqueDTO buscarEstoquePorId(UUID idEstoque) throws ValidacaoException;
 
-    public List<EstoqueDTO> buscarEstoquesDoProfissional(UUID idProfissional) throws ValidacaoException;
+    List<EstoqueDTO> buscarEstoquesDoProfissional(UUID idProfissional) throws ValidacaoException;
+
+    void deletarEstoque(UUID idEstoque, UUID idProfissional);
 }
-

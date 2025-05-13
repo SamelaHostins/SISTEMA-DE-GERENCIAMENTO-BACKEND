@@ -8,6 +8,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipal;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -24,6 +25,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import salao.online.application.dtos.dtosDeEndereco.AtualizarEnderecoDTO;
 import salao.online.application.dtos.dtosDeEndereco.BuscarEnderecoDoProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
@@ -226,6 +228,18 @@ public class ProfissionalResource {
     public Response listarProfissionaisEmDestaque() {
         List<ListarProfissionalEmDestaqueDTO> profissionais = profissionalService.listarProfissionaisEmDestaque();
         return Response.ok(profissionais).build();
+    }
+
+    @DELETE
+    @Path("deletar-horario/{idHorario}")
+    @RolesAllowed("PROFISSIONAL")
+    @Transactional
+    public Response deletarHorarioDeTrabalho(@PathParam("idHorario") UUID idHorario,
+            @Context SecurityContext securityContext) {
+        UUID idProfissional = UUID
+                .fromString(((DefaultJWTCallerPrincipal) securityContext.getUserPrincipal()).getName());
+        profissionalService.deletarHorarioDeTrabalho(idHorario, idProfissional);
+        return Response.noContent().build();
     }
 
 }

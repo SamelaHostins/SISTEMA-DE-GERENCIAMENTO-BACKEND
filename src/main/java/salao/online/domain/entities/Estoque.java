@@ -1,8 +1,10 @@
 package salao.online.domain.entities;
 
 import java.util.UUID;
+import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -51,8 +53,8 @@ public class Estoque {
     private @Getter Profissional profissional;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "estoque")
-    private @Getter List<Produto> produtos;
+    @OneToMany(mappedBy = "estoque", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private @Getter List<Produto> produtos = new ArrayList<>();
 
     public Estoque(String nome, int qtdDeProdutos, List<Produto> produtos, Profissional profissional) {
         this.nome = nome;

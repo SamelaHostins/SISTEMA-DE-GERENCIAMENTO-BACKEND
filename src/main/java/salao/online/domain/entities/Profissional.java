@@ -53,25 +53,30 @@ public class Profissional extends Informacao {
     private @Getter @Setter Endereco endereco;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
+    @OneToMany(mappedBy = "profissional", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private @Getter List<Imagem> imagens = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
+    @OneToMany(mappedBy = "profissional", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private @Getter List<Servico> servicos = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "profissional")
+    @OneToMany(mappedBy = "profissional", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private @Getter List<Estoque> estoques = new ArrayList<>();
 
     @JsonManagedReference
     @OneToMany(mappedBy = "profissional", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private @Getter @Setter List<HorarioTrabalho> horariosTrabalho = new ArrayList<>();
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "profissional", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PerguntaFrequente> perguntasFrequentes = new ArrayList<>();
+
     public Profissional(String nome, String sobrenome, LocalDate dataNascimento, String email, String telefone,
             String usuario, String senha, String documento, String instagram, ProfissaoEsteticaEnum profissao,
             String descricaoDaProfissao, Endereco endereco, List<Imagem> imagens, List<Servico> servicos,
-            List<Estoque> estoques, List<HorarioTrabalho> horarioTrabalhos) {
+            List<Estoque> estoques, List<HorarioTrabalho> horarioTrabalhos,
+            List<PerguntaFrequente> perguntasFrequentes) {
         super(nome, sobrenome, dataNascimento, email, telefone, usuario, senha, documento);
         this.instagram = instagram;
         this.profissao = profissao;
@@ -81,6 +86,7 @@ public class Profissional extends Informacao {
         this.servicos = servicos;
         this.estoques = estoques;
         this.horariosTrabalho = horarioTrabalhos;
+        this.perguntasFrequentes = perguntasFrequentes;
     }
 
     public Profissional atualizarProfissional(String novoInstagram, ProfissaoEsteticaEnum novaProfissao,

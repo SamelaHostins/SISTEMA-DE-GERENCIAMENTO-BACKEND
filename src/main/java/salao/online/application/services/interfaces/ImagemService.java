@@ -9,12 +9,12 @@ import salao.online.domain.exceptions.ValidacaoException;
 
 public interface ImagemService {
 
-      public String uploadImagem(InputStream imageBytes, int tipoImagem, UUID idUsuario,
+      String uploadImagem(InputStream imageBytes, int tipoImagem, UUID idUsuario,
                   boolean ehProfissional) throws ValidacaoException;
 
-      public void excluirImagem(UUID idImagem);
+      void excluirImagem(UUID idImagem);
 
-      public ImagemDTO buscarImagemDePerfil(UUID idUsuario);
+      ImagemDTO buscarImagemDePerfil(UUID idUsuario);
 
-      public List<ImagemDTO> buscarFotosDoPortfolio(UUID idUsuario);
+      List<ImagemDTO> buscarFotosDoPortfolio(UUID idUsuario);
 }

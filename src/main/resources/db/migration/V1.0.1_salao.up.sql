@@ -37,6 +37,18 @@ CREATE TABLE IF NOT EXISTS salao.profissional (
     FOREIGN KEY (id_endereco) REFERENCES salao.endereco(id_endereco) ON DELETE SET NULL
 );
 
+-- Tabela perguntas frequentes
+CREATE TABLE IF NOT EXISTS salao.pergunta_frequente (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    pergunta VARCHAR(300) NOT NULL,
+    resposta VARCHAR(1000) NOT NULL,
+    id_profissional UUID NOT NULL,
+    CONSTRAINT fk_profissional_pergunta FOREIGN KEY (id_profissional)
+        REFERENCES salao.profissional(id_profissional)
+        ON DELETE CASCADE
+);
+
+
 -- Tabela cliente 
 CREATE TABLE IF NOT EXISTS salao.cliente (
     id_cliente UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -78,6 +90,17 @@ CREATE TABLE IF NOT EXISTS salao.agendamento (
     FOREIGN KEY (id_cliente) REFERENCES salao.cliente(id_cliente),
     FOREIGN KEY (id_servico) REFERENCES salao.servico(id_servico)
 );
+
+-- Tabela Horário de trabalho
+CREATE TABLE IF NOT EXISTS salao.horario_trabalho (
+    id_horario UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    dia_semana INT NOT NULL CHECK (dia_semana BETWEEN 0 AND 6), -- 0=DOMINGO, 1=SEGUNDA, ..., 6=SÁBADO
+    hora_inicio TIME NOT NULL,
+    hora_fim TIME NOT NULL,
+    id_profissional UUID NOT NULL,
+    CONSTRAINT fk_profissional_horario FOREIGN KEY (id_profissional) REFERENCES salao.profissional(id_profissional) ON DELETE CASCADE
+);
+
 
 -- Tabela estoque
 CREATE TABLE IF NOT EXISTS salao.estoque (

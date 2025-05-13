@@ -74,7 +74,7 @@ public class PerguntaFrequenteResource {
     }
 
     @DELETE
-    @Path("/{idPergunta}")
+    @Path("deletar/{idPergunta}")
     @RolesAllowed("PROFISSIONAL")
     @Transactional
     public Response deletarPergunta(

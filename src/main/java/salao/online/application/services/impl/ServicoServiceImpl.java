@@ -63,21 +63,20 @@ public class ServicoServiceImpl implements ServicoService {
     private static Logger logger = LoggerFactory.getLogger(LoggerFactory.class);
 
     @Override
-    public CriarServicoDTO cadastrarServico(CriarServicoDTO servicoDTO) throws ValidacaoException{
+    public CriarServicoDTO cadastrarServico(CriarServicoDTO servicoDTO) throws ValidacaoException {
         Profissional profissional = profissionalRepository.findById(servicoDTO.getIdProfissional());
         if (profissional == null) {
             throw new ValidacaoException("Profissional não encontrado");
         }
-    
+
         Servico servico = servicoMapper.fromCriarDtoToEntity(servicoDTO);
-        servico.setProfissional(profissional); 
-    
+        servico.setProfissional(profissional);
+
         logger.info("Salvando o servico criado");
         servicoRepository.persistAndFlush(servico);
-    
+
         return servicoMapper.fromEntityToCriarDto(servico);
     }
-    
 
     @Override
     public AtualizarServicoDTO atualizarServico(AtualizarServicoDTO servicoDTO) throws ValidacaoException {
@@ -85,7 +84,10 @@ public class ServicoServiceImpl implements ServicoService {
                 .orElseThrow(() -> new ValidacaoException(
                         MensagemErroValidacaoEnum.SERVICO_NAO_ENCONTRADO.getMensagemErro()));
 
-        TipoServicoEnum tipoServico = TipoServicoEnum.valueOf(servicoDTO.getTipoServico().name());
+        // Se tipoServico for nulo, mantém o valor atual do serviço
+        TipoServicoEnum tipoServico = (servicoDTO.getTipoServico() != null)
+                ? TipoServicoEnum.valueOf(servicoDTO.getTipoServico().name())
+                : servico.getTipoServico();
 
         Duration tempoDuration;
         try {

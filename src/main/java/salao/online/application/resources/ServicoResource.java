@@ -76,6 +76,7 @@ public class ServicoResource {
     @PUT
     @Path("/atualizar/{id_servico}")
     @RolesAllowed("PROFISSIONAL")
+    @Transactional
     public Response atualizarServico(
             @PathParam("id_servico") UUID idServico,
             AtualizarServicoDTO servicoDTO) {

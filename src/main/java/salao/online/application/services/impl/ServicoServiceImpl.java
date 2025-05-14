@@ -63,12 +63,21 @@ public class ServicoServiceImpl implements ServicoService {
     private static Logger logger = LoggerFactory.getLogger(LoggerFactory.class);
 
     @Override
-    public CriarServicoDTO cadastrarServico(CriarServicoDTO servicoDTO) {
+    public CriarServicoDTO cadastrarServico(CriarServicoDTO servicoDTO) throws ValidacaoException{
+        Profissional profissional = profissionalRepository.findById(servicoDTO.getIdProfissional());
+        if (profissional == null) {
+            throw new ValidacaoException("Profissional não encontrado");
+        }
+    
         Servico servico = servicoMapper.fromCriarDtoToEntity(servicoDTO);
+        servico.setProfissional(profissional); 
+    
         logger.info("Salvando o servico criado");
         servicoRepository.persistAndFlush(servico);
+    
         return servicoMapper.fromEntityToCriarDto(servico);
     }
+    
 
     @Override
     public AtualizarServicoDTO atualizarServico(AtualizarServicoDTO servicoDTO) throws ValidacaoException {

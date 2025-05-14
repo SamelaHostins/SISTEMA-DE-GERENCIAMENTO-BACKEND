@@ -12,7 +12,7 @@ import salao.online.domain.exceptions.ValidacaoException;
 
 public interface ServicoService {
 
-    CriarServicoDTO cadastrarServico(CriarServicoDTO servicoDTO);
+    CriarServicoDTO cadastrarServico(CriarServicoDTO servicoDTO) throws ValidacaoException;
 
     AtualizarServicoDTO atualizarServico(AtualizarServicoDTO servicoDTO) throws ValidacaoException;
 

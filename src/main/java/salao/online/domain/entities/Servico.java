@@ -30,6 +30,7 @@ import lombok.Setter;
 import salao.online.domain.enums.TipoServicoEnum;
 
 @Entity
+@Setter
 @Table(schema = "salao", name = "servico")
 public class Servico {
 

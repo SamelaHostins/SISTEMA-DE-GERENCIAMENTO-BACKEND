@@ -3,8 +3,8 @@ package salao.online.application.resources;
 import java.util.List;
 import java.util.UUID;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
@@ -20,8 +20,10 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
@@ -39,21 +41,29 @@ public class ServicoResource {
     @Inject
     ServicoService servicoService;
 
+    @Inject
+    JsonWebToken jwt;
+
     private static final org.jboss.logging.Logger LOG = org.jboss.logging.Logger.getLogger(ServicoResource.class);
 
-    @Operation(summary = "Cadastrando um Servico")
-    @APIResponse(responseCode = "200", description = "Servico criado com sucesso!")
-    @APIResponse(responseCode = "500", description = "Ocorreu um erro na requisição.")
     @POST
     @Transactional
     @Path("/cadastrar")
     @RolesAllowed("PROFISSIONAL")
-    public Response cadastrarServico(@RequestBody CriarServicoDTO dto) {
+    @Operation(summary = "Cadastrando um Servico")
+    @APIResponse(responseCode = "200", description = "Servico criado com sucesso!")
+    @APIResponse(responseCode = "500", description = "Ocorreu um erro na requisição.")
+    public Response cadastrarServico(CriarServicoDTO dto, @Context SecurityContext securityContext) {
         try {
             LOG.info("Requisição recebida - Cadastrar Servico");
+
+            UUID idProfissional = UUID.fromString(jwt.getSubject());
+            dto.setIdProfissional(idProfissional);
+
             CriarServicoDTO servicoDTO = servicoService.cadastrarServico(dto);
             return Response.status(200).entity(servicoDTO).build();
         } catch (Exception ex) {
+            ex.printStackTrace();
             return Response.status(500).entity("Ocorreu um erro na requisição.").build();
         }
     }
@@ -69,7 +79,11 @@ public class ServicoResource {
     public Response atualizarServico(
             @PathParam("id_servico") UUID idServico,
             AtualizarServicoDTO servicoDTO) {
+
         try {
+
+            UUID idProfissional = UUID.fromString(jwt.getSubject());
+            servicoDTO.setIdProfissional(idProfissional);
             LOG.info("Recebendo solicitação para atualizar o serviço com ID: " + idServico);
             AtualizarServicoDTO servicoAtualizado = servicoService.atualizarServico(servicoDTO);
 

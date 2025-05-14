@@ -74,7 +74,7 @@ public class ServicoResource {
     @APIResponse(responseCode = "400", description = "Requisição inválida.")
     @APIResponse(responseCode = "500", description = "Erro interno no servidor.")
     @PUT
-    @Path("/servicos/{id_servico}")
+    @Path("/atualizar/{id_servico}")
     @RolesAllowed("PROFISSIONAL")
     public Response atualizarServico(
             @PathParam("id_servico") UUID idServico,

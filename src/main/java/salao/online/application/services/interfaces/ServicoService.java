@@ -16,6 +16,8 @@ public interface ServicoService {
 
     AtualizarServicoDTO atualizarServico(AtualizarServicoDTO servicoDTO) throws ValidacaoException;
 
+    public boolean possuiAgendamentos(UUID idServico) throws ValidacaoException;
+
     void deletarCadastroServico(UUID idServico) throws ValidacaoException;
 
     List<ServicoDTO> listarServicosDoProfissional(UUID idProfissional, int tipoServico)

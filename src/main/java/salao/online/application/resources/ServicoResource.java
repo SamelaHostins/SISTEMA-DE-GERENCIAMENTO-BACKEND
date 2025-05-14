@@ -30,6 +30,7 @@ import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaLocalDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaServicoDTO;
 import salao.online.application.services.interfaces.ServicoService;
+import salao.online.domain.entities.Servico;
 import salao.online.domain.exceptions.ValidacaoException;
 
 @Path("/servico")
@@ -105,6 +106,21 @@ public class ServicoResource {
         }
     }
 
+    @Operation(summary = "Verifica se o serviço possui agendamentos")
+    @GET
+    @Path("/possui-agendamentos/{idServico}")
+    @RolesAllowed("PROFISSIONAL")
+    public Response possuiAgendamentos(@PathParam("idServico") UUID idServico) {
+        try {
+            boolean possui = servicoService.possuiAgendamentos(idServico);
+            return Response.ok(possui).build();
+        } catch (ValidacaoException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(e.getMessage())
+                    .build();
+        }
+    }
+
     @Operation(summary = "Deletando o cadastro de um servico")
     @APIResponse(responseCode = "200", description = "Cadastro deletado com sucesso!")
     @APIResponse(responseCode = "404", description = "O servico não foi encontrado")
@@ -117,7 +133,7 @@ public class ServicoResource {
         try {
             LOG.info("Requisição recebida - Deletar o cadastro do servico");
             servicoService.deletarCadastroServico(idservico);
-            return Response.status(200).build();
+            return Response.noContent().build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {

@@ -110,13 +110,21 @@ public class ServicoServiceImpl implements ServicoService {
     }
 
     @Override
-    public void deletarCadastroServico(UUID idServico) throws ValidacaoException {
-        logger.info("Validando se o serviço existe");
+    public boolean possuiAgendamentos(UUID idServico) throws ValidacaoException {
         Servico servico = servicoRepository.findById(idServico);
-        if (servico != null) {
-            servicoRepository.deletarServico(idServico);
+        if (servico == null) {
+            throw new ValidacaoException("Serviço não encontrado.");
         }
-        throw new ValidacaoException("O serviço fornecido não existe.");
+        return servico.getAgendamentos() != null && !servico.getAgendamentos().isEmpty();
+    }
+
+    @Override
+    public void deletarCadastroServico(UUID idServico) throws ValidacaoException {
+        Servico servico = servicoRepository.findById(idServico);
+        if (servico == null) {
+            throw new ValidacaoException("Serviço não encontrado.");
+        }
+        servicoRepository.delete(servico);
     }
 
     @Override

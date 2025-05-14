@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.smallrye.common.constraint.NotNull;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -70,11 +71,11 @@ public class Servico {
     private @Getter Profissional profissional;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "servico")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "servico", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private @Getter List<Avaliacao> avaliacoes;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "servico")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "servico", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private @Getter List<Agendamento> agendamentos;
 
     public Servico(TipoServicoEnum tipoServico, String nome, String especificacao, String termosECondicoes,

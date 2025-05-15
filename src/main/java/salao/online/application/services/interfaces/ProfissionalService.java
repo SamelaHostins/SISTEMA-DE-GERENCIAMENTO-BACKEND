@@ -38,5 +38,4 @@ public interface ProfissionalService {
 
     List<ListarProfissionalEmDestaqueDTO> listarProfissionaisEmDestaque();
 
-    void deletarHorarioDeTrabalho(UUID idHorario, UUID idProfissional);
 }

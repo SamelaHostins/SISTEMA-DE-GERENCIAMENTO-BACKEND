@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
 import salao.online.application.dtos.PerguntaFrequenteDTO;
 import salao.online.application.mappers.PerguntaFrequenteMapper;
@@ -72,4 +73,12 @@ public class PerguntaFrequenteServiceImpl implements PerguntaFrequenteService {
         perguntaFrequenteRepository.delete(pergunta);
     }
 
+    @Override
+    public PerguntaFrequenteDTO buscarPorId(UUID id) {
+        PerguntaFrequente entity = perguntaFrequenteRepository.findById(id);
+        if (entity == null) {
+            throw new NotFoundException("Pergunta frequente não encontrada.");
+        }
+        return perguntaFrequenteMapper.fromEntityToDto(entity);
+    }
 }

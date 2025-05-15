@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -30,7 +31,6 @@ import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaLocalDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaServicoDTO;
 import salao.online.application.services.interfaces.ServicoService;
-import salao.online.domain.entities.Servico;
 import salao.online.domain.exceptions.ValidacaoException;
 
 @Path("/servico")
@@ -121,7 +121,7 @@ public class ServicoResource {
         }
     }
 
-    @Operation(summary = "Deletando o cadastro de um servico")
+    @Operation(summary = "Deletando um servico")
     @APIResponse(responseCode = "200", description = "Cadastro deletado com sucesso!")
     @APIResponse(responseCode = "404", description = "O servico não foi encontrado")
     @DELETE
@@ -204,4 +204,21 @@ public class ServicoResource {
     public List<PesquisaLocalDTO> pesquisarTodasAsCidadesComServicos() {
         return servicoService.pesquisarTodasAsCidadesComServicos();
     }
+
+    @Operation(summary = "Busca o servico pelo ID")
+    @GET
+    @Path("/buscar/{idServico}")
+    @PermitAll
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response buscarServicoPorId(@PathParam("idServico") UUID idServico) throws ValidacaoException {
+        try {
+            ServicoDTO dto = servicoService.buscarServicoPorId(idServico);
+            return Response.ok(dto).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(e.getMessage())
+                    .build();
+        }
+    }
+
 }

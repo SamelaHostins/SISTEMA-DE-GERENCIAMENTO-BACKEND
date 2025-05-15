@@ -66,7 +66,7 @@ public class ServicoServiceImpl implements ServicoService {
     public CriarServicoDTO cadastrarServico(CriarServicoDTO servicoDTO) throws ValidacaoException {
         Profissional profissional = profissionalRepository.findById(servicoDTO.getIdProfissional());
         if (profissional == null) {
-            throw new ValidacaoException("Profissional não encontrado");
+            throw new ValidacaoException(MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro());
         }
 
         Servico servico = servicoMapper.fromCriarDtoToEntity(servicoDTO);
@@ -113,7 +113,7 @@ public class ServicoServiceImpl implements ServicoService {
     public boolean possuiAgendamentos(UUID idServico) throws ValidacaoException {
         Servico servico = servicoRepository.findById(idServico);
         if (servico == null) {
-            throw new ValidacaoException("Serviço não encontrado.");
+            throw new ValidacaoException(MensagemErroValidacaoEnum.SERVICO_NAO_ENCONTRADO.getMensagemErro());
         }
         return servico.getAgendamentos() != null && !servico.getAgendamentos().isEmpty();
     }
@@ -122,7 +122,7 @@ public class ServicoServiceImpl implements ServicoService {
     public void deletarCadastroServico(UUID idServico) throws ValidacaoException {
         Servico servico = servicoRepository.findById(idServico);
         if (servico == null) {
-            throw new ValidacaoException("Serviço não encontrado.");
+            throw new ValidacaoException(MensagemErroValidacaoEnum.SERVICO_NAO_ENCONTRADO.getMensagemErro());
         }
         servicoRepository.delete(servico);
     }
@@ -182,16 +182,21 @@ public class ServicoServiceImpl implements ServicoService {
                 .collect(Collectors.toSet());
 
         // 3) Para cada serviço, filtra apenas os de profissionais com foto de perfil,
-        // converte para DTO e garante apenas uma entrada por profissional.
         Set<UUID> vistos = new HashSet<>();
         return servicos.stream()
-                // filtra só serviços de profissionais com perfil
                 .filter(s -> profComPerfil.contains(s.getProfissional().getIdProfissional()))
-                // converte para o DTO de local
                 .map(localMapper::fromEntityToPesquisaLocalDto)
-                // filtra pra deixar apenas uma entrada por profissional
                 .filter(dto -> vistos.add(dto.getIdProfissional()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ServicoDTO buscarServicoPorId(UUID idServico) throws ValidacaoException {
+        Servico servico = servicoRepository.findById(idServico);
+        if (servico == null) {
+            throw new ValidacaoException(MensagemErroValidacaoEnum.SERVICO_NAO_ENCONTRADO.getMensagemErro());
+        }
+        return servicoMapper.fromEntityToDto(servico);
     }
 
     private ServicoDTO getServicoDTO(Servico servico) {

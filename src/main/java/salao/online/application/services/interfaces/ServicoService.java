@@ -28,4 +28,7 @@ public interface ServicoService {
     List<ServicoDTO> listarTodosOsServicosDoProfissional(UUID idProfissional) throws ValidacaoException;
 
     List<PesquisaLocalDTO> pesquisarTodasAsCidadesComServicos();
+
+    ServicoDTO buscarServicoPorId(UUID idServico) throws ValidacaoException;;
+
 }

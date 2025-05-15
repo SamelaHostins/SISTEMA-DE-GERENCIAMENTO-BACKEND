@@ -14,4 +14,6 @@ public interface PerguntaFrequenteService {
     List<PerguntaFrequenteDTO> listarPerguntasPorProfissional(UUID idProfissional);
 
     void deletarPergunta(UUID idPergunta, UUID idProfissional);
+
+    PerguntaFrequenteDTO buscarPorId(UUID id);
 }

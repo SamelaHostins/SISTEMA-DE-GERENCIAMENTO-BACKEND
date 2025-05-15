@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import salao.online.application.dtos.dtosDeEndereco.EnderecoDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,5 +23,4 @@ public class CriarProfissionalDTO {
     private String descricaoDaProfissao;
     private String senha;
     private String documento;
-    private EnderecoDTO endereco;
 }

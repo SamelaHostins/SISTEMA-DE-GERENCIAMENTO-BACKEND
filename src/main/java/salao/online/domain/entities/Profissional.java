@@ -49,7 +49,7 @@ public class Profissional extends Informacao {
     private @Getter @Setter String descricaoDaProfissao;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_endereco", referencedColumnName = "id_endereco")
+    @JoinColumn(name = "id_endereco", referencedColumnName = "id_endereco", nullable = true)
     private @Getter @Setter Endereco endereco;
 
     @JsonManagedReference

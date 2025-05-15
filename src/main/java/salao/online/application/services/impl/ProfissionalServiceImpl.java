@@ -10,7 +10,6 @@ import io.vertx.core.impl.logging.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.WebApplicationException;
 import salao.online.application.dtos.dtosDeEndereco.AtualizarEnderecoDTO;
 import salao.online.application.dtos.dtosDeEndereco.BuscarEnderecoDoProfissionalDTO;
 import salao.online.application.dtos.dtosDeImagem.ImagemDTO;
@@ -88,10 +87,6 @@ public class ProfissionalServiceImpl implements ProfissionalService {
                     .isPresent()) {
                 throw new ValidacaoException(MensagemErroValidacaoEnum.DOCUMENTO_JA_CADASTRADO.getMensagemErro() + " "
                         + profissionalDTO.getDocumento());
-            }
-
-            if (profissionalDTO.getEndereco() == null) {
-                throw new ValidacaoException("O endereço é obrigatório para cadastro do profissional.");
             }
 
             Profissional profissional = profissionalMapper.fromCriarDtoToEntity(profissionalDTO);
@@ -271,17 +266,6 @@ public class ProfissionalServiceImpl implements ProfissionalService {
                     return dto;
                 })
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public void deletarHorarioDeTrabalho(UUID idHorario, UUID idProfissional) {
-        HorarioTrabalho horario = horarioTrabalhoRepository.findById(idHorario);
-
-        if (horario == null || !horario.getProfissional().getIdProfissional().equals(idProfissional)) {
-            throw new WebApplicationException("Horário não encontrado ou não pertence ao profissional", 403);
-        }
-
-        horarioTrabalhoRepository.delete(horario);
     }
 
     private BuscarProfissionalDTO getBuscarProfissionalDTO(Profissional profissional) {

@@ -94,7 +94,7 @@ public class PerguntaFrequenteResource {
 
     @Operation(summary = "Buscando pergunta frequente por id")
     @GET
-    @Path("/{id}")
+    @Path("buscar/{id}")
     @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
     public Response buscarPorId(@PathParam("id") UUID id) {

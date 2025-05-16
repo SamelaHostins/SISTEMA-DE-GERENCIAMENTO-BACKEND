@@ -150,7 +150,7 @@ public class ProfissionalResource {
         try {
             UUID idProfissional = UUID.fromString(jwt.getSubject());
             profissionalService.deletarProfissional(idProfissional);
-            return Response.ok().build();
+            return Response.noContent().build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {
@@ -185,7 +185,7 @@ public class ProfissionalResource {
         try {
             UUID idProfissional = UUID.fromString(jwt.getSubject());
             profissionalService.atualizarEndereco(idProfissional, dto);
-            return Response.ok("Endereço atualizado com sucesso.").build();
+            return Response.noContent().build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {

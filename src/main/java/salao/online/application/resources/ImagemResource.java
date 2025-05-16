@@ -86,7 +86,7 @@ public class ImagemResource {
     public Response excluirImagem(@PathParam("idImagem") UUID idImagem) {
         try {
             imagemService.excluirImagem(idImagem);
-            return Response.ok("Imagem excluída com sucesso.").build();
+            return Response.noContent().build();
         } catch (IllegalArgumentException e) {
             return Response.status(404).entity(e.getMessage()).build();
         } catch (Exception ex) {

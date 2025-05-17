@@ -52,7 +52,7 @@ public class HorarioTrabalhoServiceImpl implements HorarioTrabalhoService {
                         MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
 
         // Descobre o dia da semana (0 = DOMINGO, 1 = SEGUNDA...)
-        DiaSemanaEnum dia = DiaSemanaEnum.values()[data.getDayOfWeek().getValue() % 7];
+        DiaSemanaEnum dia = DiaSemanaEnum.values()[data.getDayOfWeek().getValue() - 1];
 
         // Filtra faixas cadastradas para o dia
         List<HorarioTrabalho> faixas = profissional.getHorariosTrabalho().stream()

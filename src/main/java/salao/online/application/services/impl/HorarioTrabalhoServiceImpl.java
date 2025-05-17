@@ -51,7 +51,7 @@ public class HorarioTrabalhoServiceImpl implements HorarioTrabalhoService {
                 .orElseThrow(() -> new ValidacaoException(
                         MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
 
-        // Descobre o dia da semana (0 = DOMINGO, 1 = SEGUNDA...)
+        // Descobre o dia da semana (0 = SEGUNDA, 1 = TERÇA...)
         DiaSemanaEnum dia = DiaSemanaEnum.values()[data.getDayOfWeek().getValue() - 1];
 
         // Filtra faixas cadastradas para o dia

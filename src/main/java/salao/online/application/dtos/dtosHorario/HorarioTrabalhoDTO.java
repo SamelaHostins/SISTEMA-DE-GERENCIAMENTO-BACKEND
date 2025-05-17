@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HorarioTrabalhoDTO {
-    private Integer diaSemana; // 0 = DOMINGO, 1 = SEGUNDA...
+    private int diaSemana; // 0 = DOMINGO, 1 = SEGUNDA...
     private LocalTime horaInicio;
     private LocalTime horaFim;
 }

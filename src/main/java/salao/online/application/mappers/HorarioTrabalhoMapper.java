@@ -15,14 +15,19 @@ public interface HorarioTrabalhoMapper {
 
     @Named("diaSemanaEnumToInt")
     default Integer diaSemanaEnumToInt(DiaSemanaEnum dia) {
-        return dia.ordinal();
+        return dia.getValor();
     }
 
     @Named("intToDiaSemanaEnum")
     default DiaSemanaEnum intToDiaSemanaEnum(Integer valor) {
-        return DiaSemanaEnum.values()[valor];
-    }
-
+        for (DiaSemanaEnum dia : DiaSemanaEnum.values()) {
+            if (dia.getValor() == valor) {
+                return dia;
+            }
+        }
+        throw new IllegalArgumentException("Valor inválido para DiaSemanaEnum: " + valor);
+    }    
+    
     @Mapping(source = "diaSemana", target = "diaSemana", qualifiedByName = "diaSemanaEnumToInt")
     HorarioTrabalhoDTO fromEntityToDto(HorarioTrabalho entity);
 

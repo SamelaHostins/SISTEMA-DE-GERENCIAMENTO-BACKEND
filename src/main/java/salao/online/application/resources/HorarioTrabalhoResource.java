@@ -25,7 +25,10 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
+import salao.online.application.dtos.dtosHorario.HorarioTrabalhoDTO;
 import salao.online.application.services.interfaces.HorarioTrabalhoService;
+import salao.online.application.services.interfaces.ProfissionalService;
+import salao.online.domain.exceptions.ValidacaoException;
 
 @Path("/horario")
 @Tag(name = "Endpoints de Horario Trabalho")
@@ -36,28 +39,63 @@ public class HorarioTrabalhoResource {
     @Inject
     HorarioTrabalhoService horarioTrabalhoService;
 
+    @Inject
+    ProfissionalService profissionalService;
+
+    @GET
+    @Path("/profissional/{id}/horarios-trabalho")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PermitAll
+    @Operation(summary = "Listar os horários de trabalho de um profissional")
+    @APIResponse(responseCode = "200", description = "Horários de trabalho retornados com sucesso")
+    @APIResponse(responseCode = "500", description = "Erro interno")
+    public Response listarHorariosTrabalho(@PathParam("id") UUID idProfissional) {
+        try {
+            List<HorarioTrabalhoDTO> horarios = horarioTrabalhoService.listarHorariosDoProfissional(idProfissional);
+            return Response.ok(horarios).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao buscar horários de trabalho do profissional.")
+                    .build();
+        }
+    }
+
     @GET
     @Path("/profissional/{id}/horarios-disponiveis")
     @Produces(MediaType.APPLICATION_JSON)
     @PermitAll
     @Operation(summary = "Buscar horários disponíveis para um profissional em uma data")
     @APIResponse(responseCode = "200", description = "Lista de horários disponíveis retornada com sucesso")
+    @APIResponse(responseCode = "204", description = "O profissional não trabalha neste dia")
     @APIResponse(responseCode = "400", description = "Data não informada")
+    @APIResponse(responseCode = "404", description = "Profissional não encontrado")
     @APIResponse(responseCode = "500", description = "Erro interno ao buscar horários disponíveis")
     public Response buscarHorariosDisponiveis(
             @PathParam("id") UUID idProfissional,
-            @QueryParam("data") LocalDate data) {
+            @QueryParam("data") LocalDate data) throws ValidacaoException {
 
+        // Validação: data obrigatória
         if (data == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Parâmetro 'data' é obrigatório.")
-                    .build();
+                    .entity("Parâmetro 'data' é obrigatório.").build();
         }
 
         try {
-            List<LocalTime> horariosDisponiveis = horarioTrabalhoService.buscarHorariosDisponiveis(idProfissional,
-                    data);
+            // O serviço já valida o profissional e lança exceção se não encontrado
+            List<LocalTime> horariosDisponiveis = horarioTrabalhoService
+                    .buscarHorariosDisponiveis(idProfissional, data);
+
+            if (horariosDisponiveis == null) {
+                // Retorno explícito do service indicando que o profissional não trabalha no dia
+                return Response.status(Response.Status.NO_CONTENT).build(); // 204
+            }
+
             return Response.ok(horariosDisponiveis).build();
+
+        } catch (ValidacaoException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(e.getMessage()).build();
+
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Erro ao buscar horários disponíveis.").build();

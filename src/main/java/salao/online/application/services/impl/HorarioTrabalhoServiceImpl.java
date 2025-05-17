@@ -4,16 +4,21 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
+import salao.online.application.dtos.dtosHorario.HorarioTrabalhoDTO;
+import salao.online.application.mappers.HorarioTrabalhoMapper;
 import salao.online.application.services.interfaces.HorarioTrabalhoService;
 import salao.online.domain.entities.Agendamento;
 import salao.online.domain.entities.HorarioTrabalho;
 import salao.online.domain.entities.Profissional;
 import salao.online.domain.enums.DiaSemanaEnum;
+import salao.online.domain.enums.MensagemErroValidacaoEnum;
+import salao.online.domain.exceptions.ValidacaoException;
 import salao.online.infra.repositories.AgendamentoRepository;
 import salao.online.infra.repositories.HorarioTrabalhoRepository;
 import salao.online.infra.repositories.ProfissionalRepository;
@@ -30,25 +35,36 @@ public class HorarioTrabalhoServiceImpl implements HorarioTrabalhoService {
     @Inject
     HorarioTrabalhoRepository horarioTrabalhoRepository;
 
+    @Inject
+    HorarioTrabalhoMapper mapper;
+
     @Override
-    public List<LocalTime> buscarHorariosDisponiveis(UUID idProfissional, LocalDate data) {
-        Profissional profissional = profissionalRepository.findById(idProfissional);
-        if (profissional == null) {
-            throw new WebApplicationException("Profissional não encontrado", 404);
-        }
+    public List<HorarioTrabalhoDTO> listarHorariosDoProfissional(UUID idProfissional) {
+        List<HorarioTrabalho> horarios = horarioTrabalhoRepository.list("idProfissional", idProfissional);
+        return mapper.fromEntityListToDtoList(horarios);
+    }
+
+    @Override
+    public List<LocalTime> buscarHorariosDisponiveis(UUID idProfissional, LocalDate data) throws ValidacaoException {
+        // Validação do profissional
+        Profissional profissional = Optional.ofNullable(profissionalRepository.findById(idProfissional))
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
 
         // Descobre o dia da semana (0 = DOMINGO, 1 = SEGUNDA...)
         DiaSemanaEnum dia = DiaSemanaEnum.values()[data.getDayOfWeek().getValue() % 7];
 
-        // Filtra faixas cadastradas pro dia
+        // Filtra faixas cadastradas para o dia
         List<HorarioTrabalho> faixas = profissional.getHorariosTrabalho().stream()
                 .filter(h -> h.getDiaSemana() == dia)
                 .toList();
 
-        if (faixas.isEmpty())
-            return List.of(); // Sem expediente hoje? Então nem tenta.
-
-        // Puxa os agendamentos já existentes do dia
+        // Retorna lista vazia se não há expediente hoje
+        if (faixas.isEmpty()) {
+            return List.of();
+        }
+        
+        // Puxa os agendamentos já existentes para o dia
         List<Agendamento> agendamentos = agendamentoRepository
                 .buscarPorProfissionalEData(idProfissional, data);
 
@@ -58,20 +74,17 @@ public class HorarioTrabalhoServiceImpl implements HorarioTrabalhoService {
             LocalTime hora = faixa.getHoraInicio();
 
             while (!hora.plusMinutes(30).isAfter(faixa.getHoraFim())) {
-                final LocalTime finalHora = hora; // Agora sim, sem treta com a lambda!
+                final LocalTime finalHora = hora;
 
                 boolean sobrepoe = agendamentos.stream().anyMatch(ag -> {
                     LocalTime inicioAg = ag.getHoraAgendamento();
                     LocalTime fimAg = inicioAg.plus(ag.getServico().getTempo());
-                    return !(finalHora.plusMinutes(30).isBefore(inicioAg)
-                            || finalHora.isAfter(fimAg));
+                    return !(finalHora.plusMinutes(30).isBefore(inicioAg) || finalHora.isAfter(fimAg));
                 });
-
                 if (!sobrepoe) {
                     horariosDisponiveis.add(hora);
                 }
-
-                hora = hora.plusMinutes(30); // Bora pro próximo bloco
+                hora = hora.plusMinutes(30);
             }
         }
 

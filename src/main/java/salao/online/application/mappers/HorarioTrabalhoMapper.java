@@ -26,6 +26,8 @@ public interface HorarioTrabalhoMapper {
     @Mapping(source = "diaSemana", target = "diaSemana", qualifiedByName = "diaSemanaEnumToInt")
     HorarioTrabalhoDTO fromEntityToDto(HorarioTrabalho entity);
 
+    @Mapping(target = "profissional", ignore = true)
+    @Mapping(target = "id", ignore = true)
     @Mapping(source = "diaSemana", target = "diaSemana", qualifiedByName = "intToDiaSemanaEnum")
     HorarioTrabalho fromDtoToEntity(HorarioTrabalhoDTO dto);
 

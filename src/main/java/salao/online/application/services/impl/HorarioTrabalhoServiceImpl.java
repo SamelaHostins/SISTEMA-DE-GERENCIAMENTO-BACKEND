@@ -40,9 +40,9 @@ public class HorarioTrabalhoServiceImpl implements HorarioTrabalhoService {
 
     @Override
     public List<HorarioTrabalhoDTO> listarHorariosDoProfissional(UUID idProfissional) {
-        List<HorarioTrabalho> horarios = horarioTrabalhoRepository.list("idProfissional", idProfissional);
+        List<HorarioTrabalho> horarios = horarioTrabalhoRepository.list("profissional.id", idProfissional);
         return mapper.fromEntityListToDtoList(horarios);
-    }
+    }    
 
     @Override
     public List<LocalTime> buscarHorariosDisponiveis(UUID idProfissional, LocalDate data) throws ValidacaoException {
@@ -63,7 +63,7 @@ public class HorarioTrabalhoServiceImpl implements HorarioTrabalhoService {
         if (faixas.isEmpty()) {
             return List.of();
         }
-        
+
         // Puxa os agendamentos já existentes para o dia
         List<Agendamento> agendamentos = agendamentoRepository
                 .buscarPorProfissionalEData(idProfissional, data);

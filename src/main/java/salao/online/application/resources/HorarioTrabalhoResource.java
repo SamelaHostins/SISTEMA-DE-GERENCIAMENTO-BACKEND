@@ -43,16 +43,22 @@ public class HorarioTrabalhoResource {
     ProfissionalService profissionalService;
 
     @GET
-    @Path("/profissional/{id}/horarios-trabalho")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}/horarios-trabalho")
     @PermitAll
     @Operation(summary = "Listar os horários de trabalho de um profissional")
     @APIResponse(responseCode = "200", description = "Horários de trabalho retornados com sucesso")
+    @APIResponse(responseCode = "204", description = "Profissional não possui horários cadastrados")
     @APIResponse(responseCode = "500", description = "Erro interno")
     public Response listarHorariosTrabalho(@PathParam("id") UUID idProfissional) {
         try {
             List<HorarioTrabalhoDTO> horarios = horarioTrabalhoService.listarHorariosDoProfissional(idProfissional);
+
+            if (horarios == null || horarios.isEmpty()) {
+                return Response.status(Response.Status.NO_CONTENT).build(); 
+            }
+
             return Response.ok(horarios).build();
+
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Erro ao buscar horários de trabalho do profissional.")
@@ -61,7 +67,7 @@ public class HorarioTrabalhoResource {
     }
 
     @GET
-    @Path("/profissional/{id}/horarios-disponiveis")
+    @Path("/{id}/horarios-disponiveis")
     @Produces(MediaType.APPLICATION_JSON)
     @PermitAll
     @Operation(summary = "Buscar horários disponíveis para um profissional em uma data")

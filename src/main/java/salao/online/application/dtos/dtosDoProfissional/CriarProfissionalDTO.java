@@ -18,9 +18,7 @@ public class CriarProfissionalDTO {
     private LocalDate dataNascimento;
     private String email;
     private String telefone;
-    private String instagram;
-    private ProfissaoEsteticaEnumDTO profissao;
-    private String descricaoDaProfissao;
+    private int profissao;
     private String senha;
     private String documento;
 }

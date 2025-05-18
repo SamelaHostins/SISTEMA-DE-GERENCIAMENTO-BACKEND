@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS salao.profissional (
     sobrenome VARCHAR(25) NOT NULL,
     data_nascimento DATE NOT NULL CHECK (data_nascimento <= CURRENT_DATE),
     email VARCHAR(30) NOT NULL UNIQUE,
-    telefone VARCHAR(12) NOT NULL UNIQUE CHECK (telefone ~ '^[0-9]+$'),
-    usuario VARCHAR(25) NOT NULL UNIQUE,
+    telefone VARCHAR(12) NOT NULL CHECK (telefone ~ '^[0-9]+$'),
+    usuario VARCHAR(25) NOT NULL,
     senha VARCHAR(8) NOT NULL CHECK (senha ~ '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8}$'),
     documento VARCHAR(14) NOT NULL UNIQUE CHECK (
     documento ~ '^\d{11}$' OR 

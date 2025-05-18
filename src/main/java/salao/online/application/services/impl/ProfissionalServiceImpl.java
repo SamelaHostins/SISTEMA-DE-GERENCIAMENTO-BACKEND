@@ -91,10 +91,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
 
             Profissional profissional = profissionalMapper.fromCriarDtoToEntity(profissionalDTO);
 
-            Endereco endereco = profissional.getEndereco();
-            enderecoRepository.persist(endereco);
-            profissional.setEndereco(endereco);
-
+            // Gerar nome de usuário automaticamente com nome.sobrenome
             String[] sobrenomes = profissionalDTO.getSobrenome().split(" ");
             String ultimoSobrenome = sobrenomes[sobrenomes.length - 1];
             String usuario = removeAcentos(profissionalDTO.getNome().toLowerCase()) + "." +
@@ -104,7 +101,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
             logger.info("Salvando o profissional no banco de dados");
             profissionalRepository.persistAndFlush(profissional);
 
-            return profissionalMapper.fromEntityToCriarDto(profissional);
+            return profissionalDTO; // ou outro DTO se preferir
 
         } catch (ValidacaoException e) {
             logger.warn("Erro de validação ao cadastrar profissional: " + e.getMessage());

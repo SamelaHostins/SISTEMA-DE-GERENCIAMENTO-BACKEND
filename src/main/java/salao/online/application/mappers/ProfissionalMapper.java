@@ -45,7 +45,7 @@ public interface ProfissionalMapper {
 
     @Mapping(target = "idProfissional", ignore = true)
     @Mapping(target = "dataNascimento", source = "dto.dataNascimento")
-    @Mapping(source = "profissao", target = "profissao", qualifiedByName = "dtoToEnum")
+    @Mapping(source = "profissao", target = "profissao", qualifiedByName = "intToProfissaoEnum")
     Profissional fromCriarDtoToEntity(CriarProfissionalDTO dto);
 
     BuscarProfissionalDTO fromEntityToBuscarDto(Profissional entity);

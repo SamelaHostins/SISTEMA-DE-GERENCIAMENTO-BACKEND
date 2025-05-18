@@ -60,9 +60,13 @@ public class ProfissionalResource {
             LOG.info("Requisição recebida - Cadastrar Profissional");
             CriarProfissionalDTO profissionalDTO = profissionalService.cadastrarProfissional(dto);
             return Response.ok(profissionalDTO).build();
+
         } catch (Exception ex) {
-            LOG.error("Erro ao cadastrar profissional: {}", ex.getMessage(), ex);
-            return Response.status(500).entity("Erro ao cadastrar profissional: " + ex.getMessage()).build();
+            LOG.error("Erro ao cadastrar profissional", ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao cadastrar profissional.")
+                    .type("text/plain")
+                    .build();
         }
     }
 

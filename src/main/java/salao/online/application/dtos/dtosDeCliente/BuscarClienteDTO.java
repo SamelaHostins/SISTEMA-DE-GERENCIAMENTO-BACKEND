@@ -1,15 +1,12 @@
 package salao.online.application.dtos.dtosDeCliente;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import salao.online.application.dtos.AvaliacaoDTO;
-import salao.online.application.dtos.dtosDeImagem.ImagensDoClienteDTO;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,6 +23,5 @@ public class BuscarClienteDTO {
     private String email;
     private String telefone;
     private String documento; 
-    private List<AvaliacaoDTO> avaliacoes;
-    private List<ImagensDoClienteDTO> imagens;
+    private String senha;
 }

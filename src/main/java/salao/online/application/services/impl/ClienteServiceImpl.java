@@ -175,8 +175,6 @@ public class ClienteServiceImpl implements ClienteService {
 
     private BuscarClienteDTO getBuscarClienteDTO(Cliente cliente) {
         BuscarClienteDTO clienteDTO = clienteMapper.fromEntityToBuscarDto(cliente);
-        clienteDTO.setAvaliacoes(avaliacaoMapper.fromEntityListToDtoList(cliente.getAvaliacoes()));
-        clienteDTO.setImagens(imagemMapper.fromEntityListToClienteDtoList(cliente.getImagens()));
         return clienteDTO;
     }
 

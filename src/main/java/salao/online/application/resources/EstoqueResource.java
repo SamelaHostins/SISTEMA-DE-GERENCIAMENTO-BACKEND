@@ -16,6 +16,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -39,19 +40,43 @@ public class EstoqueResource {
 
     private static final org.jboss.logging.Logger LOG = org.jboss.logging.Logger.getLogger(EstoqueResource.class);
 
-    @Operation(summary = "Cadastrar um novo estoque")
-    @APIResponse(responseCode = "200", description = "Estoque criado com sucesso!")
     @POST
     @Transactional
     @Path("/cadastrar")
     @RolesAllowed("PROFISSIONAL")
-    public Response cadastrarEstoque(@Valid @RequestBody CriarEstoqueDTO dto) {
+    public Response cadastrarEstoque(@Valid @RequestBody CriarEstoqueDTO dto,
+            @Context SecurityContext securityContext) {
         try {
             LOG.info("Requisição recebida - Cadastrar Estoque");
+
+            UUID idProfissional = UUID.fromString(securityContext.getUserPrincipal().getName());
+            dto.setIdProfissional(idProfissional); 
+
             CriarEstoqueDTO estoqueDTO = estoqueService.cadastrarEstoque(dto);
             return Response.ok(estoqueDTO).build();
         } catch (Exception ex) {
+            ex.printStackTrace();
             return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+        }
+    }
+
+    @Operation(summary = "Editar um estoque")
+    @APIResponse(responseCode = "200", description = "Estoque atualizado com sucesso")
+    @APIResponse(responseCode = "404", description = "Estoque não encontrado")
+    @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    @PUT
+    @Path("/editar")
+    @Transactional
+    @RolesAllowed("PROFISSIONAL")
+    public Response editarEstoque(@Valid @RequestBody EstoqueDTO dto, @Context SecurityContext securityContext) {
+        try {
+            UUID idProfissional = UUID.fromString(securityContext.getUserPrincipal().getName());
+            EstoqueDTO estoqueAtualizado = estoqueService.atualizarEstoque(dto, idProfissional);
+            return Response.ok(estoqueAtualizado).build();
+        } catch (ValidacaoException ex) {
+            return Response.status(404).entity(ex.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(500).entity("Erro interno ao atualizar o estoque.").build();
         }
     }
 

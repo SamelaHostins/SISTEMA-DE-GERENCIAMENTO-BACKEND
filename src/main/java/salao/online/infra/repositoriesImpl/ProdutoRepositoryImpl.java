@@ -24,9 +24,10 @@ public class ProdutoRepositoryImpl implements ProdutoRepository {
     @Override
     public Optional<Produto> deletarProduto(UUID idProduto) {
         Optional<Produto> produtoOptional = findByIdOptional(idProduto);
-        if (produtoOptional.isPresent()) {
-            deleteById(idProduto);
-        }
+        produtoOptional.ifPresent(produto -> {
+            delete(produto);
+            flush();
+        });
         return produtoOptional;
-    }
+    }    
 }

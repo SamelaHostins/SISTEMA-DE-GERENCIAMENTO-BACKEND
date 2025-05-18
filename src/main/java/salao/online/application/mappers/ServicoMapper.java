@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
+import salao.online.application.dtos.dtosDoServico.BuscarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaServicoDTO;
@@ -70,6 +71,11 @@ public interface ServicoMapper {
     PesquisaServicoDTO fromEntityToPesquisaDto(Servico entity);
 
     List<PesquisaServicoDTO> fromEntityListToPesquisaDtoList(List<Servico> servicos);
+
+    @Mapping(source = "idServico", target = "idServico")
+    @Mapping(source = "profissional.idProfissional", target = "idProfissional")
+    @Mapping(source = "tempo", target = "tempo", qualifiedByName = "durationToString")
+    BuscarServicoDTO fromEntityToBuscarDto(Servico entity);
 
     // ---------------- CONVERSORES DE TEMPO ----------------
     @Named("durationToString")

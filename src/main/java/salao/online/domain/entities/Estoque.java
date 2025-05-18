@@ -24,8 +24,10 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.smallrye.common.constraint.NotNull;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Setter
 @Table(schema = "salao", name = "estoque", uniqueConstraints = {
         @UniqueConstraint(columnNames = { "id_profissional" }) })
 public class Estoque {

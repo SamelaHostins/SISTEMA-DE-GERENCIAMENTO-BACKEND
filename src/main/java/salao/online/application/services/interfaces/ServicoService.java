@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
+import salao.online.application.dtos.dtosDoServico.BuscarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaLocalDTO;
@@ -29,6 +30,8 @@ public interface ServicoService {
 
     List<PesquisaLocalDTO> pesquisarTodasAsCidadesComServicos();
 
-    ServicoDTO buscarServicoPorId(UUID idServico) throws ValidacaoException;;
+    ServicoDTO buscarServicoPorId(UUID idServico) throws ValidacaoException;
+
+    BuscarServicoDTO buscarServicoBasicoPorId(UUID idServico) throws ValidacaoException;
 
 }

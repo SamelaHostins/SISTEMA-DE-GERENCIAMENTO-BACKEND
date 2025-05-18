@@ -9,9 +9,9 @@ import salao.online.domain.exceptions.ValidacaoException;
 
 public interface EstoqueService {
 
-    CriarEstoqueDTO cadastrarEstoque(CriarEstoqueDTO servicoDTO);
+    CriarEstoqueDTO cadastrarEstoque(CriarEstoqueDTO servicoDTO) throws ValidacaoException;
 
-    EstoqueDTO atualizarEstoque(EstoqueDTO servicoDTO) throws ValidacaoException;
+    EstoqueDTO atualizarEstoque(EstoqueDTO dto, UUID idProfissional) throws ValidacaoException;
 
     EstoqueDTO buscarEstoquePorId(UUID idEstoque) throws ValidacaoException;
 

@@ -16,6 +16,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -54,6 +55,26 @@ public class ProdutoResource {
         }
     }
 
+    @Operation(summary = "Editando um produto")
+    @APIResponse(responseCode = "200", description = "Produto atualizado com sucesso!")
+    @APIResponse(responseCode = "404", description = "Produto não encontrado")
+    @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    @PUT
+    @Transactional
+    @Path("/editar")
+    @RolesAllowed("PROFISSIONAL")
+    public Response editarProduto(@Valid @RequestBody ProdutoDTO dto) {
+        try {
+            LOG.info("Requisição recebida - Editar Produto");
+            ProdutoDTO produtoAtualizado = produtoService.atualizarProduto(dto);
+            return Response.status(200).entity(produtoAtualizado).build();
+        } catch (ValidacaoException ex) {
+            return Response.status(404).entity(ex.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+        }
+    }
+
     @Operation(summary = "Buscando um produto")
     @APIResponse(responseCode = "200", description = "Busca realizada com sucesso!")
     @APIResponse(responseCode = "404", description = "O produto não foi encontrado")
@@ -85,7 +106,7 @@ public class ProdutoResource {
         try {
             LOG.info("Requisição recebida - Deletar o cadastro do produto");
             produtoService.deletarProduto(idProduto);
-            return Response.status(200).build();
+            return Response.noContent().build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {

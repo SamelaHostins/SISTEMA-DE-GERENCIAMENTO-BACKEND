@@ -20,8 +20,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import io.smallrye.common.constraint.NotNull;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Setter
 @Table(schema = "salao", name = "produto")
 public class Produto {
 

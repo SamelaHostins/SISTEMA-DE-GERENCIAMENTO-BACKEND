@@ -49,10 +49,30 @@ public class ProdutoServiceImpl implements ProdutoService {
         return produtoMapper.fromEntityToCriarDto(produto);
     }
 
-    // não está pronto ainda
     @Override
     public ProdutoDTO atualizarProduto(ProdutoDTO produtoDTO) throws ValidacaoException {
-        throw new UnsupportedOperationException("Unimplemented method 'atualizarProduto'");
+        logger.info("Buscando o produto para atualização");
+
+        Produto produto = produtoRepository.findByIdOptional(produtoDTO.getIdProduto())
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.PRODUTO_NAO_ENCONTRADO.getMensagemErro()));
+
+        // Atualizar os campos editáveis
+        produto.setNome(produtoDTO.getNome());
+        produto.setDtValidadeProduto(produtoDTO.getDtValidadeProduto());
+        produto.setValor(produtoDTO.getValor());
+
+        // Se o estoque puder ser alterado
+        if (produtoDTO.getIdEstoque() != null &&
+                !produto.getEstoque().getIdEstoque().equals(produtoDTO.getIdEstoque())) {
+            var novoEstoque = estoqueRepository.findByIdOptional(produtoDTO.getIdEstoque())
+                    .orElseThrow(() -> new ValidacaoException(
+                            MensagemErroValidacaoEnum.ESTOQUE_NAO_ENCONTRADO.getMensagemErro()));
+            produto.setEstoque(novoEstoque);
+        }
+
+        produtoRepository.persistAndFlush(produto);
+        return getProdutoDTO(produto);
     }
 
     @Override
@@ -67,7 +87,9 @@ public class ProdutoServiceImpl implements ProdutoService {
     @Override
     public void deletarProduto(UUID idProduto) throws ValidacaoException {
         logger.info("Validando se o produto existe");
-        buscarProdutoPorId(idProduto);
+        produtoRepository.findByIdOptional(idProduto)
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.PRODUTO_NAO_ENCONTRADO.getMensagemErro()));
         produtoRepository.deletarProduto(idProduto);
     }
 

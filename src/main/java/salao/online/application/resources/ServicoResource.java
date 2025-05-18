@@ -26,6 +26,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
+import salao.online.application.dtos.dtosDoServico.BuscarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaLocalDTO;
@@ -221,4 +222,20 @@ public class ServicoResource {
         }
     }
 
+    @Operation(summary = "Buscar serviço com informações básicas")
+    @GET
+    @Path("/buscar-basico/{idServico}")
+    @PermitAll
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response buscarServicoBasicoPorId(@PathParam("idServico") UUID idServico) {
+        try {
+            BuscarServicoDTO dto = servicoService.buscarServicoBasicoPorId(idServico);
+            return Response.ok(dto).build();
+        } catch (ValidacaoException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao buscar o serviço básico.").build();
+        }
+    }
 }

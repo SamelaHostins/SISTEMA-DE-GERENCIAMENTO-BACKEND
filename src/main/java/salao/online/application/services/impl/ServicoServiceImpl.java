@@ -13,6 +13,7 @@ import io.vertx.core.impl.logging.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
+import salao.online.application.dtos.dtosDoServico.BuscarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
 import salao.online.application.dtos.dtosDoServico.TipoServicoEnumDTO;
@@ -197,6 +198,14 @@ public class ServicoServiceImpl implements ServicoService {
             throw new ValidacaoException(MensagemErroValidacaoEnum.SERVICO_NAO_ENCONTRADO.getMensagemErro());
         }
         return servicoMapper.fromEntityToDto(servico);
+    }
+
+    @Override
+    public BuscarServicoDTO buscarServicoBasicoPorId(UUID idServico) throws ValidacaoException {
+        Servico servico = servicoRepository.findByIdOptional(idServico)
+                .orElseThrow(() -> new ValidacaoException("Serviço não encontrado"));
+
+        return servicoMapper.fromEntityToBuscarDto(servico);
     }
 
     private ServicoDTO getServicoDTO(Servico servico) {

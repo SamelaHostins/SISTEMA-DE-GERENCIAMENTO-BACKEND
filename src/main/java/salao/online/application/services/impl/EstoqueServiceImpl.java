@@ -43,16 +43,36 @@ public class EstoqueServiceImpl implements EstoqueService {
     private static Logger logger = LoggerFactory.getLogger(LoggerFactory.class);
 
     @Override
-    public CriarEstoqueDTO cadastrarEstoque(CriarEstoqueDTO estoqueDTO) {
+    public CriarEstoqueDTO cadastrarEstoque(CriarEstoqueDTO estoqueDTO) throws ValidacaoException{
+        Profissional profissional = profissionalRepository.findById(estoqueDTO.getIdProfissional());
+        if (profissional == null) {
+           throw new ValidacaoException(
+                MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro());
+        }
         Estoque estoque = estoqueMapper.fromCriarDtoToEntity(estoqueDTO);
+        estoque.setProfissional(profissional);
         logger.info("Salvando o estoque criado");
         estoqueRepository.persistAndFlush(estoque);
         return estoqueMapper.fromEntityToCriarDto(estoque);
     }
 
     @Override
-    public EstoqueDTO atualizarEstoque(EstoqueDTO estoqueDTO) throws ValidacaoException {
-        throw new UnsupportedOperationException("Unimplemented method 'atualizarEstoque'");
+    public EstoqueDTO atualizarEstoque(EstoqueDTO dto, UUID idProfissional) throws ValidacaoException {
+        logger.info("Buscando o estoque para atualização");
+
+        Estoque estoque = estoqueRepository.findByIdOptional(dto.getIdEstoque())
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.ESTOQUE_NAO_ENCONTRADO.getMensagemErro()));
+
+        if (!estoque.getProfissional().getIdProfissional().equals(idProfissional)) {
+            throw new ValidacaoException("Este estoque não pertence ao profissional logado.");
+        }
+
+        // Atualiza apenas o nome (ou outros campos se forem permitidos no futuro)
+        estoque.setNome(dto.getNome());
+
+        estoqueRepository.persistAndFlush(estoque);
+        return estoqueMapper.fromEntityToDto(estoque);
     }
 
     @Override

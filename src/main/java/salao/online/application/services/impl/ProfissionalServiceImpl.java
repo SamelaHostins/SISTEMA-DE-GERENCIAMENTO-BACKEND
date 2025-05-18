@@ -26,7 +26,6 @@ import salao.online.application.mappers.ProfissionalMapper;
 import salao.online.application.mappers.ServicoMapper;
 import salao.online.application.services.interfaces.ImagemService;
 import salao.online.application.services.interfaces.ProfissionalService;
-import salao.online.domain.entities.Endereco;
 import salao.online.domain.entities.HorarioTrabalho;
 import salao.online.domain.entities.Profissional;
 import salao.online.domain.enums.DiaSemanaEnum;

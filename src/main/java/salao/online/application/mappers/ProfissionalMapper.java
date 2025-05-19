@@ -55,7 +55,6 @@ public interface ProfissionalMapper {
     @Mapping(source = "sobrenome", target = "sobrenome")
     @Mapping(source = "email", target = "email")
     @Mapping(source = "telefone", target = "telefone")
-    @Mapping(source = "senha", target = "senha")
     @Mapping(source = "instagram", target = "instagram")
     @Mapping(source = "profissao", target = "profissao", qualifiedByName = "profissaoEnumToInt")
     @Mapping(source = "horariosTrabalho", target = "horariosTrabalho")

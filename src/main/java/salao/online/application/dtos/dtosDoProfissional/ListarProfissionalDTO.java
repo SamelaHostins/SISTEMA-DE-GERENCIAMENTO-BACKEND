@@ -22,6 +22,7 @@ public class ListarProfissionalDTO {
     private String sobrenome;
     private String instagram;
     private ProfissaoEsteticaEnumDTO profissao;
+    private LocalDate dataNascimento;
     private String descricaoDaProfissao;
     private String usuario;
     private String email;

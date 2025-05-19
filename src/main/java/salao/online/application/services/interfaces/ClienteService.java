@@ -22,4 +22,7 @@ public interface ClienteService {
     List<BuscarClienteDTO> buscarClientes();
 
     Map<String, Integer> obterFaixasEtariasDasClientes();
+
+    void alterarSenha(UUID idCliente, String novaSenha) throws ValidacaoException;
+
 }

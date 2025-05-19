@@ -25,6 +25,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import salao.online.application.dtos.dtosDeCliente.AlterarSenhaClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
@@ -157,4 +158,28 @@ public class ClienteResource {
             return Response.status(500).entity("Ocorreu um erro na requisição.").build();
         }
     }
+
+    @Operation(summary = "Alterar apenas a senha do cliente logado")
+    @APIResponse(responseCode = "200", description = "Senha alterada com sucesso!")
+    @APIResponse(responseCode = "404", description = "Cliente não encontrado")
+    @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    @PUT
+    @Path("/alterar-senha")
+    @RolesAllowed("CLIENTE")
+    @Transactional
+    public Response alterarSenha(@Context JsonWebToken jwt, @Valid AlterarSenhaClienteDTO dto) {
+        try {
+            LOG.info("Requisição recebida - Alterar senha do Cliente");
+
+            UUID idCliente = UUID.fromString(jwt.getSubject());
+            clienteService.alterarSenha(idCliente, dto.getNovaSenha());
+
+            return Response.status(200).build();
+        } catch (ValidacaoException ex) {
+            return Response.status(404).entity(ex.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+        }
+    }
+
 }

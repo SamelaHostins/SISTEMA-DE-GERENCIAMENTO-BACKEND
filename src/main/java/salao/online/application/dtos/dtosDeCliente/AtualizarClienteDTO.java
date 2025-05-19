@@ -19,5 +19,4 @@ public class AtualizarClienteDTO {
     private String sobrenome;
     private String email;
     private String telefone;
-    private String senha;
 }

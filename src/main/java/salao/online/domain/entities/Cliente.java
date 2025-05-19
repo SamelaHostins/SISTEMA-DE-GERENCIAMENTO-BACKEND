@@ -43,14 +43,12 @@ public class Cliente extends Informacao {
         this.imagens = imagens;
     }
 
-    public Cliente atualizarCliente(String novoNome, String novoUsuario, String novoSobrenome, String novoEmail, String novoTelefone,
-            String novaSenha) {
+    public Cliente atualizarCliente(String novoNome, String novoUsuario, String novoSobrenome, String novoEmail, String novoTelefone) {
         setNome(novoNome);
         setUsuario(novoUsuario);
         setSobrenome(novoSobrenome);
         setEmail(novoEmail);
         setTelefone(novoTelefone);
-        setSenha(novaSenha);
         return this;
     }
 }

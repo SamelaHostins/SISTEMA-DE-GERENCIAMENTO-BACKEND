@@ -129,8 +129,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
                 dto.getUsuario(),
                 dto.getSobrenome(),
                 dto.getEmail(),
-                dto.getTelefone(),
-                dto.getSenha());
+                dto.getTelefone());
 
         // Atualiza horários de trabalho, precisa limpar pra nao duplicar
         profissional.getHorariosTrabalho().clear();
@@ -262,6 +261,17 @@ public class ProfissionalServiceImpl implements ProfissionalService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void alterarSenha(UUID idProfissional, String novaSenha) throws ValidacaoException {
+        Profissional profissional = profissionalRepository.findById(idProfissional);
+        if (profissional == null) {
+            throw new ValidacaoException(
+                    MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro());
+        }
+
+        profissional.setSenha(novaSenha);
     }
 
     private BuscarProfissionalDTO getBuscarProfissionalDTO(Profissional profissional) {

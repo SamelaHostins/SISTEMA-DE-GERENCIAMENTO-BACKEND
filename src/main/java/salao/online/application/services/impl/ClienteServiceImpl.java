@@ -128,8 +128,7 @@ public class ClienteServiceImpl implements ClienteService {
                 clienteDTO.getUsuario(),
                 clienteDTO.getSobrenome(),
                 clienteDTO.getEmail(),
-                clienteDTO.getTelefone(),
-                clienteDTO.getSenha());
+                clienteDTO.getTelefone());
 
         Log.infof("Salvando cliente %s atualizado", cliente.getIdCliente());
         clienteRepository.persistAndFlush(cliente);
@@ -166,6 +165,17 @@ public class ClienteServiceImpl implements ClienteService {
         }
 
         return distribuicao;
+    }
+
+    @Override
+    public void alterarSenha(UUID idCliente, String novaSenha) throws ValidacaoException {
+        Cliente cliente = clienteRepository.findById(idCliente);
+        if (cliente == null) {
+            throw new ValidacaoException(
+                    MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro());
+        }
+
+        cliente.setSenha(novaSenha);
     }
 
     // Calcula a idade com base na data de nascimento

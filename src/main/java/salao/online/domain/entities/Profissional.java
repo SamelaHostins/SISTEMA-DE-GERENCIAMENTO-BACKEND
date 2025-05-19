@@ -91,7 +91,7 @@ public class Profissional extends Informacao {
 
     public Profissional atualizarProfissional(String novoInstagram, ProfissaoEsteticaEnum novaProfissao,
             String novaDescricaoDaProfissao, String novoNome, String novoUsuario, String novoSobrenome,
-            String novoEmail, String novoTelefone, String novaSenha) {
+            String novoEmail, String novoTelefone) {
         setInstagram(novoInstagram);
         setProfissao(novaProfissao);
         setDescricaoDaProfissao(novaDescricaoDaProfissao);
@@ -100,7 +100,6 @@ public class Profissional extends Informacao {
         setSobrenome(novoSobrenome);
         setEmail(novoEmail);
         setTelefone(novoTelefone);
-        setSenha(novaSenha);
         return this;
     }
 

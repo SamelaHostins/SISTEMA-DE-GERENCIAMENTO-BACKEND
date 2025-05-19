@@ -26,6 +26,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import salao.online.application.dtos.dtosDeEndereco.AtualizarEnderecoDTO;
 import salao.online.application.dtos.dtosDeEndereco.BuscarEnderecoDoProfissionalDTO;
+import salao.online.application.dtos.dtosDoProfissional.AlterarSenhaProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.AtualizarProfissionalDTO;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalAutenticadoDTO;
 import salao.online.application.dtos.dtosDoProfissional.BuscarProfissionalDTO;
@@ -230,6 +231,28 @@ public class ProfissionalResource {
     public Response listarProfissionaisEmDestaque() {
         List<ListarProfissionalEmDestaqueDTO> profissionais = profissionalService.listarProfissionaisEmDestaque();
         return Response.ok(profissionais).build();
+    }
+
+    @PUT
+    @Path("/alterar-senha")
+    @RolesAllowed("PROFISSIONAL")
+    @Transactional
+    @Operation(summary = "Alterar apenas a senha do profissional logado")
+    public Response alterarSenhaProfissional(@Context JsonWebToken jwt, @Valid AlterarSenhaProfissionalDTO dto) {
+        try {
+            LOG.info("Requisição recebida - Alterar senha do Profissional");
+
+            UUID idProfissional = UUID.fromString(jwt.getSubject());
+            profissionalService.alterarSenha(idProfissional, dto.getNovaSenha());
+
+            return Response.status(Response.Status.OK).build();
+        } catch (ValidacaoException ex) {
+            return Response.status(Response.Status.NOT_FOUND).entity(ex.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao alterar a senha do profissional.")
+                    .build();
+        }
     }
 
 }

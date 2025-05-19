@@ -38,4 +38,6 @@ public interface ProfissionalService {
 
     List<ListarProfissionalEmDestaqueDTO> listarProfissionaisEmDestaque();
 
+    void alterarSenha(UUID idProfissional, String novaSenha) throws ValidacaoException;
+
 }

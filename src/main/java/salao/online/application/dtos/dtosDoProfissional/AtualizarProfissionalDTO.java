@@ -24,7 +24,6 @@ public class AtualizarProfissionalDTO {
     private int profissao;
     private String descricaoDaProfissao;
     private String instagram;
-    private String senha;
 
     private List<HorarioTrabalhoDTO> horariosTrabalho;
 }

@@ -20,6 +20,7 @@ import lombok.Setter;
 import salao.online.domain.enums.TipoImagemEnum;
 
 @Entity
+@Setter
 @Table(schema = "salao", name = "imagem")
 public class Imagem {
 

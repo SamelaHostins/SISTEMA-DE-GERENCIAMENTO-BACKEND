@@ -13,6 +13,7 @@ import lombok.Setter;
 @Setter
 public class ImagemDTO {
 
+    private UUID idImagem;
     private String urlImagem;
     private String nomeArquivo;
     private TipoImagemEnumDTO tipoImagem;

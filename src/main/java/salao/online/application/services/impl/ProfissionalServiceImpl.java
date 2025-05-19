@@ -262,7 +262,6 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     private BuscarProfissionalDTO getBuscarProfissionalDTO(Profissional profissional) {
         BuscarProfissionalDTO profissionalDTO = profissionalMapper.fromEntityToBuscarDto(profissional);
         profissionalDTO.setServicos(servicoMapper.fromEntityListToDtoList(profissional.getServicos()));
-        profissionalDTO.setImagens(imagemMapper.fromEntityListToProfissionalDtoList(profissional.getImagens()));
         return profissionalDTO;
     }
 

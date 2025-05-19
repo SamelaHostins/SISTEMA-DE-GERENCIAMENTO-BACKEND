@@ -63,7 +63,6 @@ public interface ProfissionalMapper {
     @Mapping(target = "usuario", source = "usuario")
     @Mapping(target = "email", source = "email")
     @Mapping(target = "telefone", source = "telefone")
-    @Mapping(source = "imagens", target = "imagens")
     ListarProfissionalDTO fromEntityToListarDto(Profissional entity);
 
     @Named("mapNomeCompleto")

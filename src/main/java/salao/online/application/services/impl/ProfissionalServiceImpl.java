@@ -26,9 +26,7 @@ import salao.online.application.mappers.ProfissionalMapper;
 import salao.online.application.mappers.ServicoMapper;
 import salao.online.application.services.interfaces.ImagemService;
 import salao.online.application.services.interfaces.ProfissionalService;
-import salao.online.domain.entities.HorarioTrabalho;
 import salao.online.domain.entities.Profissional;
-import salao.online.domain.enums.DiaSemanaEnum;
 import salao.online.domain.enums.MensagemErroValidacaoEnum;
 import salao.online.domain.enums.ProfissaoEsteticaEnum;
 import salao.online.domain.exceptions.ValidacaoException;
@@ -116,8 +114,8 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     @Transactional
     public AtualizarProfissionalDTO atualizarProfissional(AtualizarProfissionalDTO dto) throws ValidacaoException {
         Profissional profissional = profissionalRepository.findByIdOptional(dto.getIdProfissional())
-                .orElseThrow(() -> new ValidacaoException("Profissional não encontrado."));
-
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
         // Converte o int para enum
         ProfissaoEsteticaEnum profissaoEnum = ProfissaoEsteticaEnum.fromProfissao(dto.getProfissao());
 
@@ -130,21 +128,6 @@ public class ProfissionalServiceImpl implements ProfissionalService {
                 dto.getSobrenome(),
                 dto.getEmail(),
                 dto.getTelefone());
-
-        // Atualiza horários de trabalho, precisa limpar pra nao duplicar
-        profissional.getHorariosTrabalho().clear();
-
-        List<HorarioTrabalho> novosHorarios = dto.getHorariosTrabalho().stream()
-                .map(h -> {
-                    HorarioTrabalho horario = new HorarioTrabalho();
-                    horario.setDiaSemana(DiaSemanaEnum.values()[h.getDiaSemana()]);
-                    horario.setHoraInicio(h.getHoraInicio());
-                    horario.setHoraFim(h.getHoraFim());
-                    horario.setProfissional(profissional);
-                    return horario;
-                }).toList();
-
-        profissional.getHorariosTrabalho().addAll(novosHorarios);
 
         logger.info("Salvando profissional atualizado");
         profissionalRepository.persistAndFlush(profissional);
@@ -264,6 +247,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     }
 
     @Override
+    @Transactional
     public void alterarSenha(UUID idProfissional, String novaSenha) throws ValidacaoException {
         Profissional profissional = profissionalRepository.findById(idProfissional);
         if (profissional == null) {
@@ -272,6 +256,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
         }
 
         profissional.setSenha(novaSenha);
+        profissionalRepository.persistAndFlush(profissional); 
     }
 
     private BuscarProfissionalDTO getBuscarProfissionalDTO(Profissional profissional) {

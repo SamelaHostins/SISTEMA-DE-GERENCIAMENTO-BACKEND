@@ -174,7 +174,7 @@ public class ClienteResource {
             UUID idCliente = UUID.fromString(jwt.getSubject());
             clienteService.alterarSenha(idCliente, dto.getNovaSenha());
 
-            return Response.status(200).build();
+            return Response.noContent().build();
         } catch (ValidacaoException ex) {
             return Response.status(404).entity(ex.getMessage()).build();
         } catch (Exception ex) {

@@ -57,7 +57,6 @@ public interface ProfissionalMapper {
     @Mapping(source = "telefone", target = "telefone")
     @Mapping(source = "instagram", target = "instagram")
     @Mapping(source = "profissao", target = "profissao", qualifiedByName = "profissaoEnumToInt")
-    @Mapping(source = "horariosTrabalho", target = "horariosTrabalho")
     AtualizarProfissionalDTO fromEntityToAtualizarDto(Profissional entity);
 
     @Mapping(target = "idProfissional", ignore = true)

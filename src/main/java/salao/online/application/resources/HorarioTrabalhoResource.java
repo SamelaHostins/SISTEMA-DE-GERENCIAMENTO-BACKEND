@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -14,9 +15,11 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -25,6 +28,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
+import salao.online.application.dtos.dtosHorario.AtualizarHorariosTrabalhoDTO;
 import salao.online.application.dtos.dtosHorario.HorarioTrabalhoDTO;
 import salao.online.application.services.interfaces.HorarioTrabalhoService;
 import salao.online.application.services.interfaces.ProfissionalService;
@@ -42,6 +46,9 @@ public class HorarioTrabalhoResource {
     @Inject
     ProfissionalService profissionalService;
 
+    @Inject
+    JsonWebToken jwt;
+
     @GET
     @Path("/{id}/horarios-trabalho")
     @PermitAll
@@ -54,7 +61,7 @@ public class HorarioTrabalhoResource {
             List<HorarioTrabalhoDTO> horarios = horarioTrabalhoService.listarHorariosDoProfissional(idProfissional);
 
             if (horarios == null || horarios.isEmpty()) {
-                return Response.status(Response.Status.NO_CONTENT).build(); 
+                return Response.status(Response.Status.NO_CONTENT).build();
             }
 
             return Response.ok(horarios).build();
@@ -63,6 +70,24 @@ public class HorarioTrabalhoResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Erro ao buscar horários de trabalho do profissional.")
                     .build();
+        }
+    }
+
+    @PUT
+    @Path("/atualizar")
+    @RolesAllowed("PROFISSIONAL")
+    @Transactional
+    @Operation(summary = "Atualizar os horários de trabalho do profissional logado")
+    public Response atualizarHorariosTrabalho(@Valid AtualizarHorariosTrabalhoDTO dto) {
+        try {
+            UUID idProfissional = UUID.fromString(jwt.getSubject());
+            horarioTrabalhoService.atualizarHorariosTrabalho(idProfissional, dto.getHorarios());
+            return Response.noContent().build();
+        } catch (ValidacaoException ex) {
+            return Response.status(Response.Status.NOT_FOUND).entity(ex.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao atualizar horários de trabalho.").build();
         }
     }
 

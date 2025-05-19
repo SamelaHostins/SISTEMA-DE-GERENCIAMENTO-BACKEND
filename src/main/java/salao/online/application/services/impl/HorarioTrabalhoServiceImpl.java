@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.WebApplicationException;
 import salao.online.application.dtos.dtosHorario.HorarioTrabalhoDTO;
 import salao.online.application.mappers.HorarioTrabalhoMapper;
@@ -42,7 +43,32 @@ public class HorarioTrabalhoServiceImpl implements HorarioTrabalhoService {
     public List<HorarioTrabalhoDTO> listarHorariosDoProfissional(UUID idProfissional) {
         List<HorarioTrabalho> horarios = horarioTrabalhoRepository.list("profissional.id", idProfissional);
         return mapper.fromEntityListToDtoList(horarios);
-    }    
+    }
+
+    @Override
+    @Transactional
+    public void atualizarHorariosTrabalho(UUID idProfissional, List<HorarioTrabalhoDTO> horarios)
+            throws ValidacaoException {
+        Profissional profissional = profissionalRepository.findByIdOptional(idProfissional)
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
+
+        profissional.getHorariosTrabalho().clear();
+
+        List<HorarioTrabalho> novosHorarios = horarios.stream()
+                .map(h -> {
+                    HorarioTrabalho horario = new HorarioTrabalho();
+                    horario.setDiaSemana(DiaSemanaEnum.values()[h.getDiaSemana()]);
+                    horario.setHoraInicio(h.getHoraInicio());
+                    horario.setHoraFim(h.getHoraFim());
+                    horario.setProfissional(profissional);
+                    return horario;
+                }).toList();
+
+        profissional.getHorariosTrabalho().addAll(novosHorarios);
+
+        profissionalRepository.persistAndFlush(profissional);
+    }
 
     @Override
     public List<LocalTime> buscarHorariosDisponiveis(UUID idProfissional, LocalDate data) throws ValidacaoException {

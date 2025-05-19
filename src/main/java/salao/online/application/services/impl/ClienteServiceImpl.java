@@ -168,6 +168,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Transactional
     public void alterarSenha(UUID idCliente, String novaSenha) throws ValidacaoException {
         Cliente cliente = clienteRepository.findById(idCliente);
         if (cliente == null) {
@@ -176,6 +177,7 @@ public class ClienteServiceImpl implements ClienteService {
         }
 
         cliente.setSenha(novaSenha);
+        clienteRepository.persistAndFlush(cliente); 
     }
 
     // Calcula a idade com base na data de nascimento

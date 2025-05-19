@@ -245,7 +245,7 @@ public class ProfissionalResource {
             UUID idProfissional = UUID.fromString(jwt.getSubject());
             profissionalService.alterarSenha(idProfissional, dto.getNovaSenha());
 
-            return Response.status(Response.Status.OK).build();
+            return Response.noContent().build(); 
         } catch (ValidacaoException ex) {
             return Response.status(Response.Status.NOT_FOUND).entity(ex.getMessage()).build();
         } catch (Exception ex) {

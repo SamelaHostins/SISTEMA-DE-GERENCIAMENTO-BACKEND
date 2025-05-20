@@ -150,6 +150,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
                 dto.getCidade(),
                 dto.getEstado(),
                 dto.getCep(),
+                dto.getNome(),
                 dto.getComplemento());
 
         logger.info("Atualizando endereço no banco de dados");

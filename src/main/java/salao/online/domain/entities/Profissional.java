@@ -104,7 +104,7 @@ public class Profissional extends Informacao {
     }
 
     public void atualizarEndereco(String rua, int numero, String bairro, String cidade, String estado, String cep,
-            String complemento) {
+            String nome, String complemento) {
         if (this.endereco == null) {
             this.endereco = new Endereco();
         }
@@ -114,6 +114,7 @@ public class Profissional extends Informacao {
         this.endereco.setCidade(cidade);
         this.endereco.setEstado(estado);
         this.endereco.setCep(cep);
+        this.endereco.setNome(nome);
         this.endereco.setComplemento(complemento);
     }
 

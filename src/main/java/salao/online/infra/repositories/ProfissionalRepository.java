@@ -26,5 +26,5 @@ public interface ProfissionalRepository extends PanacheRepositoryBase<Profission
 
     public List<Profissional> listarComImagemDePerfil(int limit);
 
-    public List<Profissional> pesquisarTodosComImagemDePerfil();
+    public List<Profissional> buscarProfissionaisComImagemEComServico();
 }

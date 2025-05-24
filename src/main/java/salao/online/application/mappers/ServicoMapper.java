@@ -13,6 +13,7 @@ import salao.online.application.dtos.dtosDoServico.AtualizarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.BuscarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.CriarServicoDTO;
 import salao.online.application.dtos.dtosDoServico.ServicoDTO;
+import salao.online.application.dtos.dtosParaPesquisar.PesquisaLocalDTO;
 import salao.online.application.dtos.dtosParaPesquisar.PesquisaServicoDTO;
 import salao.online.domain.entities.Servico;
 
@@ -71,6 +72,13 @@ public interface ServicoMapper {
     PesquisaServicoDTO fromEntityToPesquisaDto(Servico entity);
 
     List<PesquisaServicoDTO> fromEntityListToPesquisaDtoList(List<Servico> servicos);
+
+    @Mapping(source = "profissional.idProfissional", target = "idProfissional")
+    @Mapping(source = "profissional.endereco.cidade", target = "cidade")
+    @Mapping(source = "profissional.endereco.bairro", target = "bairro")
+    @Mapping(source = "profissional", target = "nomeProfissional", qualifiedByName = "mapProfissionalNome")
+    @Mapping(source = "profissional.profissao", target = "profissao")
+    PesquisaLocalDTO fromEntityToPesquisaLocalDto(Servico entity);
 
     @Mapping(source = "idServico", target = "idServico")
     @Mapping(source = "profissional.idProfissional", target = "idProfissional")

@@ -186,24 +186,38 @@ public class ServicoResource {
         }
     }
 
-    @Operation(summary = "Pesquisa todos os serviços")
-    @APIResponse(responseCode = "200", description = "Pesquisa realizada com sucesso!")
-    @APIResponse(responseCode = "500", description = "Erro no servidor")
     @GET
-    @Path("/pesquisar")
     @PermitAll
-    public List<PesquisaServicoDTO> pesquisaTodosServicos() {
-        return servicoService.pesquisarTodosServicos();
+    @Path("/pesquisar")
+    @Operation(summary = "Listar todos os serviços disponíveis", description = "Retorna todos os serviços cadastrados por profissionais, incluindo informações como nome, tempo de duração e valor.")
+    @APIResponse(responseCode = "200", description = "Lista de serviços retornada com sucesso.")
+    @APIResponse(responseCode = "500", description = "Erro interno ao buscar os serviços.")
+    public Response pesquisaTodosServicos() {
+        try {
+            LOG.info("Requisição recebida - listar todos os serviços disponíveis");
+            List<PesquisaServicoDTO> servicos = servicoService.pesquisarTodosServicos();
+            return Response.ok(servicos).build();
+        } catch (Exception ex) {
+            LOG.error("Erro ao buscar serviços:", ex);
+            return Response.status(500).entity("Ocorreu um erro ao buscar os serviços.").build();
+        }
     }
 
-    @Operation(summary = "Pesquisa todos as cidades e seus serviços respectivamente")
-    @APIResponse(responseCode = "200", description = "Pesquisa realizada com sucesso!")
-    @APIResponse(responseCode = "500", description = "Erro no servidor")
     @GET
-    @Path("/pesquisarLocal")
     @PermitAll
-    public List<PesquisaLocalDTO> pesquisarTodasAsCidadesComServicos() {
-        return servicoService.pesquisarTodasAsCidadesComServicos();
+    @Path("/pesquisarLocal")
+    @Operation(summary = "Listar locais com serviços disponíveis", description = "Retorna uma lista de locais (cidade e bairro) em que há profissionais com imagem de perfil e ao menos um serviço cadastrado.")
+    @APIResponse(responseCode = "200", description = "Busca realizada com sucesso!")
+    @APIResponse(responseCode = "500", description = "Erro no servidor")
+    public Response pesquisarTodasAsCidadesComServicos() {
+        try {
+            LOG.info("Requisição recebida - listar locais com serviços disponíveis");
+            List<PesquisaLocalDTO> locais = servicoService.pesquisarTodasAsCidadesComServicos();
+            return Response.ok(locais).build();
+        } catch (Exception ex) {
+            LOG.error("Erro ao listar locais com serviços: ", ex);
+            return Response.status(500).entity("Ocorreu um erro ao buscar os locais.").build();
+        }
     }
 
     @Operation(summary = "Busca o servico pelo ID")

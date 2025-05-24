@@ -185,8 +185,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
 
     @Override
     public List<PesquisaProfissionalDTO> pesquisarTodosProfissionais() {
-        // 1) busca só profissionais com imagem de perfil
-        List<Profissional> profissionais = profissionalRepository.pesquisarTodosComImagemDePerfil();
+        List<Profissional> profissionais = profissionalRepository.buscarProfissionaisComImagemEComServico();
         return profissionais.stream()
                 .map(profissionalMapper::fromEntityToPesquisaDto)
                 .collect(Collectors.toList());
@@ -257,7 +256,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
         }
 
         profissional.setSenha(novaSenha);
-        profissionalRepository.persistAndFlush(profissional); 
+        profissionalRepository.persistAndFlush(profissional);
     }
 
     private BuscarProfissionalDTO getBuscarProfissionalDTO(Profissional profissional) {

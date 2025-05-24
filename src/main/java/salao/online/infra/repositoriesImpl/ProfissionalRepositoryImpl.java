@@ -82,15 +82,19 @@ public class ProfissionalRepositoryImpl implements ProfissionalRepository {
     }
 
     /**
-     * Retorna todos os profissionais que tenham imagem de perfil cadastrada.
+     * Retorna profissionais que têm imagem de perfil e pelo menos um serviço
+     * cadastrado.
      */
     @Override
-    public List<Profissional> pesquisarTodosComImagemDePerfil() {
+    public List<Profissional> buscarProfissionaisComImagemEComServico() {
         return find(
-                "select distinct p " +
-                        "from Profissional p " +
-                        "  join p.imagens img " +
-                        "where img.tipoImagem = :tipo",
+                "select distinct p from Profissional p " +
+                        "join p.imagens img " +
+                        "where img.tipoImagem = :tipo " +
+                        "and exists (" +
+                        "  select 1 from Servico s " +
+                        "  where s.profissional.idProfissional = p.idProfissional" +
+                        ")",
                 Parameters.with("tipo", TipoImagemEnum.PERFIL)).list();
     }
 }

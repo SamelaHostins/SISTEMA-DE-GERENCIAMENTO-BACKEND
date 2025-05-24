@@ -166,28 +166,32 @@ public class ServicoServiceImpl implements ServicoService {
 
     @Override
     public List<PesquisaServicoDTO> pesquisarTodosServicos() {
-        List<Servico> servicos = servicoRepository.findAll().list();
-        return servicoMapper.fromEntityListToPesquisaDtoList(servicos);
+        List<Profissional> profissionaisValidos = profissionalRepository.buscarProfissionaisComImagemEComServico();
+        Set<UUID> idsValidos = profissionaisValidos.stream()
+                .map(Profissional::getIdProfissional)
+                .collect(Collectors.toSet());
+
+        List<Servico> servicosFiltrados = servicoRepository.findAll().stream()
+                .filter(servico -> idsValidos.contains(servico.getProfissional().getIdProfissional()))
+                .collect(Collectors.toList());
+
+        return servicoMapper.fromEntityListToPesquisaDtoList(servicosFiltrados);
     }
 
     @Override
     public List<PesquisaLocalDTO> pesquisarTodasAsCidadesComServicos() {
-        // 1) pega todos os serviços
-        List<Servico> servicos = servicoRepository.findAll().list();
+        // 1) Busca apenas os profissionais válidos (com imagem e serviço)
+        List<Profissional> profissionaisValidos = profissionalRepository.buscarProfissionaisComImagemEComServico();
 
-        // 2) pega o conjunto de IDs de profissionais que têm foto de perfil
-        Set<UUID> profComPerfil = profissionalRepository
-                .pesquisarTodosComImagemDePerfil()
-                .stream()
-                .map(Profissional::getIdProfissional)
-                .collect(Collectors.toSet());
+        Set<UUID> profissionaisVistos = new HashSet<>();
 
-        // 3) Para cada serviço, filtra apenas os de profissionais com foto de perfil,
-        Set<UUID> vistos = new HashSet<>();
-        return servicos.stream()
-                .filter(s -> profComPerfil.contains(s.getProfissional().getIdProfissional()))
-                .map(localMapper::fromEntityToPesquisaLocalDto)
-                .filter(dto -> vistos.add(dto.getIdProfissional()))
+        // 2) Para cada serviço desses profissionais, mapeia para PesquisaLocalDTO
+        return profissionaisValidos.stream()
+                .flatMap(profissional -> profissional.getServicos().stream())
+                .filter(servico -> servico.getProfissional() != null
+                        && servico.getProfissional().getEndereco() != null)
+                .filter(servico -> profissionaisVistos.add(servico.getProfissional().getIdProfissional()))
+                .map(servicoMapper::fromEntityToPesquisaLocalDto)
                 .collect(Collectors.toList());
     }
 

@@ -10,7 +10,10 @@ import salao.online.domain.entities.Servico;
 
 public interface ServicoRepository extends PanacheRepositoryBase<Servico, UUID> {
 
-    public List<Avaliacao> buscarAvaliacoesDoServico(UUID idServico);
+    List<Avaliacao> buscarAvaliacoesDoServico(UUID idServico);
 
-    public Optional<Servico> deletarServico(UUID idServico);
+    Optional<Servico> deletarServico(UUID idServico);
+
+    List<Servico> buscarServicosDeProfissionaisComImagemEComServico();
+
 }

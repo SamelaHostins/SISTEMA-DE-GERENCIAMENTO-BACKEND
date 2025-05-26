@@ -135,7 +135,7 @@ public class HorarioTrabalhoResource {
 
     @Operation(summary = "Deletando Horario Trabalho")
     @DELETE
-    @Path("deletar-horario/{idHorario}")
+    @Path("deletar/{idHorario}")
     @RolesAllowed("PROFISSIONAL")
     @Transactional
     public Response deletarHorarioDeTrabalho(@PathParam("idHorario") UUID idHorario,

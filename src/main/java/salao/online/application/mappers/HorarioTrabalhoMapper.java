@@ -26,13 +26,14 @@ public interface HorarioTrabalhoMapper {
             }
         }
         throw new IllegalArgumentException("Valor inválido para DiaSemanaEnum: " + valor);
-    }    
-    
+    }
+
+    @Mapping(source = "id", target = "idHorario")
     @Mapping(source = "diaSemana", target = "diaSemana", qualifiedByName = "diaSemanaEnumToInt")
     HorarioTrabalhoDTO fromEntityToDto(HorarioTrabalho entity);
 
     @Mapping(target = "profissional", ignore = true)
-    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "idHorario", target = "id")
     @Mapping(source = "diaSemana", target = "diaSemana", qualifiedByName = "intToDiaSemanaEnum")
     HorarioTrabalho fromDtoToEntity(HorarioTrabalhoDTO dto);
 

@@ -157,11 +157,12 @@ public class AgendamentoServiceImpl implements AgendamentoService {
 
         @Override
         @Transactional
-        public void cancelarAgendamento(UUID idAgendamento, UUID idUsuario, boolean isProfissional) {
+        public void cancelarAgendamento(UUID idAgendamento, UUID idUsuario, boolean isProfissional)
+                        throws ValidacaoException {
                 Agendamento agendamento = agendamentoRepository.findById(idAgendamento);
 
                 if (agendamento == null) {
-                        throw new WebApplicationException("Agendamento não encontrado", 404);
+                        throw new ValidacaoException("Agendamento não encontrado");
                 }
 
                 UUID dono = isProfissional
@@ -169,11 +170,9 @@ public class AgendamentoServiceImpl implements AgendamentoService {
                                 : agendamento.getCliente().getIdCliente();
 
                 if (!dono.equals(idUsuario)) {
-                        throw new WebApplicationException("Acesso negado", 403);
+                        throw new ValidacaoException("Você não tem permissão para cancelar este agendamento");
                 }
 
-                agendamento.setStatusAgendamento(StatusAgendamentoEnum.CANCELADO);
-                agendamentoRepository.persist(agendamento);
+                agendamentoRepository.atualizarStatus(idAgendamento, StatusAgendamentoEnum.CANCELADO);
         }
-
 }

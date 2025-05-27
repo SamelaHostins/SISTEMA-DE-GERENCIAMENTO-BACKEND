@@ -29,5 +29,5 @@ public interface AgendamentoService {
                         Integer statusValor,
                         Integer formaPagamentoValor);
 
-        void cancelarAgendamento(UUID idAgendamento, UUID idUsuario, boolean isProfissional);
+        void cancelarAgendamento(UUID idAgendamento, UUID idUsuario, boolean isProfissional) throws ValidacaoException;
 }

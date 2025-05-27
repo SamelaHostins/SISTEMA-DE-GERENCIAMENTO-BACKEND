@@ -12,9 +12,9 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -130,17 +130,31 @@ public class AgendamentoResource {
         }
     }
 
-    @DELETE
-    @Path("deletar/{id}")
+    @PUT
+    @Path("cancelar/{id}")
     @RolesAllowed({ "CLIENTE", "PROFISSIONAL" })
     @Transactional
     public Response cancelarAgendamento(@PathParam("id") UUID idAgendamento,
-            @Context SecurityContext securityContext) {
-        UUID idUsuario = UUID.fromString(((DefaultJWTCallerPrincipal) securityContext.getUserPrincipal()).getName());
-        boolean isProfissional = securityContext.isUserInRole("PROFISSIONAL");
+            @Context SecurityContext securityContext) throws ValidacaoException {
 
-        agendamentoService.cancelarAgendamento(idAgendamento, idUsuario, isProfissional);
-        return Response.noContent().build(); // HTTP 204
+        try {
+            UUID idUsuario = UUID
+                    .fromString(((DefaultJWTCallerPrincipal) securityContext.getUserPrincipal()).getName());
+            boolean isProfissional = securityContext.isUserInRole("PROFISSIONAL");
+
+            agendamentoService.cancelarAgendamento(idAgendamento, idUsuario, isProfissional);
+            return Response.noContent().build();
+
+        } catch (ValidacaoException ex) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(ex.getMessage())
+                    .build();
+
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro interno ao cancelar agendamento.")
+                    .build();
+        }
     }
 
     private UUID resolveClienteId(SecurityContext securityContext) throws ValidacaoException {

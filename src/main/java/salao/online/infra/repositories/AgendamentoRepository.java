@@ -13,6 +13,8 @@ import salao.online.domain.enums.StatusAgendamentoEnum;
 
 public interface AgendamentoRepository extends PanacheRepositoryBase<Agendamento, UUID> {
 
+        void atualizarStatus(UUID id, StatusAgendamentoEnum status);
+
         List<Agendamento> buscarAgendamentosDoProfissional(UUID idProfissional, LocalDate dataInicio, LocalDate dataFim,
                         StatusAgendamentoEnum status, FormaPagamentoEnum formaPagamento);
 
@@ -31,5 +33,4 @@ public interface AgendamentoRepository extends PanacheRepositoryBase<Agendamento
 
         public List<Agendamento> buscarPorProfissionalEData(UUID idProfissional, LocalDate data);
 
-            
 }

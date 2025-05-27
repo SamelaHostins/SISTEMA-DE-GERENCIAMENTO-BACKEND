@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 import salao.online.domain.entities.Agendamento;
 import salao.online.domain.enums.FormaPagamentoEnum;
 import salao.online.domain.enums.StatusAgendamentoEnum;
@@ -15,6 +16,12 @@ import salao.online.infra.repositories.AgendamentoRepository;
 
 @ApplicationScoped
 public class AgendamentoRepositoryImpl implements AgendamentoRepository {
+
+    @Override
+    @Transactional
+    public void atualizarStatus(UUID id, StatusAgendamentoEnum status) {
+        update("statusAgendamento = ?1 where idAgendamento = ?2", status, id);
+    }
 
     @Override
     public List<Agendamento> buscarAgendamentosDoProfissional(

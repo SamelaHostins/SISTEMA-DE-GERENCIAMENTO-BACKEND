@@ -5,7 +5,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -47,25 +49,31 @@ public class HorarioTrabalhoServiceImpl implements HorarioTrabalhoService {
 
     @Override
     @Transactional
-    public void atualizarHorariosTrabalho(UUID idProfissional, List<HorarioTrabalhoDTO> horarios)
+    public void atualizarHorariosTrabalho(UUID idProfissional, List<HorarioTrabalhoDTO> novosHorariosDto)
             throws ValidacaoException {
+
         Profissional profissional = profissionalRepository.findByIdOptional(idProfissional)
                 .orElseThrow(() -> new ValidacaoException(
                         MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
 
+        List<HorarioTrabalho> atuais = profissional.getHorariosTrabalho();
+
+        List<HorarioTrabalho> novos = mapper.fromDtoListToEntityList(novosHorariosDto);
+        novos.forEach(n -> n.setProfissional(profissional));
+
+        // Descobre todos os dias que vieram na atualização
+        Set<DiaSemanaEnum> diasAtualizados = novos.stream()
+                .map(HorarioTrabalho::getDiaSemana)
+                .collect(Collectors.toSet());
+
+        // Filtra os horários antigos que NÃO são desses dias (serão preservados)
+        List<HorarioTrabalho> remanescentes = atuais.stream()
+                .filter(h -> !diasAtualizados.contains(h.getDiaSemana()))
+                .collect(Collectors.toList());
+
         profissional.getHorariosTrabalho().clear();
-
-        List<HorarioTrabalho> novosHorarios = horarios.stream()
-                .map(h -> {
-                    HorarioTrabalho horario = new HorarioTrabalho();
-                    horario.setDiaSemana(DiaSemanaEnum.values()[h.getDiaSemana()]);
-                    horario.setHoraInicio(h.getHoraInicio());
-                    horario.setHoraFim(h.getHoraFim());
-                    horario.setProfissional(profissional);
-                    return horario;
-                }).toList();
-
-        profissional.getHorariosTrabalho().addAll(novosHorarios);
+        profissional.getHorariosTrabalho().addAll(remanescentes);
+        profissional.getHorariosTrabalho().addAll(novos);
 
         profissionalRepository.persistAndFlush(profissional);
     }

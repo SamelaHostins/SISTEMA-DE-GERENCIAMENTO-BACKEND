@@ -39,11 +39,9 @@ public class HorarioTrabalho {
     @Enumerated(EnumType.ORDINAL)
     private DiaSemanaEnum diaSemana;
 
-    @NotNull
     @Column(name = "hora_inicio")
     private LocalTime horaInicio;
 
-    @NotNull
     @Column(name = "hora_fim")
     private LocalTime horaFim;
 

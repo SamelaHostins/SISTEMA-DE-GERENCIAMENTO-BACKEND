@@ -95,8 +95,8 @@ CREATE TABLE IF NOT EXISTS salao.agendamento (
 CREATE TABLE IF NOT EXISTS salao.horario_trabalho (
     id_horario UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     dia_semana INT NOT NULL CHECK (dia_semana BETWEEN 0 AND 6), -- 0=DOMINGO, 1=SEGUNDA, ..., 6=SÁBADO
-    hora_inicio TIME NOT NULL,
-    hora_fim TIME NOT NULL,
+    hora_inicio TIME,
+    hora_fim TIME,
     id_profissional UUID NOT NULL,
     CONSTRAINT fk_profissional_horario FOREIGN KEY (id_profissional) REFERENCES salao.profissional(id_profissional) ON DELETE CASCADE
 );

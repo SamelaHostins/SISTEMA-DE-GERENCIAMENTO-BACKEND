@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS salao.endereco (
     cidade VARCHAR(50) NOT NULL,
     estado VARCHAR(30) NOT NULL,
     numero INT NOT NULL CHECK (numero >= 0),
-    cep VARCHAR(10) NOT NULL CHECK (cep ~ '^\d{5}-\d{3}$'),
+    cep VARCHAR(10) NOT NULL CHECK,
     complemento VARCHAR (30)
 );
 

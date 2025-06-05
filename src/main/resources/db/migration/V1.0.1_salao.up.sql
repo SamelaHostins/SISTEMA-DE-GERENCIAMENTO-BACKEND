@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS salao.endereco (
     cidade VARCHAR(50) NOT NULL,
     estado VARCHAR(30) NOT NULL,
     numero INT NOT NULL CHECK (numero >= 0),
-    cep VARCHAR(10) NOT NULL CHECK,
+    cep VARCHAR(10) NOT NULL,
     complemento VARCHAR (30)
 );
 
@@ -21,14 +21,14 @@ CREATE TABLE IF NOT EXISTS salao.profissional (
     id_profissional UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     instagram VARCHAR(30),
     profissao INT4 NOT NULL,
-    descricao_prof VARCHAR(100),
+    descricao_prof VARCHAR(150),
     nome VARCHAR(25) NOT NULL,
     sobrenome VARCHAR(25) NOT NULL,
     data_nascimento DATE NOT NULL CHECK (data_nascimento <= CURRENT_DATE),
     email VARCHAR(30) NOT NULL UNIQUE,
-    telefone VARCHAR(12) NOT NULL CHECK (telefone ~ '^[0-9]+$'),
+    telefone VARCHAR(12) NOT NULL,
     usuario VARCHAR(25) NOT NULL,
-    senha VARCHAR(8) NOT NULL CHECK (senha ~ '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8}$'),
+    senha VARCHAR(60) NOT NULL,
     aceitou_termos BOOLEAN NOT NULL,
     documento VARCHAR(14) NOT NULL UNIQUE CHECK (
     documento ~ '^\d{11}$' OR 
@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS salao.profissional (
 -- Tabela perguntas frequentes
 CREATE TABLE IF NOT EXISTS salao.pergunta_frequente (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    pergunta VARCHAR(300) NOT NULL,
-    resposta VARCHAR(1000) NOT NULL,
+    pergunta VARCHAR(150) NOT NULL,
+    resposta VARCHAR(150) NOT NULL,
     id_profissional UUID NOT NULL,
     CONSTRAINT fk_profissional_pergunta FOREIGN KEY (id_profissional)
         REFERENCES salao.profissional(id_profissional)
@@ -57,14 +57,14 @@ CREATE TABLE IF NOT EXISTS salao.cliente (
     sobrenome VARCHAR(25) NOT NULL,
     data_nascimento DATE NOT NULL CHECK (data_nascimento <= CURRENT_DATE),
     email VARCHAR(30) NOT NULL UNIQUE,
-    telefone VARCHAR(12) NOT NULL UNIQUE CHECK (telefone ~ '^[0-9]+$'),
+    telefone VARCHAR(12) NOT NULL,
     usuario VARCHAR(25) NOT NULL UNIQUE,
-    senha VARCHAR(8) NOT NULL CHECK (senha ~ '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8}$'),
+    senha VARCHAR(60) NOT NULL,
     aceitou_termos BOOLEAN NOT NULL,
     documento VARCHAR(14) NOT NULL UNIQUE CHECK (
     documento ~ '^\d{11}$' OR 
     documento ~ '^\d{14}$' 
-    ),
+    )
 );
 
 -- Tabela servico
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS salao.servico (
     id_servico UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tipo_servico INT4,
     nome VARCHAR(55) NOT NULL CHECK (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55),
-    especificacao VARCHAR(500),
+    especificacao VARCHAR(200),
     termos_e_condicoes VARCHAR(1000),
     tempo INTERVAL,
     valor DECIMAL(5, 2),
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS salao.estoque (
 -- Tabela produto
 CREATE TABLE IF NOT EXISTS salao.produto (
     id_produto UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    nome VARCHAR(55) CHECK (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55),
+    nome VARCHAR(50) CHECK (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55),
     dt_entrada DATE,
     dt_validade DATE,
     valor DECIMAL(5, 2),

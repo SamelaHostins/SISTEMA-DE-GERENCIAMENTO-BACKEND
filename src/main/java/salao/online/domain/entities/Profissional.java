@@ -73,11 +73,11 @@ public class Profissional extends Informacao {
     private List<PerguntaFrequente> perguntasFrequentes = new ArrayList<>();
 
     public Profissional(String nome, String sobrenome, LocalDate dataNascimento, String email, String telefone,
-            String usuario, String senha, String documento, String instagram, ProfissaoEsteticaEnum profissao,
+            String usuario, String senha, Boolean aceitouTermos, String documento, String instagram, ProfissaoEsteticaEnum profissao,
             String descricaoDaProfissao, Endereco endereco, List<Imagem> imagens, List<Servico> servicos,
             List<Estoque> estoques, List<HorarioTrabalho> horarioTrabalhos,
             List<PerguntaFrequente> perguntasFrequentes) {
-        super(nome, sobrenome, dataNascimento, email, telefone, usuario, senha, documento);
+        super(nome, sobrenome, dataNascimento, email, telefone, usuario, senha, documento, aceitouTermos);
         this.instagram = instagram;
         this.profissao = profissao;
         this.descricaoDaProfissao = descricaoDaProfissao;

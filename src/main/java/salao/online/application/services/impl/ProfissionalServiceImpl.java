@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -94,6 +96,10 @@ public class ProfissionalServiceImpl implements ProfissionalService {
             String usuario = removeAcentos(profissionalDTO.getNome().toLowerCase()) + "." +
                     removeAcentos(ultimoSobrenome.toLowerCase());
             profissional.setUsuario(usuario);
+
+            // Criptografa a senha antes de salvar
+            String senhaCriptografada = BCrypt.hashpw(profissionalDTO.getSenha(), BCrypt.gensalt());
+            profissional.setSenha(senhaCriptografada);
 
             logger.info("Salvando o profissional no banco de dados");
             profissionalRepository.persistAndFlush(profissional);
@@ -255,7 +261,10 @@ public class ProfissionalServiceImpl implements ProfissionalService {
                     MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro());
         }
 
-        profissional.setSenha(novaSenha);
+        // Criptografa a nova senha
+        String senhaCriptografada = BCrypt.hashpw(novaSenha, BCrypt.gensalt());
+        profissional.setSenha(senhaCriptografada);
+
         profissionalRepository.persistAndFlush(profissional);
     }
 

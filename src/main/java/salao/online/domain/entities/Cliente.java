@@ -35,9 +35,9 @@ public class Cliente extends Informacao {
     private @Getter List<Imagem> imagens;
 
     public Cliente(String nome, String sobrenome, LocalDate dataNascimento, String email, String telefone,
-            String usuario, String senha, String documento, List<Avaliacao> avaliacoes,
+            String usuario, String senha, String documento, Boolean aceitouTermos, List<Avaliacao> avaliacoes,
             List<Agendamento> agendamentos, List<Imagem> imagens) {
-        super(nome, sobrenome, dataNascimento, email, telefone, usuario, senha, documento);
+        super(nome, sobrenome, dataNascimento, email, telefone, usuario, senha, documento, aceitouTermos);
         this.avaliacoes = avaliacoes;
         this.agendamentos = agendamentos;
         this.imagens = imagens;

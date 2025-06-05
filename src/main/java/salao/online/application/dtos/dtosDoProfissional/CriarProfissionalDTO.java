@@ -21,4 +21,5 @@ public class CriarProfissionalDTO {
     private int profissao;
     private String senha;
     private String documento;
+    private Boolean aceitouTermos;
 }

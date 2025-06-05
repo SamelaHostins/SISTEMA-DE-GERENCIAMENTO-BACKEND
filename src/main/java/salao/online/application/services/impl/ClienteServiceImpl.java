@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import io.quarkus.logging.Log;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
@@ -77,6 +79,10 @@ public class ClienteServiceImpl implements ClienteService {
             String usuario = removeAcentos(clienteDTO.getNome().toLowerCase()) + "."
                     + removeAcentos(ultimoSobrenome.toLowerCase());
             cliente.setUsuario(usuario);
+
+            // Criptografa a senha antes de salvar
+            String senhaCriptografada = BCrypt.hashpw(clienteDTO.getSenha(), BCrypt.gensalt());
+            cliente.setSenha(senhaCriptografada);
 
             logger.info("Salvando o cliente no banco de dados");
             clienteRepository.persistAndFlush(cliente);
@@ -176,8 +182,11 @@ public class ClienteServiceImpl implements ClienteService {
                     MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro());
         }
 
+        String senhaCriptografada = BCrypt.hashpw(novaSenha, BCrypt.gensalt());
+        cliente.setSenha(senhaCriptografada);
+
         cliente.setSenha(novaSenha);
-        clienteRepository.persistAndFlush(cliente); 
+        clienteRepository.persistAndFlush(cliente);
     }
 
     // Calcula a idade com base na data de nascimento

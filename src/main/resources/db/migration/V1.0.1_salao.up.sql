@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS salao.endereco (
     complemento VARCHAR (30)
 );
 
--- Tabela profissional
+-- Tabela profissionals
 CREATE TABLE IF NOT EXISTS salao.profissional (
     id_profissional UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     instagram VARCHAR(30),
@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS salao.profissional (
     telefone VARCHAR(12) NOT NULL CHECK (telefone ~ '^[0-9]+$'),
     usuario VARCHAR(25) NOT NULL,
     senha VARCHAR(8) NOT NULL CHECK (senha ~ '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8}$'),
+    aceitou_termos BOOLEAN NOT NULL,
     documento VARCHAR(14) NOT NULL UNIQUE CHECK (
     documento ~ '^\d{11}$' OR 
     documento ~ '^\d{14}$' 
@@ -59,6 +60,7 @@ CREATE TABLE IF NOT EXISTS salao.cliente (
     telefone VARCHAR(12) NOT NULL UNIQUE CHECK (telefone ~ '^[0-9]+$'),
     usuario VARCHAR(25) NOT NULL UNIQUE,
     senha VARCHAR(8) NOT NULL CHECK (senha ~ '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8}$'),
+    aceitou_termos BOOLEAN NOT NULL,
     documento VARCHAR(14) NOT NULL UNIQUE CHECK (
     documento ~ '^\d{11}$' OR 
     documento ~ '^\d{14}$' 

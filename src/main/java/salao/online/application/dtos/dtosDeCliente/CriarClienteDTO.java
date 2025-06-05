@@ -21,4 +21,5 @@ public class CriarClienteDTO {
     private String usuario;
     private String senha;
     private String documento; 
+    private Boolean aceitouTermos;
 }

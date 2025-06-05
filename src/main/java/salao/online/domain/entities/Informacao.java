@@ -1,6 +1,6 @@
 package salao.online.domain.entities;
 
-import io.smallrye.common.constraint.NotNull;
+import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.Past;
@@ -45,8 +45,11 @@ public abstract class Informacao {
     @Column(unique = true, nullable = false)
     private @Getter @Setter String documento;
 
+    @Column(name = "aceitou_termos", nullable = false)
+    private @Getter @Setter Boolean aceitouTermos;
+
     public Informacao(String nome, String sobrenome, LocalDate dataNascimento, String email, String telefone, 
-            String usuario, String senha, String documento) {
+            String usuario, String senha, String documento, Boolean aceitouTermos) {
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.dataNascimento = dataNascimento;
@@ -55,6 +58,7 @@ public abstract class Informacao {
         this.usuario = usuario;
         this.senha = senha;
         this.documento = documento;
+        this.aceitouTermos = aceitouTermos;
     }
 
     // Calcula a idade

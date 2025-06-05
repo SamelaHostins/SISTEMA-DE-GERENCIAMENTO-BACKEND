@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -28,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
     public Optional<ResultadoLogin> autenticar(String email, String senha) {
         // tenta autenticar cliente
         Optional<Cliente> clienteOpt = clienteRepository.buscarPeloEmail(email);
-        if (clienteOpt.isPresent() && clienteOpt.get().getSenha().equals(senha)) {
+        if (clienteOpt.isPresent() && BCrypt.checkpw(senha, clienteOpt.get().getSenha())) {
             Cliente c = clienteOpt.get();
             String token = gerarToken(c.getIdCliente(), c.getEmail(), TipoUsuarioEnum.CLIENTE);
             return Optional.of(new ResultadoLogin(token, TipoUsuarioEnum.CLIENTE));
@@ -36,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
 
         // tenta autenticar profissional
         Optional<Profissional> profOpt = profissionalRepository.buscarPeloEmail(email);
-        if (profOpt.isPresent() && profOpt.get().getSenha().equals(senha)) {
+        if (profOpt.isPresent() && BCrypt.checkpw(senha, profOpt.get().getSenha())) {
             Profissional p = profOpt.get();
             String token = gerarToken(p.getIdProfissional(), p.getEmail(), TipoUsuarioEnum.PROFISSIONAL);
             return Optional.of(new ResultadoLogin(token, TipoUsuarioEnum.PROFISSIONAL));

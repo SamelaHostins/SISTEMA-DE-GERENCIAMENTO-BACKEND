@@ -184,7 +184,6 @@ public class ClienteServiceImpl implements ClienteService {
         String senhaCriptografada = BCrypt.hashpw(novaSenha, BCrypt.gensalt());
         cliente.setSenha(senhaCriptografada);
 
-        cliente.setSenha(novaSenha);
         clienteRepository.persistAndFlush(cliente);
     }
 

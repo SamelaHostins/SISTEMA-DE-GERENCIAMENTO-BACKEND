@@ -68,8 +68,7 @@ public class ClienteServiceImpl implements ClienteService {
             }
 
             if (clienteRepository.find("documento", clienteDTO.getDocumento()).firstResultOptional().isPresent()) {
-                throw new ValidacaoException(MensagemErroValidacaoEnum.DOCUMENTO_JA_CADASTRADO.getMensagemErro() + " "
-                        + clienteDTO.getDocumento());
+                throw new ValidacaoException(MensagemErroValidacaoEnum.DOCUMENTO_JA_CADASTRADO.getMensagemErro());
             }
 
             Cliente cliente = clienteMapper.fromCriarDtoToEntity(clienteDTO);

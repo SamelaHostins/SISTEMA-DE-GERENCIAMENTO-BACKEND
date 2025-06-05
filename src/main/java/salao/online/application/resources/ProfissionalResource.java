@@ -1,11 +1,13 @@
 package salao.online.application.resources;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import jakarta.annotation.security.PermitAll;
@@ -56,18 +58,23 @@ public class ProfissionalResource {
     @Path("/cadastrar")
     @PermitAll
     @Operation(summary = "Cadastrar Profissional")
+    @APIResponse(responseCode = "201", description = "Profissional cadastrado com sucesso.")
+    @APIResponse(responseCode = "409", description = "E-mail ou documento já cadastrado.")
+    @APIResponse(responseCode = "500", description = "Erro interno ao cadastrar profissional.")
     public Response cadastrarProfissional(@Valid @RequestBody CriarProfissionalDTO dto) {
         try {
             LOG.info("Requisição recebida - Cadastrar Profissional");
             CriarProfissionalDTO profissionalDTO = profissionalService.cadastrarProfissional(dto);
-            return Response.ok(profissionalDTO).build();
-
+            return Response.status(Response.Status.CREATED).entity(profissionalDTO).build(); 
+        } catch (ValidacaoException ex) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity(Map.of("erro", ex.getMessage()))
+                    .build(); 
         } catch (Exception ex) {
-            LOG.error("Erro ao cadastrar profissional", ex);
+            LOG.error("Erro interno ao cadastrar profissional", ex);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Erro ao cadastrar profissional.")
-                    .type("text/plain")
-                    .build();
+                    .entity(Map.of("erro", "Erro ao cadastrar profissional."))
+                    .build(); 
         }
     }
 
@@ -245,7 +252,7 @@ public class ProfissionalResource {
             UUID idProfissional = UUID.fromString(jwt.getSubject());
             profissionalService.alterarSenha(idProfissional, dto.getNovaSenha());
 
-            return Response.noContent().build(); 
+            return Response.noContent().build();
         } catch (ValidacaoException ex) {
             return Response.status(Response.Status.NOT_FOUND).entity(ex.getMessage()).build();
         } catch (Exception ex) {

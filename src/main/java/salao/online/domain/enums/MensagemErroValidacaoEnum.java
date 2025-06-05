@@ -6,8 +6,8 @@ public enum MensagemErroValidacaoEnum {
 
     // Mensagens de erro de Cliente
     CLIENTE_NAO_ENCONTRADO("O cliente não foi encontrado."),
-    EMAIL_JA_CADASTRADO("Já existe um usuário cadastrado com este e-mail."),
-    DOCUMENTO_JA_CADASTRADO("Já existe um usuário cadastrado com este CPF/CNPJ."),
+    EMAIL_JA_CADASTRADO("Esse e-mail já foi cadastrado."),
+    DOCUMENTO_JA_CADASTRADO("Esse CPF/CNPJ já foi cadastrado."),
 
     // Mensagens de erro de Profissional
     PROFISSIONAL_NAO_ENCONTRADO("O profissional não foi encontrado."),

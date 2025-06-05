@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS salao.cliente (
     data_nascimento DATE NOT NULL CHECK (data_nascimento <= CURRENT_DATE),
     email VARCHAR(30) NOT NULL UNIQUE,
     telefone VARCHAR(12) NOT NULL,
-    usuario VARCHAR(25) NOT NULL UNIQUE,
+    usuario VARCHAR(25) NOT NULL,
     senha VARCHAR(60) NOT NULL,
     aceitou_termos BOOLEAN NOT NULL,
     documento VARCHAR(14) NOT NULL UNIQUE CHECK (

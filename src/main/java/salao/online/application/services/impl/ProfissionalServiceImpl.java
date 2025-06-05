@@ -84,8 +84,7 @@ public class ProfissionalServiceImpl implements ProfissionalService {
 
             if (profissionalRepository.find("documento", profissionalDTO.getDocumento()).firstResultOptional()
                     .isPresent()) {
-                throw new ValidacaoException(MensagemErroValidacaoEnum.DOCUMENTO_JA_CADASTRADO.getMensagemErro() + " "
-                        + profissionalDTO.getDocumento());
+                throw new ValidacaoException(MensagemErroValidacaoEnum.DOCUMENTO_JA_CADASTRADO.getMensagemErro());
             }
 
             Profissional profissional = profissionalMapper.fromCriarDtoToEntity(profissionalDTO);

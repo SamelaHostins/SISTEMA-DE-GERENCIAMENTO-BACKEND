@@ -46,20 +46,28 @@ public class ClienteResource {
 
     private static final org.jboss.logging.Logger LOG = org.jboss.logging.Logger.getLogger(ClienteResource.class);
 
-    @Operation(summary = "Cadastrando um Cliente")
-    @APIResponse(responseCode = "200", description = "Cliente criado com sucesso!")
-    @APIResponse(responseCode = "500", description = "Ocorreu um erro na requisição.")
     @POST
     @PermitAll
     @Transactional
     @Path("/cadastrar")
+    @Operation(summary = "Cadastrando um Cliente")
+    @APIResponse(responseCode = "201", description = "Cliente criado com sucesso!")
+    @APIResponse(responseCode = "409", description = "E-mail ou documento já cadastrado.")
+    @APIResponse(responseCode = "500", description = "Ocorreu um erro na requisição.")
     public Response cadastrarCliente(@Valid @RequestBody CriarClienteDTO dto) {
         try {
             LOG.info("Requisição recebida - Cadastrar Cliente");
             CriarClienteDTO clienteDTO = clienteService.cadastrarCliente(dto);
-            return Response.status(200).entity(clienteDTO).build();
+            return Response.status(Response.Status.CREATED).entity(clienteDTO).build(); 
+        } catch (ValidacaoException ex) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity(Map.of("erro", ex.getMessage()))
+                    .build();
         } catch (Exception ex) {
-            return Response.status(500).entity("Ocorreu um erro na requisição.").build();
+            LOG.error("Erro interno ao cadastrar cliente", ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Map.of("erro", "Ocorreu um erro na requisição."))
+                    .build();
         }
     }
 

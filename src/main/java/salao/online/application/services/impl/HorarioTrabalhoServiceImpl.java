@@ -1,5 +1,6 @@
 package salao.online.application.services.impl;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -76,53 +77,103 @@ public class HorarioTrabalhoServiceImpl implements HorarioTrabalhoService {
         profissional.getHorariosTrabalho().addAll(novos);
 
         profissionalRepository.persistAndFlush(profissional);
+
     }
 
     @Override
     public List<LocalTime> buscarHorariosDisponiveis(UUID idProfissional, LocalDate data) throws ValidacaoException {
-        // Validação do profissional
         Profissional profissional = Optional.ofNullable(profissionalRepository.findById(idProfissional))
                 .orElseThrow(() -> new ValidacaoException(
                         MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
 
-        // Descobre o dia da semana (0 = SEGUNDA, 1 = TERÇA...)
         DiaSemanaEnum dia = DiaSemanaEnum.values()[data.getDayOfWeek().getValue() - 1];
 
-        // Filtra faixas cadastradas para o dia
-        List<HorarioTrabalho> faixas = profissional.getHorariosTrabalho().stream()
-                .filter(h -> h.getDiaSemana() == dia)
-                .toList();
-
-        // Retorna lista vazia se não há expediente hoje
-        if (faixas.isEmpty()) {
+        List<HorarioTrabalho> faixas = montarFaixasValidas(profissional.getHorariosTrabalho(), dia);
+        if (faixas.isEmpty())
             return List.of();
-        }
 
-        // Puxa os agendamentos já existentes para o dia
-        List<Agendamento> agendamentos = agendamentoRepository
-                .buscarPorProfissionalEData(idProfissional, data);
+        List<Agendamento> agendamentos = agendamentoRepository.buscarPorProfissionalEData(idProfissional, data);
+        for (Agendamento ag : agendamentos) {
+            if (ag.getServico() == null) {
+                throw new ValidacaoException(MensagemErroValidacaoEnum.SERVICO_NULO.getMensagemErro());
+            }
+        }
 
         List<LocalTime> horariosDisponiveis = new ArrayList<>();
 
         for (HorarioTrabalho faixa : faixas) {
-            LocalTime hora = faixa.getHoraInicio();
+            LocalTime inicio = faixa.getHoraInicio();
+            LocalTime fim = faixa.getHoraFim();
 
-            while (!hora.plusMinutes(30).isAfter(faixa.getHoraFim())) {
-                final LocalTime finalHora = hora;
+            if (inicio == null || fim == null || !inicio.isBefore(fim))
+                continue;
+
+            long duracaoMinutos = Duration.between(inicio, fim).toMinutes();
+            int blocos = (int) (duracaoMinutos / 30);
+
+            for (int i = 0; i <= blocos; i++) {
+                LocalTime inicioSlot = inicio.plusMinutes(i * 30);
+                LocalTime fimSlot = inicioSlot.plusMinutes(30);
+                if (fimSlot.isAfter(fim))
+                    break;
 
                 boolean sobrepoe = agendamentos.stream().anyMatch(ag -> {
                     LocalTime inicioAg = ag.getHoraAgendamento();
                     LocalTime fimAg = inicioAg.plus(ag.getServico().getTempo());
-                    return !(finalHora.plusMinutes(30).isBefore(inicioAg) || finalHora.isAfter(fimAg));
+
+                    return !(fimSlot.isBefore(inicioAg) || fimSlot.equals(inicioAg)
+                            || inicioSlot.isAfter(fimAg) || inicioSlot.equals(fimAg));
                 });
+
                 if (!sobrepoe) {
-                    horariosDisponiveis.add(hora);
+                    horariosDisponiveis.add(inicioSlot);
                 }
-                hora = hora.plusMinutes(30);
             }
         }
 
         return horariosDisponiveis;
+    }
+
+    private List<HorarioTrabalho> montarFaixasValidas(List<HorarioTrabalho> todos, DiaSemanaEnum dia) {
+        List<HorarioTrabalho> doDia = todos.stream()
+                .filter(h -> h.getDiaSemana() == dia)
+                .toList();
+
+        List<HorarioTrabalho> completas = doDia.stream()
+                .filter(f -> f.getHoraInicio() != null && f.getHoraFim() != null
+                        && !f.getHoraInicio().isAfter(f.getHoraFim()))
+                .collect(Collectors.toList());
+
+        List<HorarioTrabalho> inicios = doDia.stream()
+                .filter(f -> f.getHoraInicio() != null && f.getHoraFim() == null)
+                .collect(Collectors.toList());
+
+        List<HorarioTrabalho> fins = new ArrayList<>(doDia.stream()
+                .filter(f -> f.getHoraInicio() == null && f.getHoraFim() != null)
+                .toList());
+
+        for (HorarioTrabalho inicio : inicios) {
+            HorarioTrabalho fim = fins.stream()
+                    .filter(f -> f.getDiaSemana() == dia)
+                    .findFirst()
+                    .orElse(null);
+
+            if (fim != null) {
+                LocalTime hi = inicio.getHoraInicio();
+                LocalTime hf = fim.getHoraFim();
+
+                if (hi != null && hf != null && !hi.isAfter(hf)) {
+                    HorarioTrabalho faixa = new HorarioTrabalho();
+                    faixa.setDiaSemana(dia);
+                    faixa.setHoraInicio(hi);
+                    faixa.setHoraFim(hf);
+                    completas.add(faixa);
+                    fins.remove(fim); // evita reuso
+                }
+            }
+        }
+
+        return completas;
     }
 
     @Override

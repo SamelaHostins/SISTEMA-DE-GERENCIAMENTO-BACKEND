@@ -121,6 +121,7 @@ public class AgendamentoRepositoryImpl implements AgendamentoRepository {
     @Override
     public List<Agendamento> buscarPorProfissionalEData(UUID idProfissional, LocalDate data) {
         return find("servico.profissional.idProfissional = ?1 and dataAgendamento = ?2", idProfissional, data).list();
+
     }
 
 }

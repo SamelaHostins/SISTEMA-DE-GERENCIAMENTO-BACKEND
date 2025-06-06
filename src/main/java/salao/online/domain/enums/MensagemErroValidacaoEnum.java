@@ -17,6 +17,7 @@ public enum MensagemErroValidacaoEnum {
 
     // Mensagem de erro de Serviço
     SERVICO_NAO_ENCONTRADO("O serviço não foi encontrado."),
+    SERVICO_NULO("O serviço está nulo"),
 
     // Mensagem de erro de Produto
     PRODUTO_NAO_ENCONTRADO("O produto não foi encontrado."),

@@ -16,6 +16,7 @@ public interface ClienteMapper {
 
     @Mapping(target = "idCliente", ignore = true)
     @Mapping(target = "dataNascimento", source = "dto.dataNascimento")
+    @Mapping(source = "aceitouTermos", target = "aceitouTermos")
     Cliente fromCriarDtoToEntity(CriarClienteDTO dto);
 
     @Mapping(target = "dataNascimento", source = "entity.dataNascimento")

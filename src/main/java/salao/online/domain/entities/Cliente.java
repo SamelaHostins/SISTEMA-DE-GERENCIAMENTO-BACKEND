@@ -47,8 +47,8 @@ public class Cliente extends Informacao {
             LocalTime horaFimPreferida, List<Avaliacao> avaliacoes,
             List<Agendamento> agendamentos, List<Imagem> imagens) {
         super(nome, sobrenome, dataNascimento, email, telefone, usuario, senha, documento, aceitouTermos);
-        this.horaInicioPreferida = horaInicioPreferida;
-        this.horaFimPreferida = horaFimPreferida;
+        this.horaInicioPreferida = horaInicioPreferida != null ? horaInicioPreferida : LocalTime.of(7, 0);
+        this.horaFimPreferida = horaFimPreferida != null ? horaFimPreferida : LocalTime.of(19, 0);        
         this.avaliacoes = avaliacoes;
         this.agendamentos = agendamentos;
         this.imagens = imagens;

@@ -25,6 +25,4 @@ public class BuscarClienteDTO {
     private String telefone;
     private String documento;
     private String senha;
-    private LocalTime horaInicioPreferida;
-    private LocalTime horaFimPreferida;
 }

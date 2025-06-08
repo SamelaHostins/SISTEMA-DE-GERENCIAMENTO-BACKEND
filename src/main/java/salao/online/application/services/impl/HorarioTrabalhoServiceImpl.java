@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,32 @@ public class HorarioTrabalhoServiceImpl implements HorarioTrabalhoService {
     public List<HorarioTrabalhoDTO> listarHorariosDoProfissional(UUID idProfissional) {
         List<HorarioTrabalho> horarios = horarioTrabalhoRepository.list("profissional.id", idProfissional);
         return mapper.fromEntityListToDtoList(horarios);
+    }
+
+    @Override
+    public List<LocalTime> buscarHorasInteirasTrabalho(UUID idProfissional, LocalDate data) throws ValidacaoException {
+        Profissional profissional = Optional.ofNullable(profissionalRepository.findById(idProfissional))
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.PROFISSIONAL_NAO_ENCONTRADO.getMensagemErro()));
+
+        DiaSemanaEnum dia = DiaSemanaEnum.values()[data.getDayOfWeek().getValue() - 1];
+
+        List<HorarioTrabalho> faixas = montarFaixasValidas(profissional.getHorariosTrabalho(), dia);
+        if (faixas.isEmpty())
+            return List.of();
+
+        Set<LocalTime> horasInteiras = new TreeSet<>();
+
+        for (HorarioTrabalho faixa : faixas) {
+            int horaInicio = faixa.getHoraInicio().getHour();
+            int horaFim = faixa.getHoraFim().getHour();
+
+            for (int h = horaInicio; h <= horaFim; h++) {
+                horasInteiras.add(LocalTime.of(h, 0));
+            }
+        }
+
+        return new ArrayList<>(horasInteiras);
     }
 
     @Override

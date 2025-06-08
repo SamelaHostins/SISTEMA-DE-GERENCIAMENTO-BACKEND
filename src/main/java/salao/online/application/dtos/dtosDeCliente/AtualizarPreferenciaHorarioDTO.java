@@ -1,6 +1,5 @@
 package salao.online.application.dtos.dtosDeCliente;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
 
@@ -13,18 +12,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-// Classe para que o cliente possa ver seu cadastro
-public class BuscarClienteDTO {
+public class AtualizarPreferenciaHorarioDTO {
 
     private UUID idCliente;
-    private String nome;
-    private String sobrenome;
-    private String usuario;
-    private LocalDate dataNascimento;
-    private String email;
-    private String telefone;
-    private String documento;
-    private String senha;
     private LocalTime horaInicioPreferida;
     private LocalTime horaFimPreferida;
 }

@@ -18,6 +18,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
+import salao.online.application.dtos.dtosDeCliente.AtualizarPreferenciaHorarioDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
 import salao.online.application.mappers.AgendamentoMapper;
@@ -95,6 +96,28 @@ public class ClienteServiceImpl implements ClienteService {
             logger.error("Erro ao cadastrar cliente", e);
             throw new RuntimeException("Erro ao cadastrar cliente.", e);
         }
+    }
+
+    @Override
+    @Transactional
+    public AtualizarPreferenciaHorarioDTO atualizarPreferenciaHorario(AtualizarPreferenciaHorarioDTO dto)
+            throws ValidacaoException {
+        Cliente cliente = clienteRepository.findByIdOptional(dto.getIdCliente())
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro()));
+
+        cliente.setHoraInicioPreferida(dto.getHoraInicioPreferida());
+        cliente.setHoraFimPreferida(dto.getHoraFimPreferida());
+
+        return clienteMapper.toAtualizarPreferenciaHorarioDTO(cliente);
+    }
+
+    @Override
+    public AtualizarPreferenciaHorarioDTO buscarPreferenciaHorario(UUID idCliente) throws ValidacaoException {
+        Cliente cliente = clienteRepository.findByIdOptional(idCliente)
+                .orElseThrow(() -> new ValidacaoException(
+                        MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro()));
+        return clienteMapper.toAtualizarPreferenciaHorarioDTO(cliente);
     }
 
     @Override

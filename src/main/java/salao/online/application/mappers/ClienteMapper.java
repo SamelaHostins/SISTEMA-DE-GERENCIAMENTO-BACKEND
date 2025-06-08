@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
+import salao.online.application.dtos.dtosDeCliente.AtualizarPreferenciaHorarioDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
 import salao.online.domain.entities.Cliente;
@@ -26,4 +27,8 @@ public interface ClienteMapper {
 
     @Mapping(target = "dataNascimento", source = "entity.dataNascimento")
     BuscarClienteDTO fromEntityToBuscarDto(Cliente entity);
+
+    AtualizarPreferenciaHorarioDTO toAtualizarPreferenciaHorarioDTO(Cliente cliente);
+
+    Cliente fromAtualizarPreferenciaHorarioDTO(AtualizarPreferenciaHorarioDTO dto);
 }

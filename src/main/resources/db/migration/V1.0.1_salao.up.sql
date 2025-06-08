@@ -64,7 +64,9 @@ CREATE TABLE IF NOT EXISTS salao.cliente (
     documento VARCHAR(14) NOT NULL UNIQUE CHECK (
     documento ~ '^\d{11}$' OR 
     documento ~ '^\d{14}$' 
-    )
+    ),
+    hora_inicio_preferida TIME NOT NULL DEFAULT '07:00:00',
+    hora_fim_preferida TIME NOT NULL DEFAULT '19:00:00'
 );
 
 -- Tabela servico

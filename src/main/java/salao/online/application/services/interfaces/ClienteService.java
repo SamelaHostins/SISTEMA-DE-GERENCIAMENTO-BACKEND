@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
+import salao.online.application.dtos.dtosDeCliente.AtualizarPreferenciaHorarioDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
 import salao.online.domain.exceptions.ValidacaoException;
@@ -12,6 +13,11 @@ import salao.online.domain.exceptions.ValidacaoException;
 public interface ClienteService {
 
     CriarClienteDTO cadastrarCliente(CriarClienteDTO clienteDTO) throws ValidacaoException;
+
+    AtualizarPreferenciaHorarioDTO atualizarPreferenciaHorario(AtualizarPreferenciaHorarioDTO dto)
+            throws ValidacaoException;
+
+    AtualizarPreferenciaHorarioDTO buscarPreferenciaHorario(UUID idCliente) throws ValidacaoException;
 
     AtualizarClienteDTO atualizarCliente(AtualizarClienteDTO clienteDTO) throws ValidacaoException;
 

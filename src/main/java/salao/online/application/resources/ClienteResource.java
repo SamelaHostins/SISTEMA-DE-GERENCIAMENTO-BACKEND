@@ -27,6 +27,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import salao.online.application.dtos.dtosDeCliente.AlterarSenhaClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.AtualizarClienteDTO;
+import salao.online.application.dtos.dtosDeCliente.AtualizarPreferenciaHorarioDTO;
 import salao.online.application.dtos.dtosDeCliente.BuscarClienteDTO;
 import salao.online.application.dtos.dtosDeCliente.CriarClienteDTO;
 import salao.online.application.services.interfaces.ClienteService;
@@ -58,7 +59,7 @@ public class ClienteResource {
         try {
             LOG.info("Requisição recebida - Cadastrar Cliente");
             CriarClienteDTO clienteDTO = clienteService.cadastrarCliente(dto);
-            return Response.status(Response.Status.CREATED).entity(clienteDTO).build(); 
+            return Response.status(Response.Status.CREATED).entity(clienteDTO).build();
         } catch (ValidacaoException ex) {
             return Response.status(Response.Status.CONFLICT)
                     .entity(Map.of("erro", ex.getMessage()))
@@ -67,6 +68,51 @@ public class ClienteResource {
             LOG.error("Erro interno ao cadastrar cliente", ex);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(Map.of("erro", "Ocorreu um erro na requisição."))
+                    .build();
+        }
+    }
+
+    @PUT
+    @Path("/preferencias")
+    @RolesAllowed({ "CLIENTE" })
+    @Transactional
+    @Operation(summary = "Atualiza preferência de horário do cliente")
+    public Response atualizarPreferenciaHorario(AtualizarPreferenciaHorarioDTO dto) {
+        try {
+            AtualizarPreferenciaHorarioDTO atualizado = clienteService.atualizarPreferenciaHorario(dto);
+            return Response.ok(atualizado).build();
+        } catch (ValidacaoException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(e.getMessage())
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao atualizar preferência de horário.")
+                    .build();
+        }
+    }
+
+    @Operation(summary = "Buscar a preferência de horário do cliente logado")
+    @APIResponse(responseCode = "200", description = "Preferência de horário retornada com sucesso!")
+    @APIResponse(responseCode = "404", description = "O cliente não foi encontrado")
+    @APIResponse(responseCode = "500", description = "Erro interno do servidor")
+    @GET
+    @Path("/buscar-preferencias")
+    @RolesAllowed("CLIENTE")
+    public Response buscarPreferenciaHorario(@Context JsonWebToken jwt) {
+        try {
+            LOG.info("Requisição recebida - Buscar preferência de horário do Cliente logado");
+
+            UUID idCliente = UUID.fromString(jwt.getSubject());
+            AtualizarPreferenciaHorarioDTO preferencias = clienteService.buscarPreferenciaHorario(idCliente);
+
+            // Sempre tem default no banco
+            return Response.ok(preferencias).build();
+
+        } catch (ValidacaoException ex) {
+            return Response.status(Response.Status.NOT_FOUND).entity(ex.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Ocorreu um erro na requisição.")
                     .build();
         }
     }

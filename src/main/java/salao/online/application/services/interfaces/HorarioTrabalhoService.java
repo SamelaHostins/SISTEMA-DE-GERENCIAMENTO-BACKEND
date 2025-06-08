@@ -12,6 +12,8 @@ public interface HorarioTrabalhoService {
 
     List<HorarioTrabalhoDTO> listarHorariosDoProfissional(UUID idProfissional);
 
+    List<LocalTime> buscarHorasInteirasTrabalho(UUID idProfissional, LocalDate data) throws ValidacaoException;
+
     void atualizarHorariosTrabalho(UUID idProfissional, List<HorarioTrabalhoDTO> horarios) throws ValidacaoException;
 
     List<LocalTime> buscarHorariosDisponiveis(UUID idProfissional, LocalDate data) throws ValidacaoException;

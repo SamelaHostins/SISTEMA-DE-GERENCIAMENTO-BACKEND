@@ -2,6 +2,7 @@ package salao.online.application.resources;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,6 +71,50 @@ public class HorarioTrabalhoResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Erro ao buscar horários de trabalho do profissional.")
                     .build();
+        }
+    }
+
+    @GET
+    @Path("/horas-inteiras")
+    @RolesAllowed("PROFISSIONAL")
+    @Operation(summary = "Listar as horas inteiras de trabalho do profissional autenticado em um dia")
+    @APIResponse(responseCode = "200", description = "Horas inteiras retornadas com sucesso")
+    @APIResponse(responseCode = "204", description = "Nenhuma hora disponível para o dia informado")
+    @APIResponse(responseCode = "400", description = "Data inválida")
+    @APIResponse(responseCode = "500", description = "Erro interno")
+    public Response listarHorasInteirasDoProfissionalAutenticado(@QueryParam("data") String dataStr,
+            @Context SecurityContext securityContext) {
+        try {
+            if (dataStr == null || dataStr.isBlank()) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Data não informada.").build();
+            }
+
+            LocalDate data;
+            try {
+                data = LocalDate.parse(dataStr); // yyyy-MM-dd
+            } catch (DateTimeParseException e) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Formato de data inválido. Use yyyy-MM-dd.")
+                        .build();
+            }
+
+            UUID idProfissional = UUID
+                    .fromString(((DefaultJWTCallerPrincipal) securityContext.getUserPrincipal()).getName());
+
+            List<LocalTime> horas = horarioTrabalhoService.buscarHorasInteirasTrabalho(idProfissional, data);
+
+            if (horas.isEmpty()) {
+                return Response.status(Response.Status.NO_CONTENT).build();
+            }
+
+            List<String> horasFormatadas = horas.stream()
+                    .map(LocalTime::toString)
+                    .toList();
+
+            return Response.ok(horasFormatadas).build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao buscar horas inteiras de trabalho.").build();
         }
     }
 

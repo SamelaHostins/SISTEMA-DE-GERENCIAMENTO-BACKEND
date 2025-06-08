@@ -102,13 +102,15 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public AtualizarPreferenciaHorarioDTO atualizarPreferenciaHorario(AtualizarPreferenciaHorarioDTO dto)
             throws ValidacaoException {
+        logger.info("Buscando o Cliente");
         Cliente cliente = clienteRepository.findByIdOptional(dto.getIdCliente())
                 .orElseThrow(() -> new ValidacaoException(
                         MensagemErroValidacaoEnum.CLIENTE_NAO_ENCONTRADO.getMensagemErro()));
-
+        logger.info("Setando horas do Cliente");
         cliente.setHoraInicioPreferida(dto.getHoraInicioPreferida());
         cliente.setHoraFimPreferida(dto.getHoraFimPreferida());
 
+        logger.info("Atualizando as horas do Cliente");
         return clienteMapper.toAtualizarPreferenciaHorarioDTO(cliente);
     }
 

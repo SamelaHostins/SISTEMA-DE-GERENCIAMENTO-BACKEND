@@ -74,13 +74,18 @@ public class ClienteResource {
 
     @PUT
     @Path("/preferencias")
-    @RolesAllowed({ "CLIENTE" })
+    @RolesAllowed("CLIENTE")
     @Transactional
     @Operation(summary = "Atualiza preferência de horário do cliente")
-    public Response atualizarPreferenciaHorario(AtualizarPreferenciaHorarioDTO dto) {
+    public Response atualizarPreferenciaHorario(@Context JsonWebToken jwt, AtualizarPreferenciaHorarioDTO dto) {
         try {
+            LOG.info("Extrai ID do cliente do JWT");
+            UUID idCliente = UUID.fromString(jwt.getSubject());
+            dto.setIdCliente(idCliente); 
+            LOG.info("Requisição recebida - Atualiza preferencia de horario do Cliente");
             AtualizarPreferenciaHorarioDTO atualizado = clienteService.atualizarPreferenciaHorario(dto);
             return Response.ok(atualizado).build();
+
         } catch (ValidacaoException e) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(e.getMessage())

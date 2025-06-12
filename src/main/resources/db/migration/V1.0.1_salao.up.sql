@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS salao.estoque (
 -- Tabela produto
 CREATE TABLE IF NOT EXISTS salao.produto (
     id_produto UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    nome VARCHAR(50) CHECK (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55),
+    nome VARCHAR(55) CHECK (LENGTH(nome) >= 3 AND LENGTH(nome) <= 55),
     dt_entrada DATE,
     dt_validade DATE,
     valor DECIMAL(5, 2),

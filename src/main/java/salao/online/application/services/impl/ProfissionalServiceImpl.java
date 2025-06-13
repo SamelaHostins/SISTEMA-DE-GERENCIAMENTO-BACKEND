@@ -76,43 +76,32 @@ public class ProfissionalServiceImpl implements ProfissionalService {
     @Override
     @Transactional
     public CriarProfissionalDTO cadastrarProfissional(CriarProfissionalDTO profissionalDTO) throws ValidacaoException {
-        try {
-            if (profissionalRepository.find("email", profissionalDTO.getEmail()).firstResultOptional().isPresent()) {
-                throw new ValidacaoException(MensagemErroValidacaoEnum.EMAIL_JA_CADASTRADO.getMensagemErro() + " "
-                        + profissionalDTO.getEmail());
-            }
-
-            if (profissionalRepository.find("documento", profissionalDTO.getDocumento()).firstResultOptional()
-                    .isPresent()) {
-                throw new ValidacaoException(MensagemErroValidacaoEnum.DOCUMENTO_JA_CADASTRADO.getMensagemErro());
-            }
-
-            Profissional profissional = profissionalMapper.fromCriarDtoToEntity(profissionalDTO);
-
-            // Gerar nome de usuário automaticamente com nome.sobrenome
-            String[] sobrenomes = profissionalDTO.getSobrenome().split(" ");
-            String ultimoSobrenome = sobrenomes[sobrenomes.length - 1];
-            String usuario = removeAcentos(profissionalDTO.getNome().toLowerCase()) + "." +
-                    removeAcentos(ultimoSobrenome.toLowerCase());
-            profissional.setUsuario(usuario);
-
-            // Criptografa a senha antes de salvar
-            String senhaCriptografada = BCrypt.hashpw(profissionalDTO.getSenha(), BCrypt.gensalt());
-            profissional.setSenha(senhaCriptografada);
-
-            logger.info("Salvando o profissional no banco de dados");
-            profissionalRepository.persistAndFlush(profissional);
-
-            return profissionalDTO; // ou outro DTO se preferir
-
-        } catch (ValidacaoException e) {
-            logger.warn("Erro de validação ao cadastrar profissional: " + e.getMessage());
-            throw e;
-
-        } catch (Exception e) {
-            logger.error("Erro ao cadastrar profissional", e);
-            throw new RuntimeException("Erro ao cadastrar profissional.", e);
+        if (profissionalRepository.existePorEmail(profissionalDTO.getEmail())) {
+            throw new ValidacaoException(MensagemErroValidacaoEnum.EMAIL_JA_CADASTRADO.getMensagemErro() + " "
+                    + profissionalDTO.getEmail());
         }
+
+        if (profissionalRepository.existePorDocumento(profissionalDTO.getDocumento())) {
+            throw new ValidacaoException(MensagemErroValidacaoEnum.DOCUMENTO_JA_CADASTRADO.getMensagemErro());
+        }
+
+        Profissional profissional = profissionalMapper.fromCriarDtoToEntity(profissionalDTO);
+
+        // Gerar nome de usuário automaticamente com nome.sobrenome
+        String[] sobrenomes = profissionalDTO.getSobrenome().split(" ");
+        String ultimoSobrenome = sobrenomes[sobrenomes.length - 1];
+        String usuario = removeAcentos(profissionalDTO.getNome().toLowerCase()) + "." +
+                removeAcentos(ultimoSobrenome.toLowerCase());
+        profissional.setUsuario(usuario);
+
+        // Criptografa a senha antes de salvar
+        String senhaCriptografada = BCrypt.hashpw(profissionalDTO.getSenha(), BCrypt.gensalt());
+        profissional.setSenha(senhaCriptografada);
+
+        logger.info("Salvando o profissional no banco de dados");
+        profissionalRepository.persistAndFlush(profissional);
+
+        return profissionalDTO;
     }
 
     @Override

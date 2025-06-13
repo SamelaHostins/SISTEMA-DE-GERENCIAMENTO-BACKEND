@@ -27,4 +27,9 @@ public interface ProfissionalRepository extends PanacheRepositoryBase<Profission
     public List<Profissional> listarComImagemDePerfil(int limit);
 
     public List<Profissional> buscarProfissionaisComImagemEComServico();
+
+    public boolean existePorEmail(String email);
+
+    public boolean existePorDocumento(String documento);
+
 }

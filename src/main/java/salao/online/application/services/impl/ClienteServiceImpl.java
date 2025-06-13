@@ -62,7 +62,6 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional
     public CriarClienteDTO cadastrarCliente(CriarClienteDTO clienteDTO) throws ValidacaoException {
-        try {
             if (clienteRepository.find("email", clienteDTO.getEmail()).firstResultOptional().isPresent()) {
                 throw new ValidacaoException(
                         MensagemErroValidacaoEnum.EMAIL_JA_CADASTRADO.getMensagemErro() + " " + clienteDTO.getEmail());
@@ -88,14 +87,6 @@ public class ClienteServiceImpl implements ClienteService {
             clienteRepository.persistAndFlush(cliente);
 
             return clienteMapper.fromEntityToCriarDto(cliente);
-
-        } catch (ValidacaoException e) {
-            logger.warn("Erro de validação ao cadastrar cliente: " + e.getMessage());
-            throw e; // Lança a exceção personalizada para ser tratada no front-end
-        } catch (Exception e) {
-            logger.error("Erro ao cadastrar cliente", e);
-            throw new RuntimeException("Erro ao cadastrar cliente.", e);
-        }
     }
 
     @Override

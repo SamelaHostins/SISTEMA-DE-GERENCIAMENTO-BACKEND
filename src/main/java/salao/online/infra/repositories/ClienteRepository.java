@@ -19,4 +19,8 @@ public interface ClienteRepository extends PanacheRepositoryBase<Cliente, UUID> 
     public Optional<Cliente> buscarClientePorId(UUID idCliente);
 
     public Optional<Cliente> buscarPeloEmail(String email);
+
+    public boolean existePorEmail(String email);
+    
+    public boolean existePorDocumento(String documento);  
 }

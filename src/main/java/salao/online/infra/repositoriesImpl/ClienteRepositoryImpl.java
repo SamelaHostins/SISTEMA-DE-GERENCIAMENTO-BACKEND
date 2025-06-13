@@ -51,9 +51,18 @@ public class ClienteRepositoryImpl implements ClienteRepository {
 
     @Override
     public Optional<Cliente> buscarPeloEmail(String email) {
-        // evita que letras maiusculas ou minusculas atrapalhem na busca e trata espaços extras
+        // evita que letras maiusculas ou minusculas atrapalhem na busca e trata espaços
+        // extras
         return find("LOWER(email)", email.trim().toLowerCase()).firstResultOptional();
 
+    }
+
+    public boolean existePorEmail(String email) {
+        return find("email", email).firstResultOptional().isPresent();
+    }
+
+    public boolean existePorDocumento(String documento) {
+        return find("documento", documento).firstResultOptional().isPresent();
     }
 
 }

@@ -97,4 +97,13 @@ public class ProfissionalRepositoryImpl implements ProfissionalRepository {
                         ")",
                 Parameters.with("tipo", TipoImagemEnum.PERFIL)).list();
     }
+
+    public boolean existePorEmail(String email) {
+        return find("email", email).firstResultOptional().isPresent();
+    }
+
+    public boolean existePorDocumento(String documento) {
+        return find("documento", documento).firstResultOptional().isPresent();
+    }
+
 }
